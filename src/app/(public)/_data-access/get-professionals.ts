@@ -27,11 +27,14 @@ export async function getProfessionals() {
             },
         },
         orderBy: {
-            subscription: {
-                plan: "desc",
-            },
+            createdAt: "desc",
         },
     });
 
-    return professionals;
+    // Coloca profissionais PROFESSIONAL primeiro
+    return professionals.sort((a, b) => {
+        if (a.subscription?.plan === "PROFESSIONAL" && b.subscription?.plan !== "PROFESSIONAL") return -1;
+        if (a.subscription?.plan !== "PROFESSIONAL" && b.subscription?.plan === "PROFESSIONAL") return 1;
+        return 0;
+    });
 }

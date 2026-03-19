@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { updateAvatar } from "../_actions/update-avatar";
 
 interface ProfileAvatarProps {
@@ -19,10 +20,6 @@ export function ProfileAvatar({ image, name }: ProfileAvatarProps) {
 
         setLoading(true);
 
-        const reader = new FileReader();
-        reader.onload = () => setPreview(reader.result as string);
-        reader.readAsDataURL(file);
-
         const formData = new FormData();
         formData.append("file", file);
 
@@ -34,6 +31,7 @@ export function ProfileAvatar({ image, name }: ProfileAvatarProps) {
         const data = await res.json();
 
         if (data.url) {
+            setPreview(data.url);
             await updateAvatar(data.url);
         }
 
@@ -46,10 +44,11 @@ export function ProfileAvatar({ image, name }: ProfileAvatarProps) {
                 className="relative w-24 h-24 cursor-pointer group flex-shrink-0"
                 onClick={() => inputRef.current?.click()}
             >
-                <img
+                <Image
                     src={preview ?? "/foto.png"}
                     alt={name ?? "Avatar"}
-                    style={{ width: "96px", height: "96px", objectFit: "cover", borderRadius: "50%" }}
+                    fill
+                    className="object-cover rounded-full"
                 />
                 <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span className="text-[#c9a84c] text-[10px] tracking-widest uppercase">

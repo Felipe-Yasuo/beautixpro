@@ -4,8 +4,16 @@ import { signIn } from "next-auth/react";
 import { register } from "./_actions/register";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+    const session = await auth();
+
+    if (session?.user) {
+        redirect("/dashboard");
+    }
+
     const [mode, setMode] = useState<"login" | "register">("login");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
@@ -60,8 +68,8 @@ export default function LoginPage() {
                     <button
                         onClick={() => setMode("login")}
                         className={`flex-1 py-2 text-xs tracking-widest uppercase transition-colors cursor-pointer ${mode === "login"
-                                ? "bg-[#c9a84c] text-black"
-                                : "text-[#5a5045] hover:text-[#c9a84c]"
+                            ? "bg-[#c9a84c] text-black"
+                            : "text-[#5a5045] hover:text-[#c9a84c]"
                             }`}
                     >
                         Entrar
@@ -69,8 +77,8 @@ export default function LoginPage() {
                     <button
                         onClick={() => setMode("register")}
                         className={`flex-1 py-2 text-xs tracking-widest uppercase transition-colors cursor-pointer ${mode === "register"
-                                ? "bg-[#c9a84c] text-black"
-                                : "text-[#5a5045] hover:text-[#c9a84c]"
+                            ? "bg-[#c9a84c] text-black"
+                            : "text-[#5a5045] hover:text-[#c9a84c]"
                             }`}
                     >
                         Cadastrar

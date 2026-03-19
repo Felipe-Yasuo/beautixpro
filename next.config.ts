@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
         hostname: "lh3.googleusercontent.com",
       },
     ],
-    dangerouslyAllowSVG: true,
   },
   serverExternalPackages: ["@prisma/client", "@prisma/adapter-pg", "pg"],
   experimental: {

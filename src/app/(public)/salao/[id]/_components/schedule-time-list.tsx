@@ -8,6 +8,7 @@ interface ScheduleTimeListProps {
     onSelect: (time: string) => void;
     userId: string;
     selectedDate: Date | null;
+    serviceDuration: number;
 }
 
 export function ScheduleTimeList({
@@ -16,6 +17,7 @@ export function ScheduleTimeList({
     onSelect,
     userId,
     selectedDate,
+    serviceDuration,
 }: ScheduleTimeListProps) {
     const [bookedTimes, setBookedTimes] = useState<string[]>([]);
 
@@ -23,36 +25,34 @@ export function ScheduleTimeList({
         if (!selectedDate) return;
 
         async function fetchBookedTimes() {
-            const date = selectedDate!.toISOString().split("T")[0];
+            const date = `${selectedDate!.getFullYear()}-${String(selectedDate!.getMonth() + 1).padStart(2, "0")}-${String(selectedDate!.getDate()).padStart(2, "0")}`;
             const res = await fetch(
-                `/api/schedule/get-appointments?userId=${userId}&date=${date}`
+                `/api/schedule/get-appointments?userId=${userId}&date=${date}&duration=${serviceDuration}`
             );
             const data = await res.json();
             setBookedTimes(data.times ?? []);
         }
 
         fetchBookedTimes();
-    }, [selectedDate, userId]);
-
-    if (!selectedDate) {
-        return (
-            <p className="text-[#3a3028] text-xs tracking-widest uppercase">
-                Selecione uma data primeiro.
-            </p>
-        );
-    }
+    }, [selectedDate, userId, serviceDuration]);
 
     if (times.length === 0) {
         return (
-            <p className="text-[#3a3028] text-xs tracking-widest uppercase">
+            <p className="text-muted-foreground text-sm">
                 Nenhum horário disponível.
             </p>
         );
     }
 
+    const sortedTimes = [...times].sort((a, b) => {
+        const [aH, aM] = a.split(":").map(Number);
+        const [bH, bM] = b.split(":").map(Number);
+        return aH * 60 + aM - (bH * 60 + bM);
+    });
+
     return (
-        <div className="grid grid-cols-3 gap-2">
-            {times.map((time) => {
+        <div className="border border-border rounded-md p-3 grid grid-cols-4 gap-2">
+            {sortedTimes.map((time) => {
                 const isBooked = bookedTimes.includes(time);
                 const isSelected = selectedTime === time;
 
@@ -62,11 +62,11 @@ export function ScheduleTimeList({
                         type="button"
                         disabled={isBooked}
                         onClick={() => onSelect(time)}
-                        className={`py-2 text-xs tracking-widest border transition-colors cursor-pointer ${isBooked
-                                ? "border-[#c9a84c11] text-[#3a3028] cursor-not-allowed"
+                        className={`py-2 text-xs rounded-md border transition-colors cursor-pointer ${isBooked
+                                ? "border-border text-muted-foreground/30 cursor-not-allowed"
                                 : isSelected
-                                    ? "border-[#c9a84c] bg-[#c9a84c11] text-[#c9a84c]"
-                                    : "border-[#c9a84c22] text-[#7a6e62] hover:border-[#c9a84c55]"
+                                    ? "border-primary bg-primary/10 text-primary"
+                                    : "border-border text-foreground hover:border-primary"
                             }`}
                     >
                         {time}

@@ -1,9 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { DatePicker } from "./date-picker";
-import { ScheduleTimeList } from "./schedule-time-list";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { createAppointment } from "../_actions/create-appointment";
+import { ptBR } from "date-fns/locale";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { ScheduleTimeList } from "./schedule-time-list";
 
 interface Service {
     id: string;
@@ -21,6 +26,9 @@ interface ScheduleFormProps {
 }
 
 export function ScheduleForm({ user }: ScheduleFormProps) {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
     const [selectedService, setSelectedService] = useState<Service | null>(null);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -28,17 +36,19 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
 
+    const isComplete = name && email && phone && selectedService && selectedDate && selectedTime;
+
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        if (!selectedService || !selectedDate || !selectedTime) {
-            setError("Selecione o serviço, data e horário.");
-            return;
-        }
+        if (!isComplete) return;
 
         setError("");
         setLoading(true);
 
-        const formData = new FormData(e.currentTarget);
+        const formData = new FormData();
+        formData.set("name", name);
+        formData.set("email", email);
+        formData.set("phone", phone);
         formData.set("serviceId", selectedService.id);
         formData.set("appointmentDate", selectedDate.toISOString());
         formData.set("time", selectedTime);
@@ -59,11 +69,11 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
     if (success) {
         return (
             <div className="flex flex-col items-center justify-center gap-6 py-20">
-                <div className="w-16 h-16 rounded-full border border-[#c9a84c] flex items-center justify-center text-[#c9a84c] text-2xl">
+                <div className="w-16 h-16 rounded-full border-2 border-primary flex items-center justify-center text-primary text-2xl">
                     ✓
                 </div>
-                <h2 className="text-2xl font-light text-[#f0ead6]">Agendamento confirmado!</h2>
-                <p className="text-[#5a5045] text-sm text-center max-w-sm">
+                <h2 className="text-xl font-bold text-foreground">Agendamento confirmado!</h2>
+                <p className="text-muted-foreground text-sm text-center max-w-sm">
                     Seu agendamento foi realizado com sucesso. Aguarde a confirmação do salão.
                 </p>
             </div>
@@ -71,104 +81,124 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* Coluna esquerda */}
-            <div className="flex flex-col gap-10">
-                {/* Serviços */}
-                <div>
-                    <p className="text-[#c9a84c] text-xs tracking-widest uppercase mb-4">
-                        1. Escolha o serviço
-                    </p>
-                    <div className="flex flex-col gap-2">
-                        {user.services.map((service) => (
-                            <button
-                                key={service.id}
-                                type="button"
-                                onClick={() => setSelectedService(service)}
-                                className={`flex items-center justify-between p-4 border text-left transition-colors cursor-pointer ${selectedService?.id === service.id
-                                    ? "border-[#c9a84c] bg-[#c9a84c11]"
-                                    : "border-[#c9a84c22] hover:border-[#c9a84c55]"
-                                    }`}
-                            >
-                                <span className="text-[#f0ead6] text-sm">{service.name}</span>
-                                <div className="text-right">
-                                    <p className="text-[#c9a84c] text-sm">
-                                        R$ {(service.price / 100).toFixed(2)}
-                                    </p>
-                                    <p className="text-[#3a3028] text-xs">{service.duration} min</p>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
-                </div>
+        <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-6 flex flex-col gap-5">
 
-                {/* Data */}
-                <div>
-                    <p className="text-[#c9a84c] text-xs tracking-widest uppercase mb-4">
-                        2. Escolha a data
-                    </p>
-                    <DatePicker selected={selectedDate} onChange={setSelectedDate} />
-                </div>
+            {/* Nome */}
+            <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">Nome completo:</label>
+                <input
+                    type="text"
+                    placeholder="Digite seu nome completo..."
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors"
+                />
             </div>
 
-            {/* Coluna direita */}
-            <div className="flex flex-col gap-10">
-                {/* Horários */}
-                <div>
-                    <p className="text-[#c9a84c] text-xs tracking-widest uppercase mb-4">
-                        3. Escolha o horário
-                    </p>
+            {/* Email */}
+            <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">Email:</label>
+                <input
+                    type="email"
+                    placeholder="Digite seu email..."
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors"
+                />
+            </div>
+
+            {/* Telefone */}
+            <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">Telefone:</label>
+                <input
+                    type="tel"
+                    placeholder="(XX) XXXXX-XXXX"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors"
+                />
+            </div>
+
+            {/* Data */}
+            <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">Data do agendamento:</label>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <button
+                            type="button"
+                            className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-left flex items-center justify-between hover:border-primary transition-colors cursor-pointer"
+                        >
+                            <span className={selectedDate ? "text-foreground" : "text-muted-foreground"}>
+                                {selectedDate ? format(selectedDate, "dd/MM/yyyy") : "Selecione uma data"}
+                            </span>
+                            <CalendarIcon size={16} className="text-muted-foreground" />
+                        </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                            mode="single"
+                            selected={selectedDate ?? undefined}
+                            onSelect={(date) => {
+                                setSelectedDate(date ?? null);
+                                setSelectedTime(null);
+                            }}
+                            disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                            locale={ptBR}
+                        />
+                    </PopoverContent>
+                </Popover>
+            </div>
+
+            {/* Serviço */}
+            <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-medium text-foreground">Selecione o serviço:</label>
+                <Select
+                    onValueChange={(value) => {
+                        const service = user.services.find((s) => s.id === value);
+                        setSelectedService(service ?? null);
+                        setSelectedTime(null);
+                    }}
+                >
+                    <SelectTrigger className="w-full bg-background border-border text-foreground">
+                        <SelectValue placeholder="Selecione um serviço" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-card border-border">
+                        {user.services.map((service) => (
+                            <SelectItem key={service.id} value={service.id} className="text-foreground">
+                                {service.name} - {Math.floor(service.duration / 60)}h {service.duration % 60}min
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
+
+            {/* Horários */}
+            {selectedService && selectedDate && (
+                <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-medium text-foreground">Horários disponíveis:</label>
                     <ScheduleTimeList
                         times={user.times}
                         selectedTime={selectedTime}
                         onSelect={setSelectedTime}
                         userId={user.id}
                         selectedDate={selectedDate}
+                        serviceDuration={selectedService.duration}
                     />
                 </div>
+            )}
 
-                {/* Dados pessoais */}
-                <div>
-                    <p className="text-[#c9a84c] text-xs tracking-widest uppercase mb-4">
-                        4. Seus dados
-                    </p>
-                    <div className="flex flex-col gap-3">
-                        <input
-                            name="name"
-                            type="text"
-                            placeholder="Seu nome"
-                            required
-                            className="bg-transparent border border-[#c9a84c33] text-[#f0ead6] px-4 py-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#3a3028] transition-colors"
-                        />
-                        <input
-                            name="email"
-                            type="email"
-                            placeholder="Seu e-mail"
-                            required
-                            className="bg-transparent border border-[#c9a84c33] text-[#f0ead6] px-4 py-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#3a3028] transition-colors"
-                        />
-                        <input
-                            name="phone"
-                            type="tel"
-                            placeholder="Seu telefone"
-                            required
-                            className="bg-transparent border border-[#c9a84c33] text-[#f0ead6] px-4 py-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#3a3028] transition-colors"
-                        />
-                    </div>
-                </div>
+            {error && <p className="text-destructive text-xs">{error}</p>}
 
-                {error && (
-                    <p className="text-red-400 text-xs">{error}</p>
-                )}
-
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-[#c9a84c] text-black py-4 text-xs tracking-widest uppercase hover:bg-[#e8c97a] transition-colors disabled:opacity-50 cursor-pointer"
-                >
-                    {loading ? "Aguarde..." : "Confirmar agendamento"}
-                </button>
-            </div>
+            <button
+                type="submit"
+                disabled={!isComplete || loading}
+                className="w-full bg-primary text-primary-foreground py-3 text-sm font-medium rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+                {loading ? "Aguarde..." : "Realizar agendamento"}
+            </button>
         </form>
     );
 }

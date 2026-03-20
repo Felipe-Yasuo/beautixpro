@@ -1,5 +1,7 @@
 import { Suspense } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAppointments } from "../../_data-access/get-appointments";
+import { getInfoUser } from "../../profile/_data-access/get-info-user";
 import { AppointmentsList } from "./appointments-list";
 import { ButtonDate } from "./button-date";
 
@@ -8,25 +10,27 @@ interface AppointmentsProps {
 }
 
 export async function Appointments({ date }: AppointmentsProps) {
-    const appointments = await getAppointments(date);
+    const [appointments, user] = await Promise.all([
+        getAppointments(date),
+        getInfoUser(),
+    ]);
 
     return (
-        <div className="flex flex-col gap-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <p className="text-[#c9a84c] text-xs tracking-widest uppercase">
-                        Agenda
-                    </p>
-                    <h1 className="text-3xl font-light text-[#f0ead6] mt-1">
-                        Agendamentos
-                    </h1>
-                </div>
+        <Card className="bg-card border-border">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-foreground text-lg font-semibold">
+                    Agendamentos
+                </CardTitle>
                 <Suspense>
                     <ButtonDate />
                 </Suspense>
-            </div>
-
-            <AppointmentsList appointments={appointments} />
-        </div>
+            </CardHeader>
+            <CardContent className="p-0">
+                <AppointmentsList
+                    appointments={appointments}
+                    times={user?.times ?? []}
+                />
+            </CardContent>
+        </Card>
     );
 }

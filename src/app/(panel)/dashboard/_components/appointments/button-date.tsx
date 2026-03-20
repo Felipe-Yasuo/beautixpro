@@ -1,6 +1,11 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export function ButtonDate() {
     const router = useRouter();
@@ -8,19 +13,28 @@ export function ButtonDate() {
     const dateParam = searchParams.get("date");
     const selected = dateParam ? new Date(dateParam + "T00:00:00") : new Date();
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        if (!e.target.value) return;
-        router.push(`/dashboard?date=${e.target.value}`);
+    function handleSelect(date: Date | undefined) {
+        if (!date) return;
+        const formatted = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+        router.push(`/dashboard?date=${formatted}`);
     }
 
-    const formatted = `${selected.getFullYear()}-${String(selected.getMonth() + 1).padStart(2, "0")}-${String(selected.getDate()).padStart(2, "0")}`;
-
     return (
-        <input
-            type="date"
-            value={formatted}
-            onChange={handleChange}
-            className="bg-transparent border border-[#c9a84c33] text-[#f0ead6] px-4 py-2 text-sm outline-none focus:border-[#c9a84c] transition-colors cursor-pointer [color-scheme:dark]"
-        />
+        <Popover>
+            <PopoverTrigger asChild>
+                <button className="flex items-center gap-2 border border-border rounded-md px-4 py-2 text-sm text-foreground hover:border-primary transition-colors cursor-pointer bg-card">
+                    <CalendarIcon size={14} className="text-muted-foreground" />
+                    {format(selected, "dd/MM/yyyy", { locale: ptBR })}
+                </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                    mode="single"
+                    selected={selected}
+                    onSelect={handleSelect}
+                    locale={ptBR}
+                />
+            </PopoverContent>
+        </Popover>
     );
 }

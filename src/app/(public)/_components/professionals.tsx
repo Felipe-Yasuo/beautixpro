@@ -7,70 +7,69 @@ export async function Professionals() {
 
     return (
         <section id="saloes" className="px-12 py-20">
-            <div className="flex flex-col gap-2 mb-12">
-                <p className="text-[#c9a84c] text-xs tracking-widest uppercase">
-                    Profissionais verificados
-                </p>
-                <h2 className="text-4xl font-light text-[#f0ead6]">
-                    Salões <span className="text-[#c9a84c] font-semibold">disponíveis</span>
+            <div className="flex flex-col gap-2 mb-12 text-center">
+                <h2 className="text-3xl font-bold text-foreground">
+                    Profissionais disponíveis
                 </h2>
             </div>
 
             {professionals.length === 0 ? (
-                <p className="text-[#3a3028] text-sm tracking-widest uppercase text-center py-20">
+                <p className="text-muted-foreground text-sm text-center py-20">
                     Nenhum salão disponível no momento.
                 </p>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
                     {professionals.map((pro) => (
                         <div
                             key={pro.id}
-                            className="border border-[#c9a84c22] hover:border-[#c9a84c55] transition-colors p-6 flex flex-col gap-5"
+                            className="bg-card border border-border hover:border-primary/50 transition-colors flex flex-col rounded-lg overflow-hidden"
                         >
-                            {/* Avatar + nome */}
-                            <div className="flex items-center gap-4">
-                                <div className="relative w-16 h-16 flex-shrink-0">
-                                    <Image
-                                        src={pro.image ?? "/foto.png"}
-                                        alt={pro.name ?? "Salão"}
-                                        fill
-                                        className="object-cover rounded-full"
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    {pro.subscription?.plan === "PROFESSIONAL" && (
-                                        <span className="text-[#c9a84c] text-[10px] tracking-widest uppercase border border-[#c9a84c33] px-2 py-0.5 w-fit">
-                                            ✦ Premium
-                                        </span>
-                                    )}
-                                    <p className="text-[#f0ead6] font-medium">{pro.name}</p>
-                                    {pro.address && (
-                                        <p className="text-[#3a3028] text-xs">{pro.address}</p>
-                                    )}
-                                </div>
+                            {/* Foto grande */}
+                            <div className="relative w-full h-44">
+                                <Image
+                                    src={pro.image ?? "/foto.png"}
+                                    alt={pro.name ?? "Salão"}
+                                    fill
+                                    className="object-cover object-top"
+                                />
+                                {pro.subscription?.plan === "PROFESSIONAL" && (
+                                    <span className="absolute top-3 right-3 text-primary text-[10px] tracking-widest uppercase bg-card border border-primary/30 px-2 py-0.5 rounded-sm">
+                                        ✦ Premium
+                                    </span>
+                                )}
                             </div>
 
-                            {/* Serviços */}
-                            {pro.services.length > 0 && (
-                                <div className="flex flex-wrap gap-2">
-                                    {pro.services.map((service) => (
-                                        <span
-                                            key={service.name}
-                                            className="text-[#7a6e62] text-[10px] tracking-widest uppercase border border-[#c9a84c22] px-2 py-1"
-                                        >
-                                            {service.name}
-                                        </span>
-                                    ))}
+                            {/* Conteúdo */}
+                            <div className="p-5 flex flex-col gap-4">
+                                <div>
+                                    <p className="text-foreground font-semibold">{pro.name}</p>
+                                    {pro.address && (
+                                        <p className="text-muted-foreground text-sm mt-0.5">{pro.address}</p>
+                                    )}
                                 </div>
-                            )}
 
-                            {/* Botão */}
-                            <Link
-                                href={`/salao/${pro.id}`}
-                                className="mt-auto text-[#c9a84c] text-xs tracking-widest uppercase flex items-center gap-2 hover:gap-3 transition-all"
-                            >
-                                Agendar agora →
-                            </Link>
+                                {/* Serviços */}
+                                {pro.services.length > 0 && (
+                                    <div className="flex flex-wrap gap-2">
+                                        {pro.services.map((service) => (
+                                            <span
+                                                key={service.name}
+                                                className="text-muted-foreground text-[10px] tracking-widest uppercase border border-border px-2 py-1 rounded-sm"
+                                            >
+                                                {service.name}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Botão */}
+                                <Link
+                                    href={`/salao/${pro.id}`}
+                                    className="w-full bg-primary text-primary-foreground py-3 text-sm font-medium text-center hover:bg-primary/90 transition-colors rounded-md flex items-center justify-center gap-2"
+                                >
+                                    Agendar horário →
+                                </Link>
+                            </div>
                         </div>
                     ))}
                 </div>

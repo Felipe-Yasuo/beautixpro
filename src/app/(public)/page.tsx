@@ -5,11 +5,13 @@ import { Footer } from "./_components/footer";
 
 export default async function Home() {
     return (
-        <div className="bg-[#0a0a0a] min-h-screen">
-            <Header />
-            <Hero />
-            <Professionals />
-            <Footer />
+        <div className="bg-background min-h-screen">
+            <div className="max-w-screen-2xl mx-auto">
+                <Header />
+                <Hero />
+                <Professionals />
+                <Footer />
+            </div>
         </div>
     );
 }

@@ -14,11 +14,22 @@ export default async function DashboardLayout({
     }
 
     return (
-        <div className="flex min-h-screen bg-[#0a0a0a]">
+        <div className="flex min-h-screen bg-background">
             <Sidebar user={session.user} />
-            <main className="flex-1 p-10 overflow-y-auto">
-                {children}
-            </main>
+
+            <div className="flex flex-col flex-1">
+                {/* Header mobile */}
+                <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-border">
+                    <Sidebar user={session.user} mobileOnly />
+                    <span className="text-foreground text-sm font-medium">
+                        Menu BeautixPro
+                    </span>
+                </header>
+
+                <main className="flex-1 p-10">
+                    {children}
+                </main>
+            </div>
         </div>
     );
 }

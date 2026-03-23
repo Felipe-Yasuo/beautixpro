@@ -30,24 +30,27 @@ export function ReminderList({ reminders }: ReminderListProps) {
 
     if (reminders.length === 0) {
         return (
-            <p className="text-muted-foreground text-sm text-center py-8">
+            <p className="text-muted-foreground/50 text-sm text-center py-6">
                 Nenhum lembrete registrado...
             </p>
         );
     }
 
     return (
-        <div className="flex flex-col gap-2 mt-4">
+        <div className="flex flex-col gap-2">
             {reminders.map((reminder) => (
                 <div
                     key={reminder.id}
-                    className="flex items-center justify-between border border-border rounded-md px-4 py-3 bg-background"
+                    className="flex items-center justify-between bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-3 group hover:border-primary/30 transition-colors"
                 >
-                    <p className="text-sm text-foreground">{reminder.description}</p>
+                    <div className="flex items-center gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                        <p className="text-sm text-foreground leading-snug">{reminder.description}</p>
+                    </div>
                     <button
                         onClick={() => handleDelete(reminder.id)}
                         disabled={deletingId === reminder.id}
-                        className="text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50 cursor-pointer ml-4"
+                        className="text-muted-foreground/30 hover:text-destructive transition-colors disabled:opacity-50 cursor-pointer ml-4 opacity-0 group-hover:opacity-100"
                     >
                         <Trash2 size={14} />
                     </button>

@@ -24,7 +24,7 @@ export async function Professionals() {
                             key={pro.id}
                             className="bg-card border border-border hover:border-primary/50 transition-colors flex flex-col rounded-lg overflow-hidden"
                         >
-                            {/* Foto grande */}
+
                             <div className="relative w-full h-44">
                                 <Image
                                     src={pro.image ?? "/foto.png"}
@@ -39,7 +39,6 @@ export async function Professionals() {
                                 )}
                             </div>
 
-                            {/* Conteúdo */}
                             <div className="p-5 flex flex-col gap-4">
                                 <div>
                                     <p className="text-foreground font-semibold">{pro.name}</p>
@@ -48,7 +47,6 @@ export async function Professionals() {
                                     )}
                                 </div>
 
-                                {/* Serviços */}
                                 {pro.services.length > 0 && (
                                     <div className="flex flex-wrap gap-2">
                                         {pro.services.map((service) => (
@@ -62,7 +60,6 @@ export async function Professionals() {
                                     </div>
                                 )}
 
-                                {/* Botão */}
                                 <Link
                                     href={`/salao/${pro.id}`}
                                     className="w-full bg-primary text-primary-foreground py-3 text-sm font-medium text-center hover:bg-primary/90 transition-colors rounded-md flex items-center justify-center gap-2"

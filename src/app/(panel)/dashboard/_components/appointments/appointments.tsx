@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAppointments } from "../../_data-access/get-appointments";
 import { getInfoUser } from "../../profile/_data-access/get-info-user";
 import { AppointmentsList } from "./appointments-list";
@@ -16,21 +15,17 @@ export async function Appointments({ date }: AppointmentsProps) {
     ]);
 
     return (
-        <Card className="bg-card border-border">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-foreground text-lg font-semibold">
-                    Agendamentos
-                </CardTitle>
+        <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#2a2a2a]">
+                <h2 className="text-xl font-bold text-foreground">Seus Agendamentos</h2>
                 <Suspense>
                     <ButtonDate />
                 </Suspense>
-            </CardHeader>
-            <CardContent className="p-0">
-                <AppointmentsList
-                    appointments={appointments}
-                    times={user?.times ?? []}
-                />
-            </CardContent>
-        </Card>
+            </div>
+            <AppointmentsList
+                appointments={appointments}
+                times={user?.times ?? []}
+            />
+        </div>
     );
 }

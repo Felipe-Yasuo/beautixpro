@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "lucide-react";
+import { Copy } from "lucide-react";
 import { toast } from "sonner";
 
 interface CopyLinkButtonProps {
@@ -17,9 +17,10 @@ export function CopyLinkButton({ userId }: CopyLinkButtonProps) {
     return (
         <button
             onClick={handleCopy}
-            className="border border-border bg-card text-foreground px-3 py-2 rounded-md hover:border-primary transition-colors cursor-pointer"
+            className="flex items-center gap-2 bg-[#1a1a1a] border border-[#3a3a3a] text-foreground px-5 py-2.5 text-sm font-medium rounded-lg hover:border-primary/50 transition-colors cursor-pointer"
         >
-            <Link size={16} />
+            Link Público
+            <Copy size={14} className="text-muted-foreground" />
         </button>
     );
 }

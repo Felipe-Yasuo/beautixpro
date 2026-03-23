@@ -33,62 +33,92 @@ export function AppointmentsList({ appointments, times }: AppointmentsListProps)
         );
     }
 
-    // Gera mapa de qual agendamento ocupa cada slot
-    const slotMap: Record<string, { appointment: Appointment; isStart: boolean }> = {};
+    const slotMap: Record<string, { appointment: Appointment; isStart: boolean; totalSlots: number }> = {};
 
     appointments.forEach((apt) => {
         const [h, m] = apt.time.split(":").map(Number);
         const startMinutes = h * 60 + m;
-        const slots = Math.ceil(apt.service.duration / 30);
+        const totalSlots = Math.ceil(apt.service.duration / 30);
 
-        for (let i = 0; i < slots; i++) {
+        for (let i = 0; i < totalSlots; i++) {
             const slotMinutes = startMinutes + i * 30;
             const slotHour = String(Math.floor(slotMinutes / 60)).padStart(2, "0");
             const slotMin = String(slotMinutes % 60).padStart(2, "0");
             slotMap[`${slotHour}:${slotMin}`] = {
                 appointment: apt,
                 isStart: i === 0,
+                totalSlots,
             };
         }
     });
 
+    // Filtra só os slots de início para renderizar cards agrupados
+    const renderedSlots = new Set<string>();
+
     return (
-        <div className="flex flex-col divide-y divide-border">
-            {sortedTimes.map((time) => {
+        <div className="flex flex-col">
+            {sortedTimes.map((time, index) => {
                 const slot = slotMap[time];
+
+                // Se é continuação, pula — já foi renderizado no slot de início
+                if (slot && !slot.isStart) {
+                    renderedSlots.add(time);
+                    return null;
+                }
+
+                const isLast = index === sortedTimes.length - 1;
 
                 return (
                     <div
                         key={time}
-                        className="flex items-center justify-between px-4 py-3 hover:bg-secondary/30 transition-colors"
+                        className={`flex gap-0 ${!isLast ? "border-b border-[#2a2a2a]" : ""}`}
                     >
-                        <div className="flex items-center gap-6">
-                            <p className="text-primary text-sm font-medium w-12">{time}</p>
-                            {slot ? (
-                                <div>
-                                    <p className="text-foreground text-sm font-medium">
-                                        {slot.appointment.name}
-                                    </p>
-                                    <p className="text-muted-foreground text-xs mt-0.5">
-                                        {slot.appointment.service.name}
-                                        {!slot.isStart && (
-                                            <span className="ml-2 text-primary/60">(continuação)</span>
-                                        )}
-                                    </p>
-                                </div>
-                            ) : (
-                                <p className="text-muted-foreground text-sm">Disponível</p>
-                            )}
+                        {/* Coluna da hora */}
+                        <div className="w-20 flex-shrink-0 flex items-start pt-4 pl-6">
+                            <span className="text-muted-foreground text-sm font-medium">{time}</span>
                         </div>
 
-                        {slot?.isStart && (
-                            <div className="flex items-center gap-4">
-                                <p className="text-primary text-sm">
-                                    R$ {(slot.appointment.service.price / 100).toFixed(2)}
+                        {/* Linha divisória vertical */}
+                        <div className="w-px bg-[#2a2a2a] mx-2 self-stretch" />
+
+                        {/* Conteúdo do slot */}
+                        <div className="flex-1 py-3 pr-4">
+                            {slot ? (
+                                <div
+                                    className="rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] p-4 flex items-center justify-between"
+                                    style={{
+                                        minHeight: slot.totalSlots > 1 ? `${slot.totalSlots * 64}px` : "auto",
+                                    }}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        {/* Avatar placeholder */}
+                                        <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center flex-shrink-0">
+                                            <span className="text-primary text-sm font-bold">
+                                                {slot.appointment.name.charAt(0).toUpperCase()}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <p className="text-foreground text-lg font-bold">
+                                                {slot.appointment.name}
+                                            </p>
+                                            <p className="text-muted-foreground text-md mt-0.5">
+                                                {slot.appointment.service.name}
+                                            </p>
+                                            {slot.totalSlots > 1 && (
+                                                <p className="text-primary/60 text-sm mt-1 flex items-center gap-1">
+                                                    ⏱ Duração: {slot.appointment.service.duration} min
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <DialogAppointment appointment={slot.appointment} />
+                                </div>
+                            ) : (
+                                <p className="text-muted-foreground/40 text-sm italic py-3 pl-2">
+                                    Disponível
                                 </p>
-                                <DialogAppointment appointment={slot.appointment} />
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 );
             })}

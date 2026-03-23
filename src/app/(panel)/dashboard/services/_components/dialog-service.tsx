@@ -1,3 +1,4 @@
+// dialog-service.tsx
 "use client";
 
 import { useState } from "react";
@@ -27,17 +28,21 @@ export function DialogService({ service, trigger }: DialogServiceProps) {
 
             {open && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    {/* Overlay */}
                     <div
-                        className="absolute inset-0 bg-black/70"
+                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                         onClick={() => setOpen(false)}
                     />
 
-                    {/* Modal */}
-                    <div className="relative bg-[#0f0f0f] border border-[#c9a84c33] p-8 w-full max-w-md mx-4 z-10">
-                        <h2 className="text-xl font-light text-[#f0ead6] mb-6">
+                    <div className="relative bg-[#0f0f0f] border border-[#c9a84c44] p-8 w-full max-w-md mx-4 z-10">
+                        {/* Linha dourada no topo */}
+                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#c9a84c]" />
+
+                        <h2 className="text-2xl font-serif font-bold text-white mb-1">
                             {service ? "Editar serviço" : "Novo serviço"}
                         </h2>
+                        <p className="text-[#ffffff40] text-xs tracking-widest uppercase mb-6">
+                            {service ? "Atualize os detalhes" : "Preencha os detalhes"}
+                        </p>
 
                         <DialogServiceForm
                             service={service}

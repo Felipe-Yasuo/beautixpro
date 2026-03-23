@@ -85,7 +85,9 @@ export function AppointmentsList({ appointments, times }: AppointmentsListProps)
                         <div className="flex-1 py-3 pr-4">
                             {slot ? (
                                 <div
-                                    className="rounded-lg border border-[#2a2a2a] bg-[#1a1a1a] p-4 flex items-center justify-between"
+                                    className="rounded-lg border border-[#2a2a2a] bg-gradient-to-r 
+            from-[#3a2f0b] 
+            to-[#0f0f0f]  p-4 flex items-center justify-between"
                                     style={{
                                         minHeight: slot.totalSlots > 1 ? `${slot.totalSlots * 64}px` : "auto",
                                     }}

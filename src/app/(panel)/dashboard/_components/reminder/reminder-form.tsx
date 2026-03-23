@@ -37,7 +37,7 @@ export function ReminderForm() {
             <button
                 type="submit"
                 disabled={loading}
-                className="bg-primary text-primary-foreground w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer flex-shrink-0"
+                className="bg-primary text-primary-foreground w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer shrink-0"
             >
                 {loading ? "·" : "+"}
             </button>

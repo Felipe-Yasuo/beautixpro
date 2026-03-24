@@ -47,19 +47,19 @@ export function ServicesList({ services }: ServicesListProps) {
         <div className="flex flex-col gap-0 border border-[var(--outline)] bg-[var(--surface-low)]">
             {/* Cabeçalho da tabela */}
             <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-4 border-b border-[var(--outline)]">
-                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">
                     Nome do Serviço
                 </span>
-                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">
                     Duração
                 </span>
-                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">
                     Status
                 </span>
-                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">
                     Preço
                 </span>
-                <span className="text-[10px] tracking-widest uppercase text-[#ffffff40] text-right">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)] text-right">
                     Ações
                 </span>
             </div>
@@ -92,8 +92,8 @@ export function ServicesList({ services }: ServicesListProps) {
                         <div>
                             <span
                                 className={`text-[10px] tracking-widest uppercase px-3 py-1 flex items-center gap-1.5 w-fit ${service.status
-                                        ? "bg-[#c9a84c22] text-[var(--gold)] border border-[#c9a84c44]"
-                                        : "bg-[#ffffff08] text-[var(--on-surface-dim)] border border-[#ffffff15]"
+                                    ? "bg-[#c9a84c22] text-[var(--gold)] border border-[#c9a84c44]"
+                                    : "bg-[#ffffff08] text-[var(--on-surface-dim)] border border-[#ffffff15]"
                                     }`}
                             >
                                 <span
@@ -138,7 +138,7 @@ export function ServicesList({ services }: ServicesListProps) {
 
             {/* Rodapé com paginação */}
             <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--outline)]">
-                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">
                     Exibindo {paginated.length} de {services.length} serviços
                 </span>
 

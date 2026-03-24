@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -24,14 +19,28 @@ model User {
   status             Boolean   @default(true)
   timeZone           String?
   stripe_customer_id String?
-  times              String[]  @default([])
 
   subscription Subscription?
-  services     Service[]
+  employees    Employee[]
   reminders    Reminder[]
   appointments Appointment[]
   accounts     Account[]
   sessions     Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  id    String   @id @default(cuid())
+  name  String
+  times String[] @default([])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  services     Service[]
+  appointments Appointment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -44,8 +53,8 @@ model Service {
   duration Int
   status   Boolean @default(true)
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
 
   appointments Appointment[]
 
@@ -63,6 +72,9 @@ model Appointment {
 
   serviceId String
   service   Service @relation(fields: [serviceId], references: [id])
+
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
 
   userId String
   user   User   @relation(fields: [userId], references: [id])

@@ -1,9 +1,10 @@
+// _components/subscription-detail.tsx
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { PortalButton } from "./portal-button";
 
 export async function SubscriptionDetail() {
     const session = await auth();
-
     if (!session?.user?.id) return null;
 
     const subscription = await prisma.subscription.findUnique({
@@ -12,24 +13,28 @@ export async function SubscriptionDetail() {
 
     if (!subscription) return null;
 
+    const planName = subscription.plan === "PROFESSIONAL" ? "Professional" : "Basic";
+
     return (
-        <div className="border border-[#c9a84c33] p-6 flex items-center justify-between mb-8">
-            <div>
-                <p className="text-[#c9a84c] text-xs tracking-widest uppercase mb-1">
-                    Plano atual
-                </p>
-                <p className="text-[#f0ead6] text-xl font-light">
-                    {subscription.plan === "PROFESSIONAL" ? "Professional" : "Basic"}
-                </p>
+        <div className="bg-[#141414] border border-[#c9a84c33] rounded-xl p-5 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#1f1a0e] border border-[#c9a84c33] rounded-lg flex items-center justify-center shrink-0">
+                    <span className="text-[#c9a84c] text-lg">✦</span>
+                </div>
+                <div>
+                    <p className="text-white text-sm">
+                        Seu Plano:{" "}
+                        <span className="font-bold text-[#c9a84c]">{planName}</span>
+                    </p>
+                    <p className="text-[#ffffff40] text-xs mt-0.5">
+                        {subscription.status === "active"
+                            ? "Sua assinatura está ativa e renova automaticamente."
+                            : `Status: ${subscription.status}`}
+                    </p>
+                </div>
             </div>
-            <span
-                className={`text-[10px] tracking-widest uppercase px-3 py-1 border ${subscription.status === "active"
-                        ? "text-[#c9a84c] border-[#c9a84c33]"
-                        : "text-red-400 border-red-400/30"
-                    }`}
-            >
-                {subscription.status === "active" ? "Ativo" : subscription.status}
-            </span>
+
+            <PortalButton />
         </div>
     );
 }

@@ -73,12 +73,12 @@ export function ProfileForm({ user }: ProfileFormProps) {
     }
 
     const inputClass =
-        "bg-[#141414] border border-[#c9a84c33] text-[#f0ead6] px-4 py-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#ffffff20] transition-colors w-full rounded-lg";
+        "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
 
     const selectClass =
-        "bg-[#141414] border border-[#c9a84c33] text-[#f0ead6] px-4 py-3 text-sm outline-none focus:border-[#c9a84c] transition-colors cursor-pointer w-full rounded-lg";
+        "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] transition-colors cursor-pointer w-full rounded-lg";
 
-    const labelClass = "text-[#c9a84c] text-xs tracking-widest uppercase";
+    const labelClass = "text-[var(--gold)] text-xs tracking-widest uppercase";
 
     return (
         <>
@@ -137,7 +137,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     <button
                         type="button"
                         onClick={() => setShowTimesModal(true)}
-                        className="flex items-center justify-between bg-[#141414] border border-[#c9a84c33] text-[#ffffff60] px-4 py-3 text-sm hover:border-[#c9a84c] hover:text-[#f0ead6] transition-colors cursor-pointer w-full text-left rounded-lg"
+                        className="flex items-center justify-between bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface-variant)] px-4 py-3 text-sm hover:border-[var(--gold)] hover:text-[var(--on-surface)] transition-colors cursor-pointer w-full text-left rounded-lg"
                     >
                         <span>
                             {selectedTimes.length > 0
@@ -165,7 +165,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
                 {error && <p className="text-red-400 text-xs">{error}</p>}
                 {success && (
-                    <p className="text-[#c9a84c] text-xs tracking-widest uppercase">
+                    <p className="text-[var(--gold)] text-xs tracking-widest uppercase">
                         Perfil atualizado com sucesso!
                     </p>
                 )}
@@ -173,7 +173,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-[#c9a84c] text-black py-3.5 text-xs tracking-widest uppercase font-semibold hover:bg-[#e8c97a] transition-colors disabled:opacity-50 cursor-pointer mt-2 rounded-lg"
+                    className="btn-primary w-full py-3.5 disabled:opacity-50 cursor-pointer mt-2 rounded-lg"
                 >
                     {loading ? "Salvando..." : "Salvar alterações"}
                 </button>
@@ -186,28 +186,28 @@ export function ProfileForm({ user }: ProfileFormProps) {
                         onClick={() => setShowTimesModal(false)}
                     />
 
-                    <div className="relative bg-[#141414] border border-[#c9a84c44] w-full max-w-lg mx-4 z-10 rounded-xl overflow-hidden">
+                    <div className="relative bg-[var(--surface-low)] border border-[var(--outline-variant)] w-full max-w-lg mx-4 z-10 rounded-xl overflow-hidden">
                         <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#c9a84c]" />
 
                         <div className="flex items-start justify-between p-6 pb-4">
                             <div>
-                                <h2 className="text-2xl font-serif font-bold text-white">
+                                <h2 className="text-2xl font-serif font-bold text-[var(--on-surface)]">
                                     Horários da clínica
                                 </h2>
-                                <p className="text-[#ffffff40] text-xs tracking-widest uppercase mt-1">
+                                <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase mt-1">
                                     Selecione os horários de funcionamento
                                 </p>
                             </div>
                             <button
                                 onClick={() => setShowTimesModal(false)}
-                                className="text-[#ffffff30] hover:text-[#c9a84c] transition-colors cursor-pointer mt-1"
+                                className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer mt-1"
                             >
                                 <X size={18} />
                             </button>
                         </div>
 
                         <div className="px-6 pb-6">
-                            <p className="text-[#ffffff30] text-xs mb-4">
+                            <p className="text-[var(--on-surface-dim)] text-xs mb-4">
                                 Clique nos horários abaixo para marcar ou desmarcar:
                             </p>
                             <div className="grid grid-cols-5 gap-2">
@@ -219,8 +219,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                             type="button"
                                             onClick={() => toggleTime(time)}
                                             className={`py-2.5 text-xs tracking-wide border transition-colors cursor-pointer rounded-lg ${isSelected
-                                                    ? "border-[#c9a84c] bg-[#c9a84c15] text-[#c9a84c]"
-                                                    : "border-[#2a2a2a] text-[#ffffff40] hover:border-[#c9a84c55] hover:text-[#ffffff70]"
+                                                    ? "border-[var(--gold)] bg-[#c9a84c15] text-[var(--gold)]"
+                                                    : "border-[var(--outline)] text-[var(--on-surface-dim)] hover:border-[#c9a84c55] hover:text-[var(--on-surface-variant)]"
                                                 }`}
                                         >
                                             {time}
@@ -230,8 +230,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             </div>
                         </div>
 
-                        <div className="border-t border-[#2a2a2a] px-6 py-4 flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-[#ffffff30]">
+                        <div className="border-t border-[var(--outline)] px-6 py-4 flex items-center justify-between">
+                            <div className="flex items-center gap-2 text-[var(--on-surface-dim)]">
                                 <Clock size={13} />
                                 <span className="text-xs">
                                     {selectedTimes.length} horário{selectedTimes.length !== 1 ? "s" : ""} selecionado{selectedTimes.length !== 1 ? "s" : ""}
@@ -240,7 +240,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             <button
                                 type="button"
                                 onClick={() => setShowTimesModal(false)}
-                                className="bg-[#c9a84c] text-black px-6 py-2.5 text-xs tracking-widest uppercase font-semibold hover:bg-[#e8c97a] transition-colors cursor-pointer rounded-lg"
+                                className="btn-primary px-6 py-2.5 cursor-pointer rounded-lg"
                             >
                                 Confirmar
                             </button>

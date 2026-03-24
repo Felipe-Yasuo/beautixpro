@@ -43,8 +43,8 @@ export function SubscriptionButton({
             onClick={handleClick}
             disabled={loading}
             className={`w-full py-3.5 text-xs tracking-widest uppercase font-semibold transition-colors disabled:opacity-50 cursor-pointer rounded-lg ${isCurrentPlan || isPro
-                ? "bg-[#c9a84c] text-black hover:bg-[#e8c97a]"
-                : "border border-[#c9a84c33] text-[#ffffff60] hover:border-[#c9a84c] hover:text-[#c9a84c]"
+                ? "bg-[var(--gold)] text-black hover:bg-[var(--gold-hover)]"
+                : "border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:border-[var(--gold)] hover:text-[var(--gold)]"
                 }`}
         >
             {label}

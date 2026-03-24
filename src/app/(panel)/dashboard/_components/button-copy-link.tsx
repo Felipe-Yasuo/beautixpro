@@ -17,7 +17,7 @@ export function CopyLinkButton({ userId }: CopyLinkButtonProps) {
     return (
         <button
             onClick={handleCopy}
-            className="flex items-center gap-2 bg-[#1a1a1a] border border-[#3a3a3a] text-foreground px-5 py-2.5 text-sm font-medium rounded-lg hover:border-primary/50 transition-colors cursor-pointer"
+            className="flex items-center gap-2 bg-[var(--surface-low)] border border-[var(--outline)] text-foreground px-5 py-2.5 text-sm font-medium rounded-lg hover:border-primary/50 transition-colors cursor-pointer"
         >
             Link Público
             <Copy size={14} className="text-muted-foreground" />

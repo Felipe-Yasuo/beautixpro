@@ -22,13 +22,13 @@ export function ButtonDate() {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <button className="flex items-center gap-2 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-foreground hover:border-primary transition-colors cursor-pointer">
+                <button className="flex items-center gap-2 bg-[var(--surface-low)] border border-[var(--outline)] rounded-lg px-4 py-2.5 text-sm text-foreground hover:border-primary transition-colors cursor-pointer">
                     <CalendarIcon size={14} className="text-primary" />
                     <span>{format(selected, "dd, 'de' MMMM", { locale: ptBR })}</span>
                     <ChevronDown size={14} className="text-muted-foreground" />
                 </button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-[#141414] border-[#2a2a2a]" align="end">
+            <PopoverContent className="w-auto p-0 bg-[var(--surface-low)] border-[var(--outline)]" align="end">
                 <Calendar
                     mode="single"
                     selected={selected}

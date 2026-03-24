@@ -71,7 +71,7 @@ export function AppointmentsList({ appointments, times }: AppointmentsListProps)
                 return (
                     <div
                         key={time}
-                        className={`flex gap-0 ${!isLast ? "border-b border-[#2a2a2a]" : ""}`}
+                        className={`flex gap-0 ${!isLast ? "border-b border-[var(--outline)]" : ""}`}
                     >
                         {/* Coluna da hora */}
                         <div className="w-20 flex-shrink-0 flex items-start pt-4 pl-6">
@@ -79,15 +79,13 @@ export function AppointmentsList({ appointments, times }: AppointmentsListProps)
                         </div>
 
                         {/* Linha divisória vertical */}
-                        <div className="w-px bg-[#2a2a2a] mx-2 self-stretch" />
+                        <div className="w-px bg-[var(--outline)] mx-2 self-stretch" />
 
                         {/* Conteúdo do slot */}
                         <div className="flex-1 py-3 pr-4">
                             {slot ? (
                                 <div
-                                    className="rounded-lg border border-[#2a2a2a] bg-gradient-to-r 
-            from-[#3a2f0b] 
-            to-[#0f0f0f]  p-4 flex items-center justify-between"
+                                    className="rounded-lg border border-[var(--outline)] bg-gradient-to-r from-[#3a2f0b] to-[var(--surface-lowest)] p-4 flex items-center justify-between"
                                     style={{
                                         minHeight: slot.totalSlots > 1 ? `${slot.totalSlots * 64}px` : "auto",
                                     }}

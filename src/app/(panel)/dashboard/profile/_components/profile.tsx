@@ -7,7 +7,7 @@ export async function Profile() {
 
     if (!user) {
         return (
-            <p className="text-[#ffffff30] text-xs tracking-widest uppercase">
+            <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase">
                 Usuário não encontrado.
             </p>
         );
@@ -16,8 +16,8 @@ export async function Profile() {
     return (
         <div className="flex flex-col gap-8 p-8">
             <div>
-                <h1 className="text-5xl font-serif font-bold text-white">Perfil</h1>
-                <p className="text-[#ffffff60] text-sm mt-2">
+                <h1 className="text-5xl font-serif font-bold text-[var(--on-surface)]">Perfil</h1>
+                <p className="text-[var(--on-surface-variant)] text-sm mt-2">
                     Gerencie as informações do seu ateliê e horários de atendimento.
                 </p>
             </div>

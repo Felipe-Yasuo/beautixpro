@@ -37,26 +37,26 @@ export function ServicesList({ services }: ServicesListProps) {
 
     if (services.length === 0) {
         return (
-            <p className="text-[#ffffff30] text-xs tracking-widest uppercase text-center py-20">
+            <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase text-center py-20">
                 Nenhum serviço cadastrado ainda.
             </p>
         );
     }
 
     return (
-        <div className="flex flex-col gap-0 border border-[#2a2a2a] bg-[#141414]">
+        <div className="flex flex-col gap-0 border border-[var(--outline)] bg-[var(--surface-low)]">
             {/* Cabeçalho da tabela */}
-            <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-4 border-b border-[#2a2a2a]">
-                <span className="text-[10px] tracking-widest uppercase text-[#ffffff40]">
+            <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-4 border-b border-[var(--outline)]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
                     Nome do Serviço
                 </span>
-                <span className="text-[10px] tracking-widest uppercase text-[#ffffff40]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
                     Duração
                 </span>
-                <span className="text-[10px] tracking-widest uppercase text-[#ffffff40]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
                     Status
                 </span>
-                <span className="text-[10px] tracking-widest uppercase text-[#ffffff40]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
                     Preço
                 </span>
                 <span className="text-[10px] tracking-widest uppercase text-[#ffffff40] text-right">
@@ -71,20 +71,20 @@ export function ServicesList({ services }: ServicesListProps) {
                 return (
                     <div
                         key={service.id}
-                        className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-5 border-b border-[#2a2a2a] last:border-b-0 hover:bg-[#1a1a1a] transition-colors items-center"
+                        className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-5 border-b border-[var(--outline)] last:border-b-0 hover:bg-[var(--surface-low)] transition-colors items-center"
                     >
                         {/* Nome + ícone */}
                         <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 bg-[#1f1a0e] border border-[#c9a84c22] flex items-center justify-center shrink-0">
-                                <Icon size={16} className="text-[#c9a84c]" />
+                            <div className="w-10 h-10 bg-[#1f1a0e] border border-[var(--outline-variant)] flex items-center justify-center shrink-0">
+                                <Icon size={16} className="text-[var(--gold)]" />
                             </div>
-                            <span className="text-white text-sm font-medium">
+                            <span className="text-[var(--on-surface)] text-sm font-medium">
                                 {service.name}
                             </span>
                         </div>
 
                         {/* Duração */}
-                        <span className="text-[#ffffff60] text-sm">
+                        <span className="text-[var(--on-surface-variant)] text-sm">
                             {service.duration} min
                         </span>
 
@@ -92,12 +92,12 @@ export function ServicesList({ services }: ServicesListProps) {
                         <div>
                             <span
                                 className={`text-[10px] tracking-widest uppercase px-3 py-1 flex items-center gap-1.5 w-fit ${service.status
-                                        ? "bg-[#c9a84c22] text-[#c9a84c] border border-[#c9a84c44]"
-                                        : "bg-[#ffffff08] text-[#ffffff40] border border-[#ffffff15]"
+                                        ? "bg-[#c9a84c22] text-[var(--gold)] border border-[#c9a84c44]"
+                                        : "bg-[#ffffff08] text-[var(--on-surface-dim)] border border-[#ffffff15]"
                                     }`}
                             >
                                 <span
-                                    className={`w-1.5 h-1.5 rounded-full ${service.status ? "bg-[#c9a84c]" : "bg-[#ffffff30]"
+                                    className={`w-1.5 h-1.5 rounded-full ${service.status ? "bg-[var(--gold)]" : "bg-[var(--on-surface-dim)]"
                                         }`}
                                 />
                                 {service.status ? "Ativo" : "Inativo"}
@@ -106,8 +106,8 @@ export function ServicesList({ services }: ServicesListProps) {
 
                         {/* Preço */}
                         <div>
-                            <span className="text-[#c9a84c] text-xs text-[#ffffff60]">R$</span>
-                            <span className="text-[#c9a84c] font-semibold ml-1">
+                            <span className="text-[var(--on-surface-variant)] text-xs">R$</span>
+                            <span className="text-[var(--gold)] font-semibold ml-1">
                                 {(service.price / 100).toLocaleString("pt-BR", {
                                     minimumFractionDigits: 2,
                                 })}
@@ -119,7 +119,7 @@ export function ServicesList({ services }: ServicesListProps) {
                             <DialogService
                                 service={service}
                                 trigger={
-                                    <button className="text-[#ffffff30] hover:text-[#c9a84c] transition-colors cursor-pointer">
+                                    <button className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer">
                                         <Pencil size={14} />
                                     </button>
                                 }
@@ -127,7 +127,7 @@ export function ServicesList({ services }: ServicesListProps) {
                             <button
                                 onClick={() => handleDelete(service.id)}
                                 disabled={deletingId === service.id}
-                                className="text-[#ffffff30] hover:text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
+                                className="text-[var(--on-surface-dim)] hover:text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
                             >
                                 <Trash2 size={14} />
                             </button>
@@ -137,8 +137,8 @@ export function ServicesList({ services }: ServicesListProps) {
             })}
 
             {/* Rodapé com paginação */}
-            <div className="flex items-center justify-between px-6 py-4 border-t border-[#2a2a2a]">
-                <span className="text-[10px] tracking-widest uppercase text-[#ffffff30]">
+            <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--outline)]">
+                <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface-dim)]">
                     Exibindo {paginated.length} de {services.length} serviços
                 </span>
 
@@ -146,14 +146,14 @@ export function ServicesList({ services }: ServicesListProps) {
                     <button
                         onClick={() => setPage((p) => Math.max(0, p - 1))}
                         disabled={page === 0}
-                        className="w-8 h-8 border border-[#2a2a2a] flex items-center justify-center text-[#ffffff40] hover:border-[#c9a84c] hover:text-[#c9a84c] transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-sm"
+                        className="w-8 h-8 border border-[var(--outline)] flex items-center justify-center text-[var(--on-surface-dim)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-sm"
                     >
                         ‹
                     </button>
                     <button
                         onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                         disabled={page >= totalPages - 1}
-                        className="w-8 h-8 bg-[#c9a84c] flex items-center justify-center text-black hover:bg-[#e8c97a] transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-sm"
+                        className="w-8 h-8 bg-[var(--gold)] flex items-center justify-center text-black hover:bg-[var(--gold-hover)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-sm"
                     >
                         ›
                     </button>

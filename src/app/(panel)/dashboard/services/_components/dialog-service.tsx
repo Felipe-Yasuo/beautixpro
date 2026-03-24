@@ -33,14 +33,14 @@ export function DialogService({ service, trigger }: DialogServiceProps) {
                         onClick={() => setOpen(false)}
                     />
 
-                    <div className="relative bg-[#0f0f0f] border border-[#c9a84c44] p-8 w-full max-w-md mx-4 z-10">
+                    <div className="relative bg-[var(--surface-lowest)] border border-[var(--outline-variant)] p-8 w-full max-w-md mx-4 z-10">
                         {/* Linha dourada no topo */}
                         <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#c9a84c]" />
 
-                        <h2 className="text-2xl font-serif font-bold text-white mb-1">
+                        <h2 className="text-2xl font-serif font-bold text-[var(--on-surface)] mb-1">
                             {service ? "Editar serviço" : "Novo serviço"}
                         </h2>
-                        <p className="text-[#ffffff40] text-xs tracking-widest uppercase mb-6">
+                        <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase mb-6">
                             {service ? "Atualize os detalhes" : "Preencha os detalhes"}
                         </p>
 

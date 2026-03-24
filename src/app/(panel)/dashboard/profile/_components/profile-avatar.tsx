@@ -53,19 +53,19 @@ export function ProfileAvatar({ image, name }: ProfileAvatarProps) {
                         className="object-cover rounded-full"
                     />
                 ) : (
-                    <div className="w-full h-full rounded-full bg-[#1a1a1a] border border-[#2a2a2a]" />
+                    <div className="w-full h-full rounded-full bg-[var(--surface-low)] border border-[var(--outline)]" />
                 )}
 
                 {/* Overlay com ícone */}
                 <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1">
                     {loading ? (
-                        <span className="text-[#c9a84c] text-[10px] tracking-widest uppercase">
+                        <span className="text-[var(--gold)] text-[10px] tracking-widest uppercase">
                             Enviando...
                         </span>
                     ) : (
                         <>
-                            <Upload size={18} className="text-[#c9a84c]" />
-                            <span className="text-[#c9a84c] text-[9px] tracking-widest uppercase">
+                            <Upload size={18} className="text-[var(--gold)]" />
+                            <span className="text-[var(--gold)] text-[9px] tracking-widest uppercase">
                                 Trocar foto
                             </span>
                         </>
@@ -75,12 +75,12 @@ export function ProfileAvatar({ image, name }: ProfileAvatarProps) {
                 {/* Ícone visível quando sem hover (sem foto) */}
                 {!preview && (
                     <div className="absolute inset-0 rounded-full flex items-center justify-center pointer-events-none">
-                        <Upload size={20} className="text-[#ffffff20]" />
+                        <Upload size={20} className="text-[var(--on-surface-dim)]" />
                     </div>
                 )}
             </div>
 
-            <p className="text-[#ffffff30] text-xs tracking-widest uppercase">
+            <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase">
                 Clique para alterar a foto
             </p>
 

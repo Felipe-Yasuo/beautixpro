@@ -15,8 +15,8 @@ export async function Appointments({ date }: AppointmentsProps) {
     ]);
 
     return (
-        <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-[#2a2a2a]">
+        <div className="bg-[var(--surface-low)] border border-[var(--outline)] rounded-xl overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--outline)]">
                 <h2 className="text-xl font-bold text-foreground">Seus Agendamentos</h2>
                 <Suspense>
                     <ButtonDate />

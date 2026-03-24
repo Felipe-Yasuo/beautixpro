@@ -41,7 +41,7 @@ export function ReminderList({ reminders }: ReminderListProps) {
             {reminders.map((reminder) => (
                 <div
                     key={reminder.id}
-                    className="flex items-center justify-between bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-3 group hover:border-primary/30 transition-colors"
+                    className="flex items-center justify-between bg-[var(--surface-low)] border border-[var(--outline)] rounded-lg px-4 py-3 group hover:border-primary/30 transition-colors"
                 >
                     <div className="flex items-center gap-3">
                         <div className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />

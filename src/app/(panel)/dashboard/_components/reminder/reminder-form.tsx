@@ -32,7 +32,7 @@ export function ReminderForm() {
                 type="text"
                 placeholder="Novo lembrete..."
                 required
-                className="flex-1 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors"
+                className="flex-1 bg-[var(--surface-low)] border border-[var(--outline)] rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors"
             />
             <button
                 type="submit"

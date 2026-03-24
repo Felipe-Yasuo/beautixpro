@@ -53,11 +53,11 @@ export async function GridPlans() {
                 return (
                     <div
                         key={plan.name}
-                        className={`relative bg-[#141414] rounded-xl flex flex-col gap-6 p-8 border transition-colors ${isCurrentPlan
-                                ? "border-[#c9a84c]"
+                        className={`relative bg-[var(--surface-low)] rounded-xl flex flex-col gap-6 p-8 border transition-colors ${isCurrentPlan
+                                ? "border-[var(--gold)]"
                                 : isPro
                                     ? "border-[#c9a84c55] hover:border-[#c9a84c88]"
-                                    : "border-[#2a2a2a] hover:border-[#c9a84c33]"
+                                    : "border-[var(--outline)] hover:border-[var(--outline-variant)]"
                             }`}
                     >
                         {/* Badge plano atual */}
@@ -70,21 +70,21 @@ export async function GridPlans() {
 
                         {/* Header */}
                         <div>
-                            <p className="text-[#ffffff40] text-[10px] tracking-widest uppercase mb-2">
+                            <p className="text-[var(--on-surface-dim)] text-[10px] tracking-widest uppercase mb-2">
                                 {plan.label}
                             </p>
-                            <h2 className={`text-4xl font-serif font-bold ${isPro ? "text-[#c9a84c]" : "text-white"}`}>
+                            <h2 className={`text-4xl font-serif font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
                                 {plan.name}
                             </h2>
                         </div>
 
                         {/* Preço */}
                         <div className="flex items-baseline gap-1">
-                            <span className="text-[#ffffff60] text-sm">R$</span>
-                            <span className={`text-5xl font-bold ${isPro ? "text-[#c9a84c]" : "text-white"}`}>
+                            <span className="text-[var(--on-surface-variant)] text-sm">R$</span>
+                            <span className={`text-5xl font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
                                 {plan.priceDisplay}
                             </span>
-                            <span className="text-[#ffffff40] text-sm">{plan.period}</span>
+                            <span className="text-[var(--on-surface-dim)] text-sm">{plan.period}</span>
                         </div>
 
                         {/* Features */}
@@ -96,9 +96,9 @@ export async function GridPlans() {
                                     <li key={i} className="flex items-center gap-3">
                                         <CheckCircle
                                             size={16}
-                                            className="text-[#c9a84c] shrink-0"
+                                            className="text-[var(--gold)] shrink-0"
                                         />
-                                        <span className={`text-sm ${bold ? "font-semibold text-white" : "text-[#ffffff60]"}`}>
+                                        <span className={`text-sm ${bold ? "font-semibold text-[var(--on-surface)]" : "text-[var(--on-surface-variant)]"}`}>
                                             {text}
                                         </span>
                                     </li>

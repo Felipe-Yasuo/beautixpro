@@ -6,8 +6,8 @@ export async function Reminders() {
     const reminders = await getReminders();
 
     return (
-        <div className="bg-[#141414] border border-[#2a2a2a] rounded-xl overflow-hidden">
-            <div className="px-6 py-5 border-b border-[#2a2a2a]">
+        <div className="bg-[var(--surface-low)] border border-[var(--outline)] rounded-xl overflow-hidden">
+            <div className="px-6 py-5 border-b border-[var(--outline)]">
                 <h2 className="text-xl font-bold text-foreground">Meus Lembretes</h2>
             </div>
             <div className="p-4 flex flex-col gap-3">

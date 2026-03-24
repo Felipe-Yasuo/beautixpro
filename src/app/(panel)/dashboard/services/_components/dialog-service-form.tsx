@@ -56,7 +56,7 @@ export function DialogServiceForm({ service, onClose }: DialogServiceFormProps) 
     }
 
     const inputClass =
-        "bg-transparent border border-[#c9a84c33] text-[#f0ead6] px-4 py-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#ffffff20] transition-colors w-full";
+        "bg-[var(--surface-high)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full";
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -64,7 +64,7 @@ export function DialogServiceForm({ service, onClose }: DialogServiceFormProps) 
 
             {/* Nome */}
             <div className="flex flex-col gap-1.5">
-                <label className="text-[#c9a84c] text-xs tracking-widest uppercase">
+                <label className="text-[var(--gold)] text-xs tracking-widest uppercase">
                     Nome do serviço
                 </label>
                 <input
@@ -79,7 +79,7 @@ export function DialogServiceForm({ service, onClose }: DialogServiceFormProps) 
 
             {/* Valor */}
             <div className="flex flex-col gap-1.5">
-                <label className="text-[#c9a84c] text-xs tracking-widest uppercase">
+                <label className="text-[var(--gold)] text-xs tracking-widest uppercase">
                     Valor do serviço (R$)
                 </label>
                 <input
@@ -96,12 +96,12 @@ export function DialogServiceForm({ service, onClose }: DialogServiceFormProps) 
 
             {/* Duração: horas + minutos */}
             <div className="flex flex-col gap-1.5">
-                <label className="text-[#c9a84c] text-xs tracking-widest uppercase">
+                <label className="text-[var(--gold)] text-xs tracking-widest uppercase">
                     Tempo de duração do serviço
                 </label>
                 <div className="flex gap-4">
                     <div className="flex flex-col gap-1 flex-1">
-                        <span className="text-[#ffffff40] text-xs">Horas</span>
+                        <span className="text-[var(--on-surface-dim)] text-xs">Horas</span>
                         <input
                             name="hours"
                             type="number"
@@ -113,7 +113,7 @@ export function DialogServiceForm({ service, onClose }: DialogServiceFormProps) 
                         />
                     </div>
                     <div className="flex flex-col gap-1 flex-1">
-                        <span className="text-[#ffffff40] text-xs">Minutos</span>
+                        <span className="text-[var(--on-surface-dim)] text-xs">Minutos</span>
                         <input
                             name="minutes"
                             type="number"
@@ -130,13 +130,13 @@ export function DialogServiceForm({ service, onClose }: DialogServiceFormProps) 
             {/* Status — só no update */}
             {service && (
                 <div className="flex flex-col gap-1.5">
-                    <label className="text-[#c9a84c] text-xs tracking-widest uppercase">
+                    <label className="text-[var(--gold)] text-xs tracking-widest uppercase">
                         Status
                     </label>
                     <select
                         name="status"
                         defaultValue={service.status ? "true" : "false"}
-                        className="bg-[#0a0a0a] border border-[#c9a84c33] text-[#f0ead6] px-4 py-3 text-sm outline-none focus:border-[#c9a84c] transition-colors cursor-pointer w-full"
+                        className="bg-[var(--surface-lowest)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] transition-colors cursor-pointer w-full"
                     >
                         <option value="true">Ativo</option>
                         <option value="false">Inativo</option>
@@ -151,14 +151,14 @@ export function DialogServiceForm({ service, onClose }: DialogServiceFormProps) 
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-[#c9a84c] text-black py-3.5 text-xs tracking-widest uppercase font-semibold hover:bg-[#e8c97a] transition-colors disabled:opacity-50 cursor-pointer"
+                    className="btn-primary w-full py-3.5 disabled:opacity-50 cursor-pointer"
                 >
                     {loading ? "Salvando..." : service ? "Salvar serviço" : "Cadastrar serviço"}
                 </button>
                 <button
                     type="button"
                     onClick={onClose}
-                    className="w-full border border-[#c9a84c22] text-[#ffffff30] py-3 text-xs tracking-widest uppercase hover:text-[#ffffff60] hover:border-[#c9a84c44] transition-colors cursor-pointer"
+                    className="w-full border border-[var(--outline-variant)] text-[var(--on-surface-dim)] py-3 text-xs tracking-widest uppercase hover:text-[var(--on-surface-variant)] hover:border-[var(--outline)] transition-colors cursor-pointer"
                 >
                     Cancelar
                 </button>

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
+import { Upload } from "lucide-react";
 import { updateAvatar } from "../_actions/update-avatar";
 
 interface ProfileAvatarProps {
@@ -39,30 +40,49 @@ export function ProfileAvatar({ image, name }: ProfileAvatarProps) {
     }
 
     return (
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col items-center gap-3">
             <div
-                className="relative w-24 h-24 cursor-pointer group flex-shrink-0"
+                className="relative w-32 h-32 cursor-pointer group"
                 onClick={() => inputRef.current?.click()}
             >
-                <Image
-                    src={preview ?? "/foto.png"}
-                    alt={name ?? "Avatar"}
-                    fill
-                    className="object-cover rounded-full"
-                />
-                <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-[#c9a84c] text-[10px] tracking-widest uppercase">
-                        {loading ? "..." : "Trocar"}
-                    </span>
+                {preview ? (
+                    <Image
+                        src={preview}
+                        alt={name ?? "Avatar"}
+                        fill
+                        className="object-cover rounded-full"
+                    />
+                ) : (
+                    <div className="w-full h-full rounded-full bg-[#1a1a1a] border border-[#2a2a2a]" />
+                )}
+
+                {/* Overlay com ícone */}
+                <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1">
+                    {loading ? (
+                        <span className="text-[#c9a84c] text-[10px] tracking-widest uppercase">
+                            Enviando...
+                        </span>
+                    ) : (
+                        <>
+                            <Upload size={18} className="text-[#c9a84c]" />
+                            <span className="text-[#c9a84c] text-[9px] tracking-widest uppercase">
+                                Trocar foto
+                            </span>
+                        </>
+                    )}
                 </div>
+
+                {/* Ícone visível quando sem hover (sem foto) */}
+                {!preview && (
+                    <div className="absolute inset-0 rounded-full flex items-center justify-center pointer-events-none">
+                        <Upload size={20} className="text-[#ffffff20]" />
+                    </div>
+                )}
             </div>
 
-            <div>
-                <p className="text-[#f0ead6] text-sm font-medium">{name}</p>
-                <p className="text-[#3a3028] text-xs mt-1">
-                    Clique na foto para alterar
-                </p>
-            </div>
+            <p className="text-[#ffffff30] text-xs tracking-widest uppercase">
+                Clique para alterar a foto
+            </p>
 
             <input
                 ref={inputRef}

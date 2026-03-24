@@ -7,19 +7,19 @@ export async function Profile() {
 
     if (!user) {
         return (
-            <p className="text-[#3a3028] text-xs tracking-widest uppercase">
+            <p className="text-[#ffffff30] text-xs tracking-widest uppercase">
                 Usuário não encontrado.
             </p>
         );
     }
 
     return (
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-8 p-8">
             <div>
-                <p className="text-[#c9a84c] text-xs tracking-widest uppercase">
-                    Configurações
+                <h1 className="text-5xl font-serif font-bold text-white">Perfil</h1>
+                <p className="text-[#ffffff60] text-sm mt-2">
+                    Gerencie as informações do seu ateliê e horários de atendimento.
                 </p>
-                <h1 className="text-3xl font-light text-[#f0ead6] mt-1">Perfil</h1>
             </div>
 
             <ProfileAvatar image={user.image} name={user.name} />

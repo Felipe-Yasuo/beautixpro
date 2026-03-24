@@ -3,7 +3,6 @@ import { prisma } from "@/lib/prisma";
 
 export async function getInfoUser() {
     const session = await auth();
-
     if (!session?.user?.id) return null;
 
     const user = await prisma.user.findUnique({
@@ -16,6 +15,8 @@ export async function getInfoUser() {
             address: true,
             phone: true,
             times: true,
+            status: true,
+            timeZone: true,
         },
     });
 

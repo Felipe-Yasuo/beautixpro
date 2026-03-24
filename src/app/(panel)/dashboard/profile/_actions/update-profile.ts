@@ -10,33 +10,37 @@ const profileSchema = z.object({
     phone: z.string().min(10, "Telefone inválido."),
     address: z.string().min(2, "Endereço inválido."),
     times: z.array(z.string()).default([]),
+    status: z.coerce.boolean(),
+    timeZone: z.string().min(1, "Fuso horário inválido."),
 });
 
 export async function updateProfile(formData: FormData) {
     const session = await auth();
-
     if (!session?.user?.id) return { error: "Não autorizado." };
 
     const times = formData.getAll("times") as string[];
 
-    const raw = {
+    const parsed = profileSchema.safeParse({
         name: formData.get("name"),
         phone: formData.get("phone"),
         address: formData.get("address"),
         times,
-    };
+        status: formData.get("status"),
+        timeZone: formData.get("timeZone"),
+    });
 
-    const parsed = profileSchema.safeParse(raw);
-
-    if (!parsed.success) {
-        return { error: parsed.error.issues[0].message };
-    }
-
-    const { name, phone, address } = parsed.data;
+    if (!parsed.success) return { error: parsed.error.issues[0].message };
 
     await prisma.user.update({
         where: { id: session.user.id },
-        data: { name, phone, address, times },
+        data: {
+            name: parsed.data.name,
+            phone: parsed.data.phone,
+            address: parsed.data.address,
+            times: parsed.data.times,
+            status: parsed.data.status,
+            timeZone: parsed.data.timeZone,
+        },
     });
 
     revalidatePath("/dashboard/profile");

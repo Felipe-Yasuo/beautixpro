@@ -1,10 +1,18 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { getUserPlan } from "@/lib/get-plan";
+import { redirect } from "next/navigation";
 
 export async function getReports() {
     const session = await auth();
 
     if (!session?.user?.id) return null;
+
+    const plan = await getUserPlan();
+
+    if (plan === "FREE") {
+        redirect("/dashboard/subscription");
+    }
 
     const appointments = await prisma.appointment.findMany({
         where: { userId: session.user.id },

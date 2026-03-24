@@ -1,13 +1,16 @@
+
 import { prisma } from "@/lib/prisma";
 
 export async function getProfessionals() {
-    const professionals = await prisma.user.findMany({
+
+    const users = await prisma.user.findMany({
         where: {
             status: true,
+            subscription: {
+                status: "active",
+            },
             services: {
-                some: {
-                    status: true,
-                },
+                some: { status: true },
             },
         },
         select: {
@@ -16,25 +19,15 @@ export async function getProfessionals() {
             image: true,
             address: true,
             subscription: {
-                select: {
-                    plan: true,
-                },
+                select: { plan: true },
             },
-            services: {
-                where: { status: true },
-                select: { name: true },
-                take: 3,
-            },
-        },
-        orderBy: {
-            createdAt: "desc",
         },
     });
 
-    // Coloca profissionais PROFESSIONAL primeiro
-    return professionals.sort((a, b) => {
-        if (a.subscription?.plan === "PROFESSIONAL" && b.subscription?.plan !== "PROFESSIONAL") return -1;
-        if (a.subscription?.plan !== "PROFESSIONAL" && b.subscription?.plan === "PROFESSIONAL") return 1;
+    // Professional primeiro, Basic depois
+    return users.sort((a, b) => {
+        if (a.subscription?.plan === "PROFESSIONAL") return -1;
+        if (b.subscription?.plan === "PROFESSIONAL") return 1;
         return 0;
     });
 }

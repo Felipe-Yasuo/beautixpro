@@ -6,7 +6,11 @@ import { z } from "zod";
 const appointmentSchema = z.object({
     name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres."),
     email: z.string().email("E-mail inválido."),
-    phone: z.string().min(10, "Telefone inválido."),
+    phone: z
+        .string()
+        .regex(/^\d+$/, "Telefone deve conter apenas números.")
+        .min(8, "Telefone deve ter pelo menos 8 números.")
+        .max(15, "Telefone deve ter no máximo 15 números."),
     serviceId: z.string().uuid("Serviço inválido."),
     appointmentDate: z.string().min(1, "Data inválida."),
     time: z.string().min(1, "Horário inválido."),

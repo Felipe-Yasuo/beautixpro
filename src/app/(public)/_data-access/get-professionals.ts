@@ -1,8 +1,6 @@
-
 import { prisma } from "@/lib/prisma";
 
 export async function getProfessionals() {
-
     const users = await prisma.user.findMany({
         where: {
             status: true,
@@ -21,10 +19,13 @@ export async function getProfessionals() {
             subscription: {
                 select: { plan: true },
             },
+            services: {
+                where: { status: true },
+                select: { name: true },
+            },
         },
     });
 
-    // Professional primeiro, Basic depois
     return users.sort((a, b) => {
         if (a.subscription?.plan === "PROFESSIONAL") return -1;
         if (b.subscription?.plan === "PROFESSIONAL") return 1;

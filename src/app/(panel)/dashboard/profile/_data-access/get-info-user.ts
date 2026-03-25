@@ -14,9 +14,17 @@ export async function getInfoUser() {
             image: true,
             address: true,
             phone: true,
-            times: true,
             status: true,
             timeZone: true,
+            times: true,
+            employees: {
+                select: {
+                    id: true,
+                    name: true,
+                    times: true,
+                },
+                orderBy: { createdAt: "asc" },
+            },
         },
     });
 

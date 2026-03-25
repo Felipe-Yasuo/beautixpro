@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { X, Clock, ChevronRight } from "lucide-react";
+import { ChevronRight, X, Clock } from "lucide-react";
 import { updateProfile } from "../_actions/update-profile";
+import { updateUserTimes } from "../_actions/update-user-times";
+import { EmployeesSection } from "./employees-section";
 
 const ALL_TIMES = [
     "08:00", "08:30", "09:00", "09:30", "10:00",
@@ -27,23 +29,33 @@ const TIMEZONES = [
     { value: "America/Noronha", label: "Fernando de Noronha (GMT-2)" },
 ];
 
+interface Employee {
+    id: string;
+    name: string;
+    times: string[];
+}
+
 interface ProfileFormProps {
     user: {
         name?: string | null;
         phone?: string | null;
         address?: string | null;
-        times: string[];
         status: boolean;
         timeZone?: string | null;
+        times: string[];
+        employees: Employee[];
     };
+    isProfessional: boolean;
 }
 
-export function ProfileForm({ user }: ProfileFormProps) {
-    const [selectedTimes, setSelectedTimes] = useState<string[]>(user.times ?? []);
-    const [showTimesModal, setShowTimesModal] = useState(false);
+export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
+
+    const [showTimesModal, setShowTimesModal] = useState(false);
+    const [selectedTimes, setSelectedTimes] = useState<string[]>(user.times);
+    const [savingTimes, setSavingTimes] = useState(false);
 
     function toggleTime(time: string) {
         setSelectedTimes((prev) =>
@@ -51,23 +63,25 @@ export function ProfileForm({ user }: ProfileFormProps) {
         );
     }
 
+    async function handleSaveTimes() {
+        setSavingTimes(true);
+        await updateUserTimes(selectedTimes);
+        setSavingTimes(false);
+        setShowTimesModal(false);
+    }
+
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setError("");
         setSuccess(false);
         setLoading(true);
-
         const formData = new FormData(e.currentTarget);
-        selectedTimes.forEach((time) => formData.append("times", time));
-
         const result = await updateProfile(formData);
-
         if (result?.error) {
             setError(result.error);
             setLoading(false);
             return;
         }
-
         setSuccess(true);
         setLoading(false);
     }
@@ -83,14 +97,13 @@ export function ProfileForm({ user }: ProfileFormProps) {
     return (
         <>
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
                 <div className="flex flex-col gap-1.5">
-                    <label className={labelClass}>Nome completo</label>
+                    <label className={labelClass}>Nome do salão</label>
                     <input
                         name="name"
                         type="text"
                         defaultValue={user.name ?? ""}
-                        placeholder="Seu nome"
+                        placeholder="Nome do seu salão"
                         required
                         className={inputClass}
                     />
@@ -113,8 +126,10 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     <input
                         name="phone"
                         type="tel"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         defaultValue={user.phone ?? ""}
-                        placeholder="(00) 00000-0000"
+                        placeholder="Apenas números"
                         required
                         className={inputClass}
                     />
@@ -133,22 +148,6 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                    <label className={labelClass}>Configurar horários da clínica</label>
-                    <button
-                        type="button"
-                        onClick={() => setShowTimesModal(true)}
-                        className="flex items-center justify-between bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface-variant)] px-4 py-3 text-sm hover:border-[var(--gold)] hover:text-[var(--on-surface)] transition-colors cursor-pointer w-full text-left rounded-lg"
-                    >
-                        <span>
-                            {selectedTimes.length > 0
-                                ? `${selectedTimes.length} horário${selectedTimes.length > 1 ? "s" : ""} selecionado${selectedTimes.length > 1 ? "s" : ""}`
-                                : "Clique aqui para selecionar horários"}
-                        </span>
-                        <ChevronRight size={16} className="text-[#c9a84c] shrink-0" />
-                    </button>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
                     <label className={labelClass}>Fuso horário</label>
                     <select
                         name="timeZone"
@@ -163,6 +162,33 @@ export function ProfileForm({ user }: ProfileFormProps) {
                     </select>
                 </div>
 
+                {/* Horários da clínica — só FREE/BASIC */}
+                {!isProfessional && (
+                    <div className="flex flex-col gap-1.5">
+                        <label className={labelClass}>Configurar horários da clínica</label>
+                        <button
+                            type="button"
+                            onClick={() => setShowTimesModal(true)}
+                            className="flex items-center justify-between bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface-dim)] px-4 py-3 text-sm hover:border-[var(--gold)] hover:text-[var(--on-surface)] transition-colors cursor-pointer w-full text-left rounded-lg"
+                        >
+                            <span>
+                                {selectedTimes.length > 0
+                                    ? `${selectedTimes.length} horário${selectedTimes.length > 1 ? "s" : ""} selecionado${selectedTimes.length > 1 ? "s" : ""}`
+                                    : "Clique aqui para selecionar horários"}
+                            </span>
+                            <ChevronRight size={16} className="text-[var(--gold)] shrink-0" />
+                        </button>
+                    </div>
+                )}
+
+                {/* Funcionários — só PROFESSIONAL */}
+                {isProfessional && (
+                    <EmployeesSection
+                        employees={user.employees}
+                        isProfessional={isProfessional}
+                    />
+                )}
+
                 {error && <p className="text-red-400 text-xs">{error}</p>}
                 {success && (
                     <p className="text-[var(--gold)] text-xs tracking-widest uppercase">
@@ -173,21 +199,21 @@ export function ProfileForm({ user }: ProfileFormProps) {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="btn-primary w-full py-3.5 disabled:opacity-50 cursor-pointer mt-2 rounded-lg"
+                    className="btn-primary w-full py-3.5 disabled:opacity-50 mt-2 rounded-lg"
                 >
                     {loading ? "Salvando..." : "Salvar alterações"}
                 </button>
             </form>
 
+            {/* Modal de horários (FREE/BASIC) */}
             {showTimesModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     <div
                         className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                         onClick={() => setShowTimesModal(false)}
                     />
-
                     <div className="relative bg-[var(--surface-low)] border border-[var(--outline-variant)] w-full max-w-lg mx-4 z-10 rounded-xl overflow-hidden">
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#c9a84c]" />
+                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--gold)]" />
 
                         <div className="flex items-start justify-between p-6 pb-4">
                             <div>
@@ -195,10 +221,11 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                     Horários da clínica
                                 </h2>
                                 <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase mt-1">
-                                    Selecione os horários de funcionamento
+                                    Selecione os horários de atendimento
                                 </p>
                             </div>
                             <button
+                                type="button"
                                 onClick={() => setShowTimesModal(false)}
                                 className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer mt-1"
                             >
@@ -207,9 +234,6 @@ export function ProfileForm({ user }: ProfileFormProps) {
                         </div>
 
                         <div className="px-6 pb-6">
-                            <p className="text-[var(--on-surface-dim)] text-xs mb-4">
-                                Clique nos horários abaixo para marcar ou desmarcar:
-                            </p>
                             <div className="grid grid-cols-5 gap-2">
                                 {ALL_TIMES.map((time) => {
                                     const isSelected = selectedTimes.includes(time);
@@ -219,8 +243,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
                                             type="button"
                                             onClick={() => toggleTime(time)}
                                             className={`py-2.5 text-xs tracking-wide border transition-colors cursor-pointer rounded-lg ${isSelected
-                                                    ? "border-[var(--gold)] bg-[#c9a84c15] text-[var(--gold)]"
-                                                    : "border-[var(--outline)] text-[var(--on-surface-dim)] hover:border-[#c9a84c55] hover:text-[var(--on-surface-variant)]"
+                                                    ? "border-[var(--gold)] bg-[var(--gold-ghost)] text-[var(--gold)]"
+                                                    : "border-[var(--outline)] text-[var(--on-surface-dim)] hover:border-[var(--gold)] hover:text-[var(--on-surface-variant)]"
                                                 }`}
                                         >
                                             {time}
@@ -239,10 +263,11 @@ export function ProfileForm({ user }: ProfileFormProps) {
                             </div>
                             <button
                                 type="button"
-                                onClick={() => setShowTimesModal(false)}
-                                className="btn-primary px-6 py-2.5 cursor-pointer rounded-lg"
+                                onClick={handleSaveTimes}
+                                disabled={savingTimes}
+                                className="btn-primary px-6 py-2.5 cursor-pointer rounded-lg disabled:opacity-50"
                             >
-                                Confirmar
+                                {savingTimes ? "Salvando..." : "Confirmar"}
                             </button>
                         </div>
                     </div>

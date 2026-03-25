@@ -1,9 +1,13 @@
 import { getInfoUser } from "../_data-access/get-info-user";
+import { getUserPlan } from "@/lib/get-plan";
 import { ProfileAvatar } from "./profile-avatar";
 import { ProfileForm } from "./profile-form";
 
 export async function Profile() {
-    const user = await getInfoUser();
+    const [user, plan] = await Promise.all([
+        getInfoUser(),
+        getUserPlan(),
+    ]);
 
     if (!user) {
         return (
@@ -16,7 +20,9 @@ export async function Profile() {
     return (
         <div className="flex flex-col gap-8 p-8">
             <div>
-                <h1 className="text-5xl font-serif font-bold text-[var(--on-surface)]">Perfil</h1>
+                <h1 className="text-5xl font-serif font-bold text-[var(--on-surface)]">
+                    Perfil
+                </h1>
                 <p className="text-[var(--on-surface-variant)] text-sm mt-2">
                     Gerencie as informações do seu ateliê e horários de atendimento.
                 </p>
@@ -24,7 +30,10 @@ export async function Profile() {
 
             <ProfileAvatar image={user.image} name={user.name} />
 
-            <ProfileForm user={user} />
+            <ProfileForm
+                user={user}
+                isProfessional={plan === "PROFESSIONAL"}
+            />
         </div>
     );
 }

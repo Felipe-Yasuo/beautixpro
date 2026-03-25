@@ -26,6 +26,7 @@ model User {
   appointments Appointment[]
   accounts     Account[]
   sessions     Session[]
+  times        String[]      @default([])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

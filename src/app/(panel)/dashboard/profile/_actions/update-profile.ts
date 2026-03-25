@@ -7,9 +7,12 @@ import { revalidatePath } from "next/cache";
 
 const profileSchema = z.object({
     name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres."),
-    phone: z.string().min(10, "Telefone inválido."),
+    phone: z
+        .string()
+        .regex(/^\d+$/, "Telefone deve conter apenas números.")
+        .min(8, "Telefone deve ter pelo menos 8 números.")
+        .max(15, "Telefone deve ter no máximo 15 números."),
     address: z.string().min(2, "Endereço inválido."),
-    times: z.array(z.string()).default([]),
     status: z.coerce.boolean(),
     timeZone: z.string().min(1, "Fuso horário inválido."),
 });
@@ -18,13 +21,10 @@ export async function updateProfile(formData: FormData) {
     const session = await auth();
     if (!session?.user?.id) return { error: "Não autorizado." };
 
-    const times = formData.getAll("times") as string[];
-
     const parsed = profileSchema.safeParse({
         name: formData.get("name"),
         phone: formData.get("phone"),
         address: formData.get("address"),
-        times,
         status: formData.get("status"),
         timeZone: formData.get("timeZone"),
     });
@@ -37,7 +37,6 @@ export async function updateProfile(formData: FormData) {
             name: parsed.data.name,
             phone: parsed.data.phone,
             address: parsed.data.address,
-            times: parsed.data.times,
             status: parsed.data.status,
             timeZone: parsed.data.timeZone,
         },

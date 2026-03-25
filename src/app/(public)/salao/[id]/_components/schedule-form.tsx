@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { ScheduleTimeList } from "./schedule-time-list";
 import { useScheduleForm } from "../_hooks/useScheduleForm";
+import { useAvailableSlots } from "../_hooks/useAvailableSlots";
 import type { Employee } from "../_hooks/useScheduleForm";
 
 function formatDuration(minutes: number): string {
@@ -55,6 +56,12 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
         handleDateChange,
         handleSubmit,
     } = useScheduleForm({ user });
+
+    const { bookedTimes } = useAvailableSlots({
+        employeeId: selectedEmployee?.id ?? null,
+        selectedDate,
+        serviceDuration: selectedService?.duration ?? 0,
+    });
 
     if (user.employees.length === 0) {
         return (
@@ -190,9 +197,7 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                         times={selectedEmployee.times}
                         selectedTime={selectedTime}
                         onSelect={setSelectedTime}
-                        employeeId={selectedEmployee.id}
-                        selectedDate={selectedDate}
-                        serviceDuration={selectedService.duration}
+                        bookedTimes={bookedTimes}
                     />
                 </div>
             )}

@@ -4,13 +4,10 @@ import { Appointments } from "./_components/appointments/appointments";
 import { Reminders } from "./_components/reminder/reminders";
 import { CopyLinkButton } from "./_components/button-copy-link";
 import { getDailyRevenue } from "./_data-access/get-daily-revenue";
+import { formatBRL } from "@/lib/formatters";
 
 interface PageProps {
     searchParams: Promise<{ date?: string; employeeId?: string }>;
-}
-
-function formatBRL(cents: number): string {
-    return (cents / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 });
 }
 
 function calcPercentChange(today: number, yesterday: number): number | null {

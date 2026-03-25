@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cancelAppointment } from "../../_actions/cancel-appointment";
+import { formatBRL } from "@/lib/formatters";
 
 interface Appointment {
     id: string;
@@ -20,9 +21,6 @@ interface DialogAppointmentProps {
     appointment: Appointment;
 }
 
-function formatBRL(cents: number): string {
-    return (cents / 100).toFixed(2);
-}
 
 export function DialogAppointment({ appointment }: DialogAppointmentProps) {
     const [open, setOpen] = useState(false);

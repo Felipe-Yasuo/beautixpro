@@ -4,6 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { createService } from "../_actions/create-service";
 import { updateService } from "../_actions/update-service";
+import { extractFieldErrors } from "@/lib/schemas";
 
 const serviceSchema = z.object({
     name: z.string().min(2, "Nome deve ter ao menos 2 caracteres"),
@@ -36,14 +37,6 @@ interface DialogServiceFormProps {
     onClose: () => void;
 }
 
-function extractFieldErrors(error: z.ZodError<ServiceFields>): FieldErrors {
-    const errors: FieldErrors = {};
-    for (const issue of error.issues) {
-        const field = issue.path[0] as keyof ServiceFields;
-        errors[field] ??= issue.message;
-    }
-    return errors;
-}
 
 const LABEL_CLASS = "text-[var(--gold)] text-xs tracking-widest uppercase";
 

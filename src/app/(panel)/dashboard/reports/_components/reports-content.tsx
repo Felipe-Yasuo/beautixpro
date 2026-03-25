@@ -1,10 +1,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getReports } from "../_data-access/get-reports";
-
-function formatBRL(cents: number): string {
-    return (cents / 100).toFixed(2);
-}
+import { formatBRL } from "@/lib/formatters";
 
 export async function ReportsContent() {
     const session = await auth();

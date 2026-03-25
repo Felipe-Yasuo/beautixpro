@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Pencil, Trash2, Scissors, Sparkles, Leaf, Brush } from "lucide-react";
 import { DialogService } from "./dialog-service";
 import { deleteService } from "../_actions/delete-service";
+import { formatBRL } from "@/lib/formatters";
 
 interface Service {
     id: string;
@@ -29,9 +30,6 @@ interface ServicesListProps {
 const SERVICE_ICONS = [Scissors, Sparkles, Leaf, Brush] as const;
 const PAGE_SIZE = 4;
 
-function formatBRL(cents: number): string {
-    return (cents / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 });
-}
 
 export function ServicesList({ services, employees, isProfessional, atLimit }: ServicesListProps) {
     const [deletingId, setDeletingId] = useState<string | null>(null);

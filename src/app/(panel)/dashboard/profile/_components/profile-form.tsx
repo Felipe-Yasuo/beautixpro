@@ -6,6 +6,8 @@ import { ChevronRight, X, Clock } from "lucide-react";
 import { updateProfile } from "../_actions/update-profile";
 import { updateUserTimes } from "../_actions/update-user-times";
 import { EmployeesSection } from "./employees-section";
+import { ALL_TIMES } from "@/lib/constants";
+import { extractFieldErrors } from "@/lib/schemas";
 
 const profileSchema = z.object({
     name: z.string().min(3, "Nome deve ter ao menos 3 caracteres"),
@@ -20,16 +22,6 @@ const profileSchema = z.object({
 
 type ProfileFields = z.infer<typeof profileSchema>;
 type FieldErrors = Partial<Record<keyof ProfileFields, string>>;
-
-const ALL_TIMES = [
-    "08:00", "08:30", "09:00", "09:30", "10:00",
-    "10:30", "11:00", "11:30", "12:00", "12:30",
-    "13:00", "13:30", "14:00", "14:30", "15:00",
-    "15:30", "16:00", "16:30", "17:00", "17:30",
-    "18:00", "18:30", "19:00", "19:30", "20:00",
-    "20:30", "21:00", "21:30", "22:00", "22:30",
-    "23:00", "23:30", "00:00",
-] as const;
 
 const TIMEZONES = [
     { value: "America/Sao_Paulo", label: "Brasília (GMT-3)" },
@@ -63,14 +55,6 @@ interface ProfileFormProps {
     isProfessional: boolean;
 }
 
-function extractFieldErrors(error: z.ZodError<ProfileFields>): FieldErrors {
-    const errors: FieldErrors = {};
-    for (const issue of error.issues) {
-        const field = issue.path[0] as keyof ProfileFields;
-        errors[field] ??= issue.message;
-    }
-    return errors;
-}
 
 function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;

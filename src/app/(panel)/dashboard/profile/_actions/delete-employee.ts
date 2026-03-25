@@ -1,11 +1,9 @@
 "use server";
 
-import { z } from "zod";
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-
-const idSchema = z.string().min(1, "ID inválido.");
+import { idSchema } from "@/lib/schemas";
 
 export async function deleteEmployee(id: string) {
     const userId = await requireAuth();

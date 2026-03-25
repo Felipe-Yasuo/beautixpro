@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { createAppointment } from "../_actions/create-appointment";
+import { extractFieldErrors } from "@/lib/schemas";
 
 const scheduleSchema = z.object({
     name: z.string().min(3, "Nome deve ter ao menos 3 caracteres"),
@@ -35,14 +36,6 @@ interface UseScheduleFormProps {
     };
 }
 
-function extractFieldErrors(error: z.ZodError<ScheduleFields>): FieldErrors {
-    const errors: FieldErrors = {};
-    for (const issue of error.issues) {
-        const field = issue.path[0] as keyof ScheduleFields;
-        errors[field] ??= issue.message;
-    }
-    return errors;
-}
 
 export function useScheduleForm({ user }: UseScheduleFormProps) {
     const isMultiEmployee = user.employees.length > 1;

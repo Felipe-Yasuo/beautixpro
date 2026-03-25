@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { getAvailableSlots } from "../_actions/get-available-slots";
 
 interface UseAvailableSlotsProps {
     employeeId: string | null;
@@ -20,12 +21,13 @@ export function useAvailableSlots({ employeeId, selectedDate, serviceDuration }:
         let cancelled = false;
 
         async function fetchBookedTimes() {
-            const res = await fetch(
-                `/api/schedule/get-appointments?employeeId=${employeeId}&date=${dateString}&duration=${serviceDuration}`
-            );
-            const data = await res.json();
+            const times = await getAvailableSlots({
+                employeeId: employeeId!,
+                date: dateString!,
+                duration: serviceDuration,
+            });
             if (!cancelled) {
-                setBookedTimes(data.times ?? []);
+                setBookedTimes(times);
             }
         }
 

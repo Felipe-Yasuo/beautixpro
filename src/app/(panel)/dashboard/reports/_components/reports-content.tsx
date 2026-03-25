@@ -1,18 +1,11 @@
-import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { getReports } from "../_data-access/get-reports";
 import { formatBRL } from "@/lib/formatters";
+import { getUserPlan } from "@/lib/get-plan";
 
 export async function ReportsContent() {
-    const session = await auth();
+    const plan = await getUserPlan();
 
-    const subscription = session?.user?.id
-        ? await prisma.subscription.findUnique({
-            where: { userId: session.user.id },
-        })
-        : null;
-
-    if (!subscription || subscription.plan !== "PROFESSIONAL") {
+    if (plan !== "PROFESSIONAL") {
         return (
             <div className="flex flex-col items-center justify-center py-32 gap-6">
                 <div className="border border-[#c9a84c33] p-10 flex flex-col items-center gap-4 max-w-md text-center">

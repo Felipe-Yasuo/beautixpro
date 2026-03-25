@@ -77,6 +77,7 @@ export function AppointmentsList({
                     <select
                         value={selectedEmployeeId ?? employees[0]?.id}
                         onChange={(e) => handleEmployeeChange(e.target.value)}
+                        aria-label="Selecionar funcionário"
                         className="bg-[var(--surface-high)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-2.5 text-sm outline-none focus:border-[var(--gold)] transition-colors cursor-pointer rounded-lg"
                     >
                         {employees.map((e) => (

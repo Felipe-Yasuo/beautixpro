@@ -50,9 +50,10 @@ export function ReminderList({ reminders }: ReminderListProps) {
                     <button
                         onClick={() => handleDelete(reminder.id)}
                         disabled={deletingId === reminder.id}
+                        aria-label={`Excluir lembrete: ${reminder.description}`}
                         className="text-muted-foreground/30 hover:text-destructive transition-colors disabled:opacity-50 cursor-pointer ml-4 opacity-0 group-hover:opacity-100"
                     >
-                        <Trash2 size={14} />
+                        <Trash2 size={14} aria-hidden="true" />
                     </button>
                 </div>
             ))}

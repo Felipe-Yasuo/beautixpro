@@ -54,15 +54,17 @@ export function ReminderForm() {
                     name="description"
                     type="text"
                     placeholder="Novo lembrete..."
+                    aria-label="Descrição do lembrete"
                     onBlur={(e) => validateDescription(e.target.value)}
                     className="flex-1 bg-[var(--surface-low)] border border-[var(--outline)] rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors"
                 />
                 <button
                     type="submit"
                     disabled={loading}
+                    aria-label="Adicionar lembrete"
                     className="bg-primary text-primary-foreground w-10 h-10 rounded-lg flex items-center justify-center text-lg font-bold hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer shrink-0"
                 >
-                    {loading ? "·" : "+"}
+                    <span aria-hidden="true">{loading ? "·" : "+"}</span>
                 </button>
             </form>
             {fieldError && <p className="text-red-400 text-xs">{fieldError}</p>}

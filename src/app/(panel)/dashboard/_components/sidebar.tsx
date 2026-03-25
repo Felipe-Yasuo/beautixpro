@@ -115,10 +115,11 @@ function SidebarContent({
                 )}
                 <button
                     onClick={() => signOut({ callbackUrl: "/login" })}
+                    aria-label="Sair da conta"
                     className={`flex items-center gap-3 text-muted-foreground hover:text-destructive text-sm transition-colors cursor-pointer ${collapsed ? "justify-center" : ""}`}
                 >
-                    <LogOut size={16} />
-                    {!collapsed && "Sair"}
+                    <LogOut size={16} aria-hidden="true" />
+                    {!collapsed && <span>Sair</span>}
                 </button>
             </div>
         </div>
@@ -133,8 +134,8 @@ export function Sidebar({ user, mobileOnly }: SidebarProps) {
         return (
             <Sheet>
                 <SheetTrigger asChild>
-                    <button className="text-foreground cursor-pointer">
-                        <Menu size={20} />
+                    <button aria-label="Abrir menu" className="text-foreground cursor-pointer">
+                        <Menu size={20} aria-hidden="true" />
                     </button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-64 p-0 bg-card border-border">
@@ -153,9 +154,10 @@ export function Sidebar({ user, mobileOnly }: SidebarProps) {
         >
             <button
                 onClick={() => setCollapsed(!collapsed)}
+                aria-label={collapsed ? "Expandir menu lateral" : "Recolher menu lateral"}
                 className="absolute -right-3 top-6 bg-card border border-border rounded-full w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer z-10"
             >
-                {collapsed ? <ChevronRight size={12} /> : <ChevronLeft size={12} />}
+                {collapsed ? <ChevronRight size={12} aria-hidden="true" /> : <ChevronLeft size={12} aria-hidden="true" />}
             </button>
             <SidebarContent collapsed={collapsed} pathname={pathname} user={user} />
         </aside>

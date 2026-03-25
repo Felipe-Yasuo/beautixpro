@@ -28,12 +28,17 @@ export function TimePickerModal({
                 className="absolute inset-0 bg-black/80 backdrop-blur-sm"
                 onClick={onClose}
             />
-            <div className="relative bg-[var(--surface-low)] border border-[var(--outline-variant)] w-full max-w-lg mx-4 z-10 rounded-xl overflow-hidden">
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="time-picker-title"
+                className="relative bg-[var(--surface-low)] border border-[var(--outline-variant)] w-full max-w-lg mx-4 z-10 rounded-xl overflow-hidden"
+            >
                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--gold)]" />
 
                 <div className="flex items-start justify-between p-6 pb-4">
                     <div>
-                        <h2 className="text-2xl font-serif font-bold text-[var(--on-surface)]">
+                        <h2 id="time-picker-title" className="text-2xl font-serif font-bold text-[var(--on-surface)]">
                             Horários da clínica
                         </h2>
                         <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase mt-1">
@@ -43,9 +48,10 @@ export function TimePickerModal({
                     <button
                         type="button"
                         onClick={onClose}
+                        aria-label="Fechar modal"
                         className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer mt-1"
                     >
-                        <X size={18} />
+                        <X size={18} aria-hidden="true" />
                     </button>
                 </div>
 

@@ -83,6 +83,7 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                             setSelectedEmployeeId(e.target.value);
                             setPage(0);
                         }}
+                        aria-label="Filtrar por funcionário"
                         className="bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-2.5 text-sm outline-none focus:border-[var(--gold)] transition-colors cursor-pointer rounded-lg"
                     >
                         {employees.length === 0 && (
@@ -165,17 +166,21 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                                         service={service}
                                         employeeId={service.employee.id}
                                         trigger={
-                                            <button className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer">
-                                                <Pencil size={14} />
+                                            <button
+                                                aria-label={`Editar serviço ${service.name}`}
+                                                className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer"
+                                            >
+                                                <Pencil size={14} aria-hidden="true" />
                                             </button>
                                         }
                                     />
                                     <button
                                         onClick={() => handleDelete(service.id)}
                                         disabled={deletingId === service.id}
+                                        aria-label={`Excluir serviço ${service.name}`}
                                         className="text-[var(--on-surface-dim)] hover:text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
                                     >
-                                        <Trash2 size={14} />
+                                        <Trash2 size={14} aria-hidden="true" />
                                     </button>
                                 </div>
                             </div>
@@ -190,16 +195,18 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                             <button
                                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                                 disabled={page === 0}
+                                aria-label="Página anterior"
                                 className="w-8 h-8 border border-[var(--outline)] flex items-center justify-center text-[var(--on-surface-dim)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-sm"
                             >
-                                ‹
+                                <span aria-hidden="true">‹</span>
                             </button>
                             <button
                                 onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                                 disabled={page >= totalPages - 1}
+                                aria-label="Próxima página"
                                 className="w-8 h-8 bg-[var(--gold)] flex items-center justify-center text-black hover:bg-[var(--gold-hover)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer text-sm"
                             >
-                                ›
+                                <span aria-hidden="true">›</span>
                             </button>
                         </div>
                     </div>

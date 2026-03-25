@@ -49,8 +49,13 @@ export function DialogAppointment({ appointment }: DialogAppointmentProps) {
                         onClick={() => setOpen(false)}
                     />
 
-                    <div className="relative bg-[var(--surface-lowest)] border border-[var(--outline-variant)] p-8 w-full max-w-md mx-4 z-10">
-                        <h2 className="text-xl font-light text-[var(--on-surface)] mb-6">
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="dialog-appointment-title"
+                        className="relative bg-[var(--surface-lowest)] border border-[var(--outline-variant)] p-8 w-full max-w-md mx-4 z-10"
+                    >
+                        <h2 id="dialog-appointment-title" className="text-xl font-light text-[var(--on-surface)] mb-6">
                             Detalhes do agendamento
                         </h2>
 

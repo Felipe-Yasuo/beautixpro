@@ -33,10 +33,15 @@ export function DialogService({ service, employeeId, trigger }: DialogServicePro
                         onClick={() => setOpen(false)}
                     />
 
-                    <div className="relative bg-[var(--surface-lowest)] border border-[var(--outline-variant)] p-8 w-full max-w-md mx-4 z-10">
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="dialog-service-title"
+                        className="relative bg-[var(--surface-lowest)] border border-[var(--outline-variant)] p-8 w-full max-w-md mx-4 z-10"
+                    >
                         <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#c9a84c]" />
 
-                        <h2 className="text-2xl font-serif font-bold text-[var(--on-surface)] mb-1">
+                        <h2 id="dialog-service-title" className="text-2xl font-serif font-bold text-[var(--on-surface)] mb-1">
                             {service ? "Editar serviço" : "Novo serviço"}
                         </h2>
                         <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase mb-6">

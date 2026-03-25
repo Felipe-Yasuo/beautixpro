@@ -158,9 +158,10 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                                         type="button"
                                         onClick={() => handleDelete(employee.id)}
                                         disabled={deletingId === employee.id}
+                                        aria-label={`Excluir funcionário ${employee.name}`}
                                         className="text-[var(--on-surface-dim)] hover:text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
                                     >
-                                        <Trash2 size={14} />
+                                        <Trash2 size={14} aria-hidden="true" />
                                     </button>
                                 </div>
                             </div>
@@ -182,12 +183,17 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                         onClick={() => setTimesModal(null)}
                     />
 
-                    <div className="relative bg-[var(--surface-low)] border border-[var(--outline-variant)] w-full max-w-lg mx-4 z-10 rounded-xl overflow-hidden">
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="employee-times-title"
+                        className="relative bg-[var(--surface-low)] border border-[var(--outline-variant)] w-full max-w-lg mx-4 z-10 rounded-xl overflow-hidden"
+                    >
                         <div className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--gold)]" />
 
                         <div className="flex items-start justify-between p-6 pb-4">
                             <div>
-                                <h2 className="text-2xl font-serif font-bold text-[var(--on-surface)]">
+                                <h2 id="employee-times-title" className="text-2xl font-serif font-bold text-[var(--on-surface)]">
                                     Horários — {timesModal.name}
                                 </h2>
                                 <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase mt-1">
@@ -195,10 +201,12 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                                 </p>
                             </div>
                             <button
+                                type="button"
                                 onClick={() => setTimesModal(null)}
+                                aria-label="Fechar modal"
                                 className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer mt-1"
                             >
-                                <X size={18} />
+                                <X size={18} aria-hidden="true" />
                             </button>
                         </div>
 

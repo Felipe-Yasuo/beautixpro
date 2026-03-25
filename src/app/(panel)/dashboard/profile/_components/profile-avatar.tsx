@@ -42,8 +42,17 @@ export function ProfileAvatar({ image, name }: ProfileAvatarProps) {
     return (
         <div className="flex flex-col items-center gap-3">
             <div
+                role="button"
+                tabIndex={0}
                 className="relative w-32 h-32 cursor-pointer group"
                 onClick={() => inputRef.current?.click()}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        inputRef.current?.click();
+                    }
+                }}
+                aria-label="Alterar foto de perfil"
             >
                 {preview ? (
                     <Image

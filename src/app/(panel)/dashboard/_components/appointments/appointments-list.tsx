@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { DialogAppointment } from "./dialog-appointment";
+import { parseTime, formatTime } from "@/lib/schedule";
 
 interface Appointment {
     id: string;
@@ -27,16 +28,6 @@ interface AppointmentsListProps {
     isProfessional: boolean;
 }
 
-function parseTimeToMinutes(time: string): number {
-    const [h, m] = time.split(":").map(Number);
-    return h * 60 + m;
-}
-
-function formatMinutesToTime(totalMinutes: number): string {
-    const hour = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
-    const min = String(totalMinutes % 60).padStart(2, "0");
-    return `${hour}:${min}`;
-}
 
 type SlotInfo = { appointment: Appointment; isStart: boolean; totalSlots: number };
 
@@ -44,11 +35,11 @@ function buildSlotMap(appointments: Appointment[]): Record<string, SlotInfo> {
     const map: Record<string, SlotInfo> = {};
 
     for (const apt of appointments) {
-        const startMinutes = parseTimeToMinutes(apt.time);
+        const startMinutes = parseTime(apt.time);
         const totalSlots = Math.ceil(apt.service.duration / 30);
 
         for (let i = 0; i < totalSlots; i++) {
-            const slotTime = formatMinutesToTime(startMinutes + i * 30);
+            const slotTime = formatTime(startMinutes + i * 30);
             map[slotTime] = { appointment: apt, isStart: i === 0, totalSlots };
         }
     }
@@ -73,7 +64,7 @@ export function AppointmentsList({
     }
 
     const sortedTimes = [...times].sort(
-        (a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b)
+        (a, b) => parseTime(a) - parseTime(b)
     );
 
     const slotMap = buildSlotMap(appointments);

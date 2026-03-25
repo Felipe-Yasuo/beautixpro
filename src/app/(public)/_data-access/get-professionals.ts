@@ -7,8 +7,12 @@ export async function getProfessionals() {
             subscription: {
                 status: "active",
             },
-            services: {
-                some: { status: true },
+            employees: {
+                some: {
+                    services: {
+                        some: { status: true },
+                    },
+                },
             },
         },
         select: {
@@ -19,9 +23,13 @@ export async function getProfessionals() {
             subscription: {
                 select: { plan: true },
             },
-            services: {
-                where: { status: true },
-                select: { name: true },
+            employees: {
+                select: {
+                    services: {
+                        where: { status: true },
+                        select: { name: true },
+                    },
+                },
             },
         },
     });

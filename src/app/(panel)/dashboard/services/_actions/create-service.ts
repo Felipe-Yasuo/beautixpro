@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -26,14 +26,13 @@ const serviceSchema = z.object({
 });
 
 export async function createService(formData: FormData) {
-    const session = await auth();
-    if (!session?.user?.id) return { error: "Não autorizado." };
+    const userId = await requireAuth();
 
     const plan = await getUserPlan();
     const limit = SERVICE_LIMITS[plan];
 
     const serviceCount = await prisma.service.count({
-        where: { employee: { userId: session.user.id } },
+        where: { employee: { userId: userId } },
     });
 
     if (serviceCount >= limit) {
@@ -57,7 +56,7 @@ export async function createService(formData: FormData) {
 
     if (!targetEmployeeId) {
         const defaultEmployee = await prisma.employee.findFirst({
-            where: { userId: session.user.id },
+            where: { userId: userId },
         });
 
         if (defaultEmployee) {
@@ -67,7 +66,7 @@ export async function createService(formData: FormData) {
                 data: {
                     name: "Padrão",
                     times: [],
-                    userId: session.user.id,
+                    userId: userId,
                 },
             });
             targetEmployeeId = created.id;
@@ -76,7 +75,7 @@ export async function createService(formData: FormData) {
 
     if (employeeId) {
         const owns = await prisma.employee.findFirst({
-            where: { id: targetEmployeeId, userId: session.user.id },
+            where: { id: targetEmployeeId, userId: userId },
         });
         if (!owns) return { error: "Funcionário inválido." };
     }

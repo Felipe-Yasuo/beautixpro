@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { auth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
@@ -11,14 +11,13 @@ const schema = z.object({
 });
 
 export async function updateEmployeeTimes(employeeId: string, times: string[]) {
-    const session = await auth();
-    if (!session?.user?.id) return { error: "Não autorizado." };
+    const userId = await requireAuth();
 
     const parsed = schema.safeParse({ employeeId, times });
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
     const employee = await prisma.employee.findUnique({
-        where: { id: parsed.data.employeeId, userId: session.user.id },
+        where: { id: parsed.data.employeeId, userId },
     });
 
     if (!employee) return { error: "Funcionário não encontrado." };

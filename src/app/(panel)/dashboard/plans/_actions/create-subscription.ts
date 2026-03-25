@@ -1,16 +1,14 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
 export async function createSubscription(priceId: string) {
-    const session = await auth();
-
-    if (!session?.user?.id) return { error: "Não autorizado." };
+    const userId = await requireAuth();
 
     const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
+        where: { id: userId },
         select: {
             email: true,
             name: true,
@@ -31,7 +29,7 @@ export async function createSubscription(priceId: string) {
         customerId = customer.id;
 
         await prisma.user.update({
-            where: { id: session.user.id },
+            where: { id: userId },
             data: { stripe_customer_id: customerId },
         });
     }
@@ -44,11 +42,11 @@ export async function createSubscription(priceId: string) {
         success_url: `${process.env.NEXTAUTH_URL}/dashboard/plans?success=true`,
         cancel_url: `${process.env.NEXTAUTH_URL}/dashboard/plans?canceled=true`,
         metadata: {
-            userId: session.user.id,
+            userId: userId,
         },
         subscription_data: {
             metadata: {
-                userId: session.user.id,
+                userId: userId,
             },
         },
     });

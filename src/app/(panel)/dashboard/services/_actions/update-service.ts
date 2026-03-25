@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -14,8 +14,7 @@ const serviceSchema = z.object({
 });
 
 export async function updateService(formData: FormData) {
-    const session = await auth();
-    if (!session?.user?.id) return { error: "Não autorizado." };
+    const userId = await requireAuth();
 
     const parsed = serviceSchema.safeParse({
         id: formData.get("id"),
@@ -32,7 +31,7 @@ export async function updateService(formData: FormData) {
     const { id, name, price, duration, status } = parsed.data;
 
     const service = await prisma.service.findFirst({
-        where: { id, employee: { userId: session.user.id } },
+        where: { id, employee: { userId } },
     });
 
     if (!service) return { error: "Serviço não encontrado." };

@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -10,9 +10,7 @@ const reminderSchema = z.object({
 });
 
 export async function createReminder(formData: FormData) {
-    const session = await auth();
-
-    if (!session?.user?.id) return { error: "Não autorizado." };
+    const userId = await requireAuth();
 
     const parsed = reminderSchema.safeParse({
         description: formData.get("description"),
@@ -25,7 +23,7 @@ export async function createReminder(formData: FormData) {
     await prisma.reminder.create({
         data: {
             description: parsed.data.description,
-            userId: session.user.id,
+            userId,
         },
     });
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -18,8 +18,7 @@ const profileSchema = z.object({
 });
 
 export async function updateProfile(formData: FormData) {
-    const session = await auth();
-    if (!session?.user?.id) return { error: "Não autorizado." };
+    const userId = await requireAuth();
 
     const parsed = profileSchema.safeParse({
         name: formData.get("name"),
@@ -32,7 +31,7 @@ export async function updateProfile(formData: FormData) {
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
     await prisma.user.update({
-        where: { id: session.user.id },
+        where: { id: userId },
         data: {
             name: parsed.data.name,
             phone: parsed.data.phone,

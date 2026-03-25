@@ -5,6 +5,12 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./prisma";
 import bcrypt from "bcryptjs";
 
+export async function requireAuth(): Promise<string> {
+    const session = await auth();
+    if (!session?.user?.id) throw new Error("Não autorizado.");
+    return session.user.id;
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
     providers: [

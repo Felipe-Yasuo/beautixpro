@@ -1,16 +1,14 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
 export async function createPortalCustomer() {
-    const session = await auth();
-
-    if (!session?.user?.id) return { error: "Não autorizado." };
+    const userId = await requireAuth();
 
     const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
+        where: { id: userId },
         select: { stripe_customer_id: true },
     });
 

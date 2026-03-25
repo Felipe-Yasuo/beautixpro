@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getUserPlan } from "@/lib/get-plan";
 import { z } from "zod";
@@ -11,8 +11,7 @@ const schema = z.object({
 });
 
 export async function createEmployee(formData: FormData) {
-    const session = await auth();
-    if (!session?.user?.id) return { error: "Não autorizado." };
+    const userId = await requireAuth();
 
     const plan = await getUserPlan();
     if (plan !== "PROFESSIONAL") {
@@ -25,7 +24,7 @@ export async function createEmployee(formData: FormData) {
     await prisma.employee.create({
         data: {
             name: parsed.data.name,
-            userId: session.user.id,
+            userId,
         },
     });
 

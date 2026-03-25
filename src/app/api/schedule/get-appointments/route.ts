@@ -1,19 +1,32 @@
+import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { computeBlockedSlots, computeUnavailableStarts } from "@/lib/schedule";
+
+const querySchema = z.object({
+    employeeId: z.string().min(1),
+    date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Data inválida."),
+    duration: z.coerce.number().int().min(0).default(0),
+});
 
 export async function GET(req: NextRequest) {
-    const employeeId = req.nextUrl.searchParams.get("employeeId");
-    const date = req.nextUrl.searchParams.get("date");
-    const duration = Number(req.nextUrl.searchParams.get("duration") ?? "0");
+    const params = {
+        employeeId: req.nextUrl.searchParams.get("employeeId"),
+        date: req.nextUrl.searchParams.get("date"),
+        duration: req.nextUrl.searchParams.get("duration") ?? "0",
+    };
 
-    if (!employeeId || !date) {
+    const parsed = querySchema.safeParse(params);
+    if (!parsed.success) {
         return NextResponse.json({ times: [] });
     }
+
+    const { employeeId, date, duration } = parsed.data;
 
     const appointments = await prisma.appointment.findMany({
         where: {
             employeeId,
-            appointmentDate: new Date(date + "T00:00:00"),
+            appointmentDate: new Date(`${date}T00:00:00`),
         },
         select: {
             time: true,
@@ -21,37 +34,8 @@ export async function GET(req: NextRequest) {
         },
     });
 
-    const blockedSlots = new Set<string>();
-
-    appointments.forEach((apt) => {
-        const [h, m] = apt.time.split(":").map(Number);
-        const startMinutes = h * 60 + m;
-        const endMinutes = startMinutes + apt.service.duration;
-
-        for (let t = startMinutes; t < endMinutes; t += 30) {
-            const hour = String(Math.floor(t / 60)).padStart(2, "0");
-            const min = String(t % 60).padStart(2, "0");
-            blockedSlots.add(`${hour}:${min}`);
-        }
-    });
-
-    const unavailableStarts = new Set<string>();
-
-    if (duration > 0) {
-        for (let t = 8 * 60; t <= 23 * 60; t += 30) {
-            const endTime = t + duration;
-            for (let s = t; s < endTime; s += 30) {
-                const hour = String(Math.floor(s / 60)).padStart(2, "0");
-                const min = String(s % 60).padStart(2, "0");
-                if (blockedSlots.has(`${hour}:${min}`)) {
-                    const startHour = String(Math.floor(t / 60)).padStart(2, "0");
-                    const startMin = String(t % 60).padStart(2, "0");
-                    unavailableStarts.add(`${startHour}:${startMin}`);
-                    break;
-                }
-            }
-        }
-    }
+    const blockedSlots = computeBlockedSlots(appointments);
+    const unavailableStarts = computeUnavailableStarts(blockedSlots, duration);
 
     return NextResponse.json({
         times: Array.from(new Set([...blockedSlots, ...unavailableStarts])),

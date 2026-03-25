@@ -2,10 +2,13 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getReports } from "../_data-access/get-reports";
 
+function formatBRL(cents: number): string {
+    return (cents / 100).toFixed(2);
+}
+
 export async function ReportsContent() {
     const session = await auth();
 
-    // Verifica se tem plano Professional
     const subscription = session?.user?.id
         ? await prisma.subscription.findUnique({
             where: { userId: session.user.id },
@@ -33,13 +36,20 @@ export async function ReportsContent() {
                         Ver planos
                     </a>
                 </div>
-            </div >
+            </div>
         );
     }
 
     const reports = await getReports();
 
     if (!reports) return null;
+
+    const metrics = [
+        { label: "Total de agendamentos", value: String(reports.totalAppointments), highlight: false },
+        { label: "Faturamento total", value: `R$ ${formatBRL(reports.totalRevenue)}`, highlight: true },
+        { label: "Agendamentos este mês", value: String(reports.appointmentsThisMonth), highlight: false },
+        { label: "Faturamento este mês", value: `R$ ${formatBRL(reports.revenueThisMonth)}`, highlight: true },
+    ] as const;
 
     return (
         <div className="flex flex-col gap-10">
@@ -50,46 +60,19 @@ export async function ReportsContent() {
                 <h1 className="text-3xl font-light text-[#f0ead6] mt-1">Relatórios</h1>
             </div>
 
-            {/* Cards de métricas */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="border border-[#c9a84c22] p-6">
-                    <p className="text-[#3a3028] text-xs tracking-widest uppercase mb-2">
-                        Total de agendamentos
-                    </p>
-                    <p className="text-4xl font-light text-[#f0ead6]">
-                        {reports.totalAppointments}
-                    </p>
-                </div>
-
-                <div className="border border-[#c9a84c22] p-6">
-                    <p className="text-[#3a3028] text-xs tracking-widest uppercase mb-2">
-                        Faturamento total
-                    </p>
-                    <p className="text-4xl font-light text-[#c9a84c]">
-                        R$ {(reports.totalRevenue / 100).toFixed(2)}
-                    </p>
-                </div>
-
-                <div className="border border-[#c9a84c22] p-6">
-                    <p className="text-[#3a3028] text-xs tracking-widest uppercase mb-2">
-                        Agendamentos este mês
-                    </p>
-                    <p className="text-4xl font-light text-[#f0ead6]">
-                        {reports.appointmentsThisMonth}
-                    </p>
-                </div>
-
-                <div className="border border-[#c9a84c22] p-6">
-                    <p className="text-[#3a3028] text-xs tracking-widest uppercase mb-2">
-                        Faturamento este mês
-                    </p>
-                    <p className="text-4xl font-light text-[#c9a84c]">
-                        R$ {(reports.revenueThisMonth / 100).toFixed(2)}
-                    </p>
-                </div>
+                {metrics.map((metric) => (
+                    <div key={metric.label} className="border border-[#c9a84c22] p-6">
+                        <p className="text-[#3a3028] text-xs tracking-widest uppercase mb-2">
+                            {metric.label}
+                        </p>
+                        <p className={`text-4xl font-light ${metric.highlight ? "text-[#c9a84c]" : "text-[#f0ead6]"}`}>
+                            {metric.value}
+                        </p>
+                    </div>
+                ))}
             </div>
 
-            {/* Serviços populares */}
             <div className="flex flex-col gap-4">
                 <p className="text-[#c9a84c] text-xs tracking-widest uppercase">
                     Serviços mais populares
@@ -113,7 +96,7 @@ export async function ReportsContent() {
                                     </p>
                                 </div>
                                 <p className="text-[#c9a84c] text-sm">
-                                    R$ {(service.revenue / 100).toFixed(2)}
+                                    R$ {formatBRL(service.revenue)}
                                 </p>
                             </div>
                         ))}

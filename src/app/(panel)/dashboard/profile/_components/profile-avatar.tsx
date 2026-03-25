@@ -56,7 +56,6 @@ export function ProfileAvatar({ image, name }: ProfileAvatarProps) {
                     <div className="w-full h-full rounded-full bg-[var(--surface-low)] border border-[var(--outline)]" />
                 )}
 
-                {/* Overlay com ícone */}
                 <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1">
                     {loading ? (
                         <span className="text-[var(--gold)] text-[10px] tracking-widest uppercase">
@@ -72,7 +71,6 @@ export function ProfileAvatar({ image, name }: ProfileAvatarProps) {
                     )}
                 </div>
 
-                {/* Ícone visível quando sem hover (sem foto) */}
                 {!preview && (
                     <div className="absolute inset-0 rounded-full flex items-center justify-center pointer-events-none">
                         <Upload size={20} className="text-[var(--on-surface-dim)]" />

@@ -32,7 +32,6 @@ export async function createService(formData: FormData) {
     const plan = await getUserPlan();
     const limit = SERVICE_LIMITS[plan];
 
-    // Contagem via relação employee → userId
     const serviceCount = await prisma.service.count({
         where: { employee: { userId: session.user.id } },
     });
@@ -56,7 +55,6 @@ export async function createService(formData: FormData) {
 
     let targetEmployeeId = employeeId;
 
-    // FREE/BASIC: busca ou cria employee padrão invisível
     if (!targetEmployeeId) {
         const defaultEmployee = await prisma.employee.findFirst({
             where: { userId: session.user.id },
@@ -76,7 +74,6 @@ export async function createService(formData: FormData) {
         }
     }
 
-    // Valida que o employee pertence ao usuário (segurança para PROFESSIONAL)
     if (employeeId) {
         const owns = await prisma.employee.findFirst({
             where: { id: targetEmployeeId, userId: session.user.id },

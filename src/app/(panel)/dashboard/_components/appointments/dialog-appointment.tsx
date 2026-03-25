@@ -1,4 +1,3 @@
-//dialog-appointment.tsx
 "use client";
 
 import { useState } from "react";
@@ -19,6 +18,10 @@ interface Appointment {
 
 interface DialogAppointmentProps {
     appointment: Appointment;
+}
+
+function formatBRL(cents: number): string {
+    return (cents / 100).toFixed(2);
 }
 
 export function DialogAppointment({ appointment }: DialogAppointmentProps) {
@@ -69,8 +72,7 @@ export function DialogAppointment({ appointment }: DialogAppointmentProps) {
                                 </p>
                                 <p className="text-[var(--on-surface)] text-sm">{appointment.service.name}</p>
                                 <p className="text-[var(--on-surface-variant)] text-xs mt-1">
-                                    {appointment.service.duration} min · R${" "}
-                                    {(appointment.service.price / 100).toFixed(2)}
+                                    {appointment.service.duration} min · R$ {formatBRL(appointment.service.price)}
                                 </p>
                             </div>
 

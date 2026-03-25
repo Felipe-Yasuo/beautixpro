@@ -1,4 +1,3 @@
-// src/lib/get-plan.ts
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -13,7 +12,6 @@ export async function getUserPlan(): Promise<UserPlan> {
         select: { plan: true, status: true },
     });
 
-    // Assinatura inativa = FREE
     if (!subscription || subscription.status !== "active") return "FREE";
 
     return subscription.plan as UserPlan;

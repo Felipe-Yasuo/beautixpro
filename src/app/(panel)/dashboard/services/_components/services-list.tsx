@@ -26,8 +26,12 @@ interface ServicesListProps {
     atLimit: boolean;
 }
 
-const SERVICE_ICONS = [Scissors, Sparkles, Leaf, Brush];
+const SERVICE_ICONS = [Scissors, Sparkles, Leaf, Brush] as const;
 const PAGE_SIZE = 4;
+
+function formatBRL(cents: number): string {
+    return (cents / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 });
+}
 
 export function ServicesList({ services, employees, isProfessional, atLimit }: ServicesListProps) {
     const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -36,14 +40,12 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
         employees[0]?.id ?? ""
     );
 
-    // Filtra por employee selecionado se PROFESSIONAL
     const filtered = isProfessional && selectedEmployeeId
         ? services.filter((s) => s.employee.id === selectedEmployeeId)
         : services;
 
     const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
     const paginated = filtered.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
-
     const selectedEmployee = employees.find((e) => e.id === selectedEmployeeId);
 
     async function handleDelete(id: string) {
@@ -52,9 +54,29 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
         setDeletingId(null);
     }
 
+    function UpgradeLink() {
+        return (
+            <a href="/dashboard/plans" className="btn-primary text-[10px] px-4 py-2.5">
+                Fazer upgrade
+            </a>
+        );
+    }
+
+    function NewServiceButton({ employeeId }: { employeeId?: string }) {
+        return (
+            <DialogService
+                employeeId={employeeId}
+                trigger={
+                    <button className="btn-primary flex items-center gap-2 text-sm px-4 py-2.5">
+                        + Novo Serviço
+                    </button>
+                }
+            />
+        );
+    }
+
     return (
         <div className="flex flex-col gap-4">
-            {/* Select de funcionário + botão (só PROFESSIONAL) */}
             {isProfessional && (
                 <div className="flex items-center justify-between gap-4">
                     <select
@@ -75,45 +97,17 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                         ))}
                     </select>
 
-                    {!atLimit && selectedEmployee && (
-                        <DialogService
-                            employeeId={selectedEmployeeId}
-                            trigger={
-                                <button className="btn-primary flex items-center gap-2 text-sm px-4 py-2.5">
-                                    + Novo Serviço
-                                </button>
-                            }
-                        />
-                    )}
-
-                    {atLimit && (
-                        <a href="/dashboard/plans" className="btn-primary text-[10px] px-4 py-2.5">
-                            Fazer upgrade
-                        </a>
-                    )}
+                    {!atLimit && selectedEmployee && <NewServiceButton employeeId={selectedEmployeeId} />}
+                    {atLimit && <UpgradeLink />}
                 </div>
             )}
 
-            {/* Botão FREE/BASIC */}
             {!isProfessional && (
                 <div className="flex justify-end">
-                    {!atLimit ? (
-                        <DialogService
-                            trigger={
-                                <button className="btn-primary flex items-center gap-2">
-                                    + Novo Serviço
-                                </button>
-                            }
-                        />
-                    ) : (
-                        <a href="/dashboard/plans" className="btn-primary text-[10px] px-4 py-2.5">
-                            Fazer upgrade
-                        </a>
-                    )}
+                    {!atLimit ? <NewServiceButton /> : <UpgradeLink />}
                 </div>
             )}
 
-            {/* Tabela */}
             {filtered.length === 0 ? (
                 <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase text-center py-20">
                     {isProfessional && employees.length === 0
@@ -122,7 +116,6 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                 </p>
             ) : (
                 <div className="flex flex-col gap-0 border border-[var(--outline)] bg-[var(--surface-low)]">
-                    {/* Cabeçalho */}
                     <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-4 border-b border-[var(--outline)]">
                         <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">Nome do Serviço</span>
                         <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">Duração</span>
@@ -152,10 +145,11 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                                 </span>
 
                                 <div>
-                                    <span className={`text-[10px] tracking-widest uppercase px-3 py-1 flex items-center gap-1.5 w-fit ${service.status
-                                        ? "bg-[#c9a84c22] text-[var(--gold)] border border-[#c9a84c44]"
-                                        : "bg-[#ffffff08] text-[var(--on-surface-dim)] border border-[#ffffff15]"
-                                        }`}>
+                                    <span className={`text-[10px] tracking-widest uppercase px-3 py-1 flex items-center gap-1.5 w-fit ${
+                                        service.status
+                                            ? "bg-[#c9a84c22] text-[var(--gold)] border border-[#c9a84c44]"
+                                            : "bg-[#ffffff08] text-[var(--on-surface-dim)] border border-[#ffffff15]"
+                                    }`}>
                                         <span className={`w-1.5 h-1.5 rounded-full ${service.status ? "bg-[var(--gold)]" : "bg-[var(--on-surface-dim)]"}`} />
                                         {service.status ? "Ativo" : "Inativo"}
                                     </span>
@@ -164,7 +158,7 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                                 <div>
                                     <span className="text-[var(--on-surface-variant)] text-xs">R$</span>
                                     <span className="text-[var(--gold)] font-semibold ml-1">
-                                        {(service.price / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                                        {formatBRL(service.price)}
                                     </span>
                                 </div>
 
@@ -190,7 +184,6 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                         );
                     })}
 
-                    {/* Rodapé paginação */}
                     <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--outline)]">
                         <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">
                             Exibindo {paginated.length} de {filtered.length} serviços

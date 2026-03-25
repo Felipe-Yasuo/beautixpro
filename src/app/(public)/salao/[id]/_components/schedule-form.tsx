@@ -1,28 +1,27 @@
 "use client";
 
-import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { createAppointment } from "../_actions/create-appointment";
 import { ptBR } from "date-fns/locale";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { ScheduleTimeList } from "./schedule-time-list";
+import { useScheduleForm } from "../_hooks/useScheduleForm";
+import type { Employee } from "../_hooks/useScheduleForm";
 
-interface Service {
-    id: string;
-    name: string;
-    price: number;
-    duration: number;
+function formatDuration(minutes: number): string {
+    const hours = Math.floor(minutes / 60);
+    const remainder = minutes % 60;
+    const hoursPart = hours > 0 ? `${hours}h ` : "";
+    const minutesPart = remainder > 0 ? `${remainder}min` : "";
+    return `${hoursPart}${minutesPart}`.trim();
 }
 
-interface Employee {
-    id: string;
-    name: string;
-    times: string[];
-    services: Service[];
-}
+const INPUT_CLASS =
+    "w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors";
+
+const today = () => new Date(new Date().setHours(0, 0, 0, 0));
 
 interface ScheduleFormProps {
     user: {
@@ -32,53 +31,30 @@ interface ScheduleFormProps {
 }
 
 export function ScheduleForm({ user }: ScheduleFormProps) {
-    const isMultiEmployee = user.employees.length > 1;
-
-    // FREE/BASIC: usa o único employee direto, sem mostrar seleção
-    const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-        isMultiEmployee ? null : user.employees[0] ?? null
-    );
-
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
-    const [selectedService, setSelectedService] = useState<Service | null>(null);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [selectedTime, setSelectedTime] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState(false);
-
-    const isComplete = name && email && phone && selectedEmployee && selectedService && selectedDate && selectedTime;
-
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        if (!isComplete) return;
-
-        setError("");
-        setLoading(true);
-
-        const formData = new FormData();
-        formData.set("name", name);
-        formData.set("email", email);
-        formData.set("phone", phone);
-        formData.set("serviceId", selectedService.id);
-        formData.set("employeeId", selectedEmployee.id);
-        formData.set("appointmentDate", selectedDate.toISOString());
-        formData.set("time", selectedTime);
-        formData.set("userId", user.id);
-
-        const result = await createAppointment(formData);
-
-        if (result?.error) {
-            setError(result.error);
-            setLoading(false);
-            return;
-        }
-
-        setSuccess(true);
-        setLoading(false);
-    }
+    const {
+        isMultiEmployee,
+        selectedEmployee,
+        selectedService,
+        selectedDate,
+        selectedTime,
+        name,
+        email,
+        phone,
+        fieldErrors,
+        serverError,
+        loading,
+        success,
+        isComplete,
+        setName,
+        setEmail,
+        setPhone,
+        setSelectedTime,
+        validateField,
+        handleEmployeeChange,
+        handleServiceChange,
+        handleDateChange,
+        handleSubmit,
+    } = useScheduleForm({ user });
 
     if (user.employees.length === 0) {
         return (
@@ -104,19 +80,10 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
 
     return (
         <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-6 flex flex-col gap-5">
-
-            {/* Seleção de funcionário — só PROFESSIONAL (múltiplos employees) */}
             {isMultiEmployee && (
                 <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium text-foreground">Selecione o profissional:</label>
-                    <Select
-                        onValueChange={(value) => {
-                            const employee = user.employees.find((e) => e.id === value);
-                            setSelectedEmployee(employee ?? null);
-                            setSelectedService(null);
-                            setSelectedTime(null);
-                        }}
-                    >
+                    <Select onValueChange={handleEmployeeChange}>
                         <SelectTrigger className="w-full bg-background border-border text-foreground">
                             <SelectValue placeholder="Selecione um profissional" />
                         </SelectTrigger>
@@ -131,7 +98,6 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                 </div>
             )}
 
-            {/* Nome */}
             <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-foreground">Nome completo:</label>
                 <input
@@ -139,12 +105,12 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                     placeholder="Digite seu nome completo..."
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    required
-                    className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors"
+                    onBlur={(e) => validateField("name", e.target.value)}
+                    className={INPUT_CLASS}
                 />
+                {fieldErrors.name && <p className="text-destructive text-xs">{fieldErrors.name}</p>}
             </div>
 
-            {/* Email */}
             <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-foreground">Email:</label>
                 <input
@@ -152,12 +118,12 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                     placeholder="Digite seu email..."
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors"
+                    onBlur={(e) => validateField("email", e.target.value)}
+                    className={INPUT_CLASS}
                 />
+                {fieldErrors.email && <p className="text-destructive text-xs">{fieldErrors.email}</p>}
             </div>
 
-            {/* Telefone */}
             <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-foreground">Telefone:</label>
                 <input
@@ -165,29 +131,23 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                     placeholder="(XX) XXXXX-XXXX"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    required
-                    className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors"
+                    onBlur={(e) => validateField("phone", e.target.value)}
+                    className={INPUT_CLASS}
                 />
+                {fieldErrors.phone && <p className="text-destructive text-xs">{fieldErrors.phone}</p>}
             </div>
 
-            {/* Serviço — só aparece após selecionar employee (ou sempre para FREE/BASIC) */}
             {selectedEmployee && (
                 <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium text-foreground">Selecione o serviço:</label>
-                    <Select
-                        onValueChange={(value) => {
-                            const service = selectedEmployee.services.find((s) => s.id === value);
-                            setSelectedService(service ?? null);
-                            setSelectedTime(null);
-                        }}
-                    >
+                    <Select onValueChange={handleServiceChange}>
                         <SelectTrigger className="w-full bg-background border-border text-foreground">
                             <SelectValue placeholder="Selecione um serviço" />
                         </SelectTrigger>
                         <SelectContent className="bg-card border-border">
                             {selectedEmployee.services.map((service) => (
                                 <SelectItem key={service.id} value={service.id} className="text-foreground">
-                                    {service.name} — {Math.floor(service.duration / 60) > 0 ? `${Math.floor(service.duration / 60)}h ` : ""}{service.duration % 60 > 0 ? `${service.duration % 60}min` : ""}
+                                    {service.name} — {formatDuration(service.duration)}
                                 </SelectItem>
                             ))}
                         </SelectContent>
@@ -195,7 +155,6 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                 </div>
             )}
 
-            {/* Data */}
             {selectedService && (
                 <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium text-foreground">Data do agendamento:</label>
@@ -215,11 +174,8 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                             <Calendar
                                 mode="single"
                                 selected={selectedDate ?? undefined}
-                                onSelect={(date) => {
-                                    setSelectedDate(date ?? null);
-                                    setSelectedTime(null);
-                                }}
-                                disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                                onSelect={handleDateChange}
+                                disabled={(date) => date < today()}
                                 locale={ptBR}
                             />
                         </PopoverContent>
@@ -227,7 +183,6 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                 </div>
             )}
 
-            {/* Horários */}
             {selectedEmployee && selectedService && selectedDate && (
                 <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium text-foreground">Horários disponíveis:</label>
@@ -242,7 +197,7 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                 </div>
             )}
 
-            {error && <p className="text-destructive text-xs">{error}</p>}
+            {serverError && <p className="text-destructive text-xs">{serverError}</p>}
 
             <button
                 type="submit"

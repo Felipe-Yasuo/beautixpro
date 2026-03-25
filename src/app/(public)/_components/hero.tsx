@@ -4,8 +4,6 @@ import Link from "next/link";
 export function Hero() {
     return (
         <section className="relative flex items-center justify-between px-12 min-h-[88vh] overflow-hidden">
-
-            {/* Texto */}
             <div className="flex flex-col gap-7 max-w-lg z-10">
                 <h1 className="text-6xl font-light leading-[1.1] text-foreground">
                     Encontre os melhores{" "}
@@ -33,7 +31,6 @@ export function Hero() {
                     </Link>
                 </div>
 
-                {/* Stats */}
                 <div className="flex items-center gap-4 mt-4 border-t border-border pt-6">
                     <div className="text-center">
                         <p className="text-primary text-2xl font-light">500+</p>
@@ -52,7 +49,6 @@ export function Hero() {
                 </div>
             </div>
 
-            {/* Imagem */}
             <div className="absolute right-0 top-0 h-full w-[55%]">
                 <Image
                     src="/hairdresser-hero.png"
@@ -63,7 +59,6 @@ export function Hero() {
                 />
                 <div className="absolute inset-0 bg-linear-to-r from-background via-background/10 to-transparent" />
             </div>
-
         </section>
     );
 }

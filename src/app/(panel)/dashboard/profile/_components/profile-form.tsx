@@ -1,10 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { z } from "zod";
 import { ChevronRight, X, Clock } from "lucide-react";
 import { updateProfile } from "../_actions/update-profile";
 import { updateUserTimes } from "../_actions/update-user-times";
 import { EmployeesSection } from "./employees-section";
+
+const profileSchema = z.object({
+    name: z.string().min(3, "Nome deve ter ao menos 3 caracteres"),
+    address: z.string().min(5, "Endereço deve ter ao menos 5 caracteres"),
+    phone: z
+        .string()
+        .min(10, "Telefone inválido")
+        .regex(/^[\d\s()\-+]+$/, "Telefone inválido"),
+    status: z.enum(["true", "false"]),
+    timeZone: z.string().min(1, "Selecione o fuso horário"),
+});
+
+type ProfileFields = z.infer<typeof profileSchema>;
+type FieldErrors = Partial<Record<keyof ProfileFields, string>>;
 
 const ALL_TIMES = [
     "08:00", "08:30", "09:00", "09:30", "10:00",
@@ -14,7 +29,7 @@ const ALL_TIMES = [
     "18:00", "18:30", "19:00", "19:30", "20:00",
     "20:30", "21:00", "21:30", "22:00", "22:30",
     "23:00", "23:30", "00:00",
-];
+] as const;
 
 const TIMEZONES = [
     { value: "America/Sao_Paulo", label: "Brasília (GMT-3)" },
@@ -27,7 +42,7 @@ const TIMEZONES = [
     { value: "America/Boa_Vista", label: "Boa Vista (GMT-4)" },
     { value: "America/Rio_Branco", label: "Rio Branco (GMT-5)" },
     { value: "America/Noronha", label: "Fernando de Noronha (GMT-2)" },
-];
+] as const;
 
 interface Employee {
     id: string;
@@ -48,9 +63,34 @@ interface ProfileFormProps {
     isProfessional: boolean;
 }
 
+function extractFieldErrors(error: z.ZodError<ProfileFields>): FieldErrors {
+    const errors: FieldErrors = {};
+    for (const issue of error.issues) {
+        const field = issue.path[0] as keyof ProfileFields;
+        errors[field] ??= issue.message;
+    }
+    return errors;
+}
+
+function pluralize(count: number, singular: string, plural: string): string {
+    return count === 1 ? singular : plural;
+}
+
+const LABEL_CLASS = "text-[var(--gold)] text-xs tracking-widest uppercase";
+
+const INPUT_CLASS =
+    "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
+
+const INPUT_ERROR_CLASS =
+    "bg-[var(--surface-low)] border border-red-500 text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
+
+const SELECT_CLASS =
+    "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] transition-colors cursor-pointer w-full rounded-lg";
+
 export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+    const [serverError, setServerError] = useState("");
     const [success, setSuccess] = useState(false);
 
     const [showTimesModal, setShowTimesModal] = useState(false);
@@ -70,59 +110,84 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
         setShowTimesModal(false);
     }
 
+    function validateField(field: keyof ProfileFields, value: string) {
+        const shape = profileSchema.shape[field] as z.ZodTypeAny;
+        const result = shape.safeParse(value);
+        setFieldErrors((prev) => ({
+            ...prev,
+            [field]: result.success ? undefined : (result.error as z.ZodError).issues[0]?.message,
+        }));
+    }
+
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        setError("");
+        setServerError("");
         setSuccess(false);
-        setLoading(true);
+
         const formData = new FormData(e.currentTarget);
+        const raw = {
+            name: formData.get("name") as string,
+            address: formData.get("address") as string,
+            phone: formData.get("phone") as string,
+            status: formData.get("status") as string,
+            timeZone: formData.get("timeZone") as string,
+        };
+
+        const validation = profileSchema.safeParse(raw);
+        if (!validation.success) {
+            setFieldErrors(extractFieldErrors(validation.error));
+            return;
+        }
+
+        setFieldErrors({});
+        setLoading(true);
+
         const result = await updateProfile(formData);
         if (result?.error) {
-            setError(result.error);
+            setServerError(result.error);
             setLoading(false);
             return;
         }
+
         setSuccess(true);
         setLoading(false);
     }
 
-    const inputClass =
-        "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
-
-    const selectClass =
-        "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] transition-colors cursor-pointer w-full rounded-lg";
-
-    const labelClass = "text-[var(--gold)] text-xs tracking-widest uppercase";
+    const timesLabel = selectedTimes.length > 0
+        ? `${selectedTimes.length} ${pluralize(selectedTimes.length, "horário selecionado", "horários selecionados")}`
+        : "Clique aqui para selecionar horários";
 
     return (
         <>
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1.5">
-                    <label className={labelClass}>Nome do salão</label>
+                    <label className={LABEL_CLASS}>Nome do salão</label>
                     <input
                         name="name"
                         type="text"
                         defaultValue={user.name ?? ""}
                         placeholder="Nome do seu salão"
-                        required
-                        className={inputClass}
+                        onBlur={(e) => validateField("name", e.target.value)}
+                        className={fieldErrors.name ? INPUT_ERROR_CLASS : INPUT_CLASS}
                     />
+                    {fieldErrors.name && <p className="text-red-400 text-xs">{fieldErrors.name}</p>}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                    <label className={labelClass}>Endereço completo</label>
+                    <label className={LABEL_CLASS}>Endereço completo</label>
                     <input
                         name="address"
                         type="text"
                         defaultValue={user.address ?? ""}
                         placeholder="Digite o endereço da clínica..."
-                        required
-                        className={inputClass}
+                        onBlur={(e) => validateField("address", e.target.value)}
+                        className={fieldErrors.address ? INPUT_ERROR_CLASS : INPUT_CLASS}
                     />
+                    {fieldErrors.address && <p className="text-red-400 text-xs">{fieldErrors.address}</p>}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                    <label className={labelClass}>Telefone</label>
+                    <label className={LABEL_CLASS}>Telefone</label>
                     <input
                         name="phone"
                         type="tel"
@@ -130,17 +195,18 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
                         pattern="[0-9]*"
                         defaultValue={user.phone ?? ""}
                         placeholder="Apenas números"
-                        required
-                        className={inputClass}
+                        onBlur={(e) => validateField("phone", e.target.value)}
+                        className={fieldErrors.phone ? INPUT_ERROR_CLASS : INPUT_CLASS}
                     />
+                    {fieldErrors.phone && <p className="text-red-400 text-xs">{fieldErrors.phone}</p>}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                    <label className={labelClass}>Status da clínica</label>
+                    <label className={LABEL_CLASS}>Status da clínica</label>
                     <select
                         name="status"
                         defaultValue={user.status ? "true" : "false"}
-                        className={selectClass}
+                        className={SELECT_CLASS}
                     >
                         <option value="true">Ativo (clínica aberta)</option>
                         <option value="false">Inativo (clínica fechada)</option>
@@ -148,11 +214,11 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                    <label className={labelClass}>Fuso horário</label>
+                    <label className={LABEL_CLASS}>Fuso horário</label>
                     <select
                         name="timeZone"
                         defaultValue={user.timeZone ?? "America/Sao_Paulo"}
-                        className={selectClass}
+                        className={SELECT_CLASS}
                     >
                         {TIMEZONES.map((tz) => (
                             <option key={tz.value} value={tz.value}>
@@ -162,26 +228,20 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
                     </select>
                 </div>
 
-                {/* Horários da clínica — só FREE/BASIC */}
                 {!isProfessional && (
                     <div className="flex flex-col gap-1.5">
-                        <label className={labelClass}>Configurar horários da clínica</label>
+                        <label className={LABEL_CLASS}>Configurar horários da clínica</label>
                         <button
                             type="button"
                             onClick={() => setShowTimesModal(true)}
                             className="flex items-center justify-between bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface-dim)] px-4 py-3 text-sm hover:border-[var(--gold)] hover:text-[var(--on-surface)] transition-colors cursor-pointer w-full text-left rounded-lg"
                         >
-                            <span>
-                                {selectedTimes.length > 0
-                                    ? `${selectedTimes.length} horário${selectedTimes.length > 1 ? "s" : ""} selecionado${selectedTimes.length > 1 ? "s" : ""}`
-                                    : "Clique aqui para selecionar horários"}
-                            </span>
+                            <span>{timesLabel}</span>
                             <ChevronRight size={16} className="text-[var(--gold)] shrink-0" />
                         </button>
                     </div>
                 )}
 
-                {/* Funcionários — só PROFESSIONAL */}
                 {isProfessional && (
                     <EmployeesSection
                         employees={user.employees}
@@ -189,7 +249,7 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
                     />
                 )}
 
-                {error && <p className="text-red-400 text-xs">{error}</p>}
+                {serverError && <p className="text-red-400 text-xs">{serverError}</p>}
                 {success && (
                     <p className="text-[var(--gold)] text-xs tracking-widest uppercase">
                         Perfil atualizado com sucesso!
@@ -205,7 +265,6 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
                 </button>
             </form>
 
-            {/* Modal de horários (FREE/BASIC) */}
             {showTimesModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     <div
@@ -242,10 +301,11 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
                                             key={time}
                                             type="button"
                                             onClick={() => toggleTime(time)}
-                                            className={`py-2.5 text-xs tracking-wide border transition-colors cursor-pointer rounded-lg ${isSelected
+                                            className={`py-2.5 text-xs tracking-wide border transition-colors cursor-pointer rounded-lg ${
+                                                isSelected
                                                     ? "border-[var(--gold)] bg-[var(--gold-ghost)] text-[var(--gold)]"
                                                     : "border-[var(--outline)] text-[var(--on-surface-dim)] hover:border-[var(--gold)] hover:text-[var(--on-surface-variant)]"
-                                                }`}
+                                            }`}
                                         >
                                             {time}
                                         </button>
@@ -258,7 +318,7 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
                             <div className="flex items-center gap-2 text-[var(--on-surface-dim)]">
                                 <Clock size={13} />
                                 <span className="text-xs">
-                                    {selectedTimes.length} horário{selectedTimes.length !== 1 ? "s" : ""} selecionado{selectedTimes.length !== 1 ? "s" : ""}
+                                    {selectedTimes.length} {pluralize(selectedTimes.length, "horário selecionado", "horários selecionados")}
                                 </span>
                             </div>
                             <button

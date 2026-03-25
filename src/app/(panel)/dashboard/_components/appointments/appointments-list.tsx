@@ -27,6 +27,35 @@ interface AppointmentsListProps {
     isProfessional: boolean;
 }
 
+function parseTimeToMinutes(time: string): number {
+    const [h, m] = time.split(":").map(Number);
+    return h * 60 + m;
+}
+
+function formatMinutesToTime(totalMinutes: number): string {
+    const hour = String(Math.floor(totalMinutes / 60)).padStart(2, "0");
+    const min = String(totalMinutes % 60).padStart(2, "0");
+    return `${hour}:${min}`;
+}
+
+type SlotInfo = { appointment: Appointment; isStart: boolean; totalSlots: number };
+
+function buildSlotMap(appointments: Appointment[]): Record<string, SlotInfo> {
+    const map: Record<string, SlotInfo> = {};
+
+    for (const apt of appointments) {
+        const startMinutes = parseTimeToMinutes(apt.time);
+        const totalSlots = Math.ceil(apt.service.duration / 30);
+
+        for (let i = 0; i < totalSlots; i++) {
+            const slotTime = formatMinutesToTime(startMinutes + i * 30);
+            map[slotTime] = { appointment: apt, isStart: i === 0, totalSlots };
+        }
+    }
+
+    return map;
+}
+
 export function AppointmentsList({
     appointments,
     times,
@@ -43,34 +72,14 @@ export function AppointmentsList({
         router.push(`?${params.toString()}`);
     }
 
-    const sortedTimes = [...times].sort((a, b) => {
-        const [aH, aM] = a.split(":").map(Number);
-        const [bH, bM] = b.split(":").map(Number);
-        return aH * 60 + aM - (bH * 60 + bM);
-    });
+    const sortedTimes = [...times].sort(
+        (a, b) => parseTimeToMinutes(a) - parseTimeToMinutes(b)
+    );
 
-    const slotMap: Record<string, { appointment: Appointment; isStart: boolean; totalSlots: number }> = {};
-
-    appointments.forEach((apt) => {
-        const [h, m] = apt.time.split(":").map(Number);
-        const startMinutes = h * 60 + m;
-        const totalSlots = Math.ceil(apt.service.duration / 30);
-
-        for (let i = 0; i < totalSlots; i++) {
-            const slotMinutes = startMinutes + i * 30;
-            const slotHour = String(Math.floor(slotMinutes / 60)).padStart(2, "0");
-            const slotMin = String(slotMinutes % 60).padStart(2, "0");
-            slotMap[`${slotHour}:${slotMin}`] = {
-                appointment: apt,
-                isStart: i === 0,
-                totalSlots,
-            };
-        }
-    });
+    const slotMap = buildSlotMap(appointments);
 
     return (
         <div className="flex flex-col">
-            {/* Filtro de funcionário — só PROFESSIONAL */}
             {isProfessional && employees.length > 0 && (
                 <div className="px-6 py-4 border-b border-[var(--outline)]">
                     <select

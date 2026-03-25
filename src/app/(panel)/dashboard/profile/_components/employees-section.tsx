@@ -14,7 +14,7 @@ const ALL_TIMES = [
     "18:00", "18:30", "19:00", "19:30", "20:00",
     "20:30", "21:00", "21:30", "22:00", "22:30",
     "23:00", "23:30", "00:00",
-];
+] as const;
 
 interface Employee {
     id: string;
@@ -27,12 +27,17 @@ interface EmployeesSectionProps {
     isProfessional: boolean;
 }
 
+function pluralize(count: number, singular: string, plural: string): string {
+    return count === 1 ? singular : plural;
+}
+
+const LABEL_CLASS = "text-[var(--gold)] text-xs tracking-widest uppercase";
+
 export function EmployeesSection({ employees, isProfessional }: EmployeesSectionProps) {
     const [loading, setLoading] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [error, setError] = useState("");
     const [newName, setNewName] = useState("");
-    // Modal de horários
     const [timesModal, setTimesModal] = useState<Employee | null>(null);
     const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
     const [savingTimes, setSavingTimes] = useState(false);
@@ -80,12 +85,10 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
         setDeletingId(null);
     }
 
-    const labelClass = "text-[var(--gold)] text-xs tracking-widest uppercase";
-
     if (!isProfessional) {
         return (
             <div className="flex flex-col gap-1.5">
-                <label className={labelClass}>Funcionários</label>
+                <label className={LABEL_CLASS}>Funcionários</label>
                 <div className="bg-[var(--surface-low)] border border-[var(--outline-variant)] rounded-lg px-4 py-3 flex items-center justify-between">
                     <span className="text-[var(--on-surface-dim)] text-sm">
                         Exclusivo do plano Professional
@@ -97,16 +100,15 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                         Fazer upgrade →
                     </a>
                 </div>
-            </div >
+            </div>
         );
     }
 
     return (
         <>
             <div className="flex flex-col gap-3">
-                <label className={labelClass}>Funcionários</label>
+                <label className={LABEL_CLASS}>Funcionários</label>
 
-                {/* Formulário de adicionar */}
                 <div className="flex gap-2">
                     <input
                         type="text"
@@ -128,7 +130,6 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
 
                 {error && <p className="text-red-400 text-xs">{error}</p>}
 
-                {/* Lista de funcionários */}
                 {employees.length > 0 && (
                     <div className="flex flex-col gap-2">
                         {employees.map((employee) => (
@@ -137,7 +138,6 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                                 className="bg-[var(--surface-low)] border border-[var(--outline-variant)] rounded-lg px-4 py-3 flex items-center justify-between"
                             >
                                 <div className="flex items-center gap-3">
-                                    {/* Avatar inicial */}
                                     <div className="w-8 h-8 rounded-full bg-[var(--gold-ghost)] border border-[var(--outline-variant)] flex items-center justify-center shrink-0">
                                         <span className="text-[var(--gold)] text-xs font-semibold">
                                             {employee.name.charAt(0).toUpperCase()}
@@ -149,7 +149,6 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                                 </div>
 
                                 <div className="flex items-center gap-3">
-                                    {/* Botão de horários */}
                                     <button
                                         type="button"
                                         onClick={() => openTimesModal(employee)}
@@ -158,13 +157,12 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                                         <Clock size={13} />
                                         <span>
                                             {employee.times.length > 0
-                                                ? `${employee.times.length} horários`
+                                                ? `${employee.times.length} ${pluralize(employee.times.length, "horário", "horários")}`
                                                 : "Definir horários"}
                                         </span>
                                         <ChevronRight size={13} />
                                     </button>
 
-                                    {/* Deletar */}
                                     <button
                                         type="button"
                                         onClick={() => handleDelete(employee.id)}
@@ -186,7 +184,6 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                 )}
             </div>
 
-            {/* Modal de horários por funcionário */}
             {timesModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     <div
@@ -223,10 +220,11 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                                             key={time}
                                             type="button"
                                             onClick={() => toggleTime(time)}
-                                            className={`py-2.5 text-xs tracking-wide border transition-colors cursor-pointer rounded-lg ${isSelected
-                                                ? "border-[var(--gold)] bg-[var(--gold-ghost)] text-[var(--gold)]"
-                                                : "border-[var(--outline)] text-[var(--on-surface-dim)] hover:border-[var(--gold)] hover:text-[var(--on-surface-variant)]"
-                                                }`}
+                                            className={`py-2.5 text-xs tracking-wide border transition-colors cursor-pointer rounded-lg ${
+                                                isSelected
+                                                    ? "border-[var(--gold)] bg-[var(--gold-ghost)] text-[var(--gold)]"
+                                                    : "border-[var(--outline)] text-[var(--on-surface-dim)] hover:border-[var(--gold)] hover:text-[var(--on-surface-variant)]"
+                                            }`}
                                         >
                                             {time}
                                         </button>
@@ -239,7 +237,7 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                             <div className="flex items-center gap-2 text-[var(--on-surface-dim)]">
                                 <Clock size={13} />
                                 <span className="text-xs">
-                                    {selectedTimes.length} horário{selectedTimes.length !== 1 ? "s" : ""} selecionado{selectedTimes.length !== 1 ? "s" : ""}
+                                    {selectedTimes.length} {pluralize(selectedTimes.length, "horário selecionado", "horários selecionados")}
                                 </span>
                             </div>
                             <button

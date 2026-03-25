@@ -31,7 +31,6 @@ export async function updateService(formData: FormData) {
 
     const { id, name, price, duration, status } = parsed.data;
 
-    // Valida ownership via employee → userId
     const service = await prisma.service.findFirst({
         where: { id, employee: { userId: session.user.id } },
     });

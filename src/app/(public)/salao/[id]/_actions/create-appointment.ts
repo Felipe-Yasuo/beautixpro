@@ -36,7 +36,6 @@ export async function createAppointment(formData: FormData) {
 
     const { name, email, phone, serviceId, employeeId, appointmentDate, time, userId } = parsed.data;
 
-    // Verifica conflito de horário por funcionário
     const existing = await prisma.appointment.findFirst({
         where: {
             employeeId,

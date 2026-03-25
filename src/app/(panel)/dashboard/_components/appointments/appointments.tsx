@@ -10,6 +10,17 @@ interface AppointmentsProps {
     employeeId?: string;
 }
 
+function resolveEmployeeTimes(
+    isProfessional: boolean,
+    employees: { id: string; times: string[] }[],
+    employeeId?: string,
+    userTimes: string[] = []
+): string[] {
+    if (!isProfessional) return userTimes;
+    const selected = employees.find((e) => e.id === employeeId) ?? employees[0];
+    return selected?.times ?? [];
+}
+
 export async function Appointments({ date, employeeId }: AppointmentsProps) {
     const [appointments, user, plan] = await Promise.all([
         getAppointments(date, employeeId),
@@ -19,15 +30,7 @@ export async function Appointments({ date, employeeId }: AppointmentsProps) {
 
     const isProfessional = plan === "PROFESSIONAL";
     const employees = user?.employees ?? [];
-
-    // Para FREE/BASIC usa times do usuário; para PROFESSIONAL usa times do employee selecionado
-    let times: string[] = [];
-    if (isProfessional) {
-        const selected = employees.find((e) => e.id === employeeId) ?? employees[0];
-        times = selected?.times ?? [];
-    } else {
-        times = user?.times ?? [];
-    }
+    const times = resolveEmployeeTimes(isProfessional, employees, employeeId, user?.times);
 
     return (
         <div className="bg-[var(--surface-low)] border border-[var(--outline)] rounded-xl overflow-hidden">

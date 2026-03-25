@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { z } from "zod";
 import { ChevronRight } from "lucide-react";
 import { updateProfile } from "../_actions/update-profile";
@@ -81,29 +81,29 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
     const [selectedTimes, setSelectedTimes] = useState<string[]>(user.times);
     const [savingTimes, setSavingTimes] = useState(false);
 
-    function toggleTime(time: string) {
+    const toggleTime = useCallback((time: string) => {
         setSelectedTimes((prev) =>
             prev.includes(time) ? prev.filter((t) => t !== time) : [...prev, time]
         );
-    }
+    }, []);
 
-    async function handleSaveTimes() {
+    const handleSaveTimes = useCallback(async () => {
         setSavingTimes(true);
         await updateUserTimes(selectedTimes);
         setSavingTimes(false);
         setShowTimesModal(false);
-    }
+    }, [selectedTimes]);
 
-    function validateField(field: keyof ProfileFields, value: string) {
+    const validateField = useCallback((field: keyof ProfileFields, value: string) => {
         const shape = profileSchema.shape[field] as z.ZodTypeAny;
         const result = shape.safeParse(value);
         setFieldErrors((prev) => ({
             ...prev,
             [field]: result.success ? undefined : (result.error as z.ZodError).issues[0]?.message,
         }));
-    }
+    }, []);
 
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setServerError("");
         setSuccess(false);
@@ -135,7 +135,7 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
 
         setSuccess(true);
         setLoading(false);
-    }
+    }, []);
 
     const timesLabel = selectedTimes.length > 0
         ? `${selectedTimes.length} ${pluralize(selectedTimes.length, "horário selecionado", "horários selecionados")}`

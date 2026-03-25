@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DialogAppointment } from "./dialog-appointment";
 import { parseTime, formatTime } from "@/lib/schedule";
@@ -67,7 +68,7 @@ export function AppointmentsList({
         (a, b) => parseTime(a) - parseTime(b)
     );
 
-    const slotMap = buildSlotMap(appointments);
+    const slotMap = useMemo(() => buildSlotMap(appointments), [appointments]);
 
     return (
         <div className="flex flex-col">

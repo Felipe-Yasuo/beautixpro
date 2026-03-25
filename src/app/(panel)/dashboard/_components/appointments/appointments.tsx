@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getAppointments } from "../../_data-access/get-appointments";
+import { getAppointments, resolveEmployeeTimes } from "../../_data-access/get-appointments";
 import { getInfoUser } from "../../profile/_data-access/get-info-user";
 import { getUserPlan } from "@/lib/get-plan";
 import { AppointmentsList } from "./appointments-list";
@@ -8,17 +8,6 @@ import { ButtonDate } from "./button-date";
 interface AppointmentsProps {
     date: Date;
     employeeId?: string;
-}
-
-function resolveEmployeeTimes(
-    isProfessional: boolean,
-    employees: { id: string; times: string[] }[],
-    employeeId?: string,
-    userTimes: string[] = []
-): string[] {
-    if (!isProfessional) return userTimes;
-    const selected = employees.find((e) => e.id === employeeId) ?? employees[0];
-    return selected?.times ?? [];
 }
 
 export async function Appointments({ date, employeeId }: AppointmentsProps) {

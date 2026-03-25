@@ -1,6 +1,17 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+export function resolveEmployeeTimes(
+    isProfessional: boolean,
+    employees: { id: string; times: string[] }[],
+    employeeId?: string,
+    userTimes: string[] = []
+): string[] {
+    if (!isProfessional) return userTimes;
+    const selected = employees.find((e) => e.id === employeeId) ?? employees[0];
+    return selected?.times ?? [];
+}
+
 export async function getAppointments(date: Date, employeeId?: string) {
     const session = await auth();
     if (!session?.user?.id) return [];

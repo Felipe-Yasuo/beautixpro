@@ -6,7 +6,7 @@ interface ScheduleTimeListProps {
     times: string[];
     selectedTime: string | null;
     onSelect: (time: string) => void;
-    userId: string;
+    employeeId: string;
     selectedDate: Date | null;
     serviceDuration: number;
 }
@@ -15,7 +15,7 @@ export function ScheduleTimeList({
     times,
     selectedTime,
     onSelect,
-    userId,
+    employeeId,
     selectedDate,
     serviceDuration,
 }: ScheduleTimeListProps) {
@@ -27,14 +27,14 @@ export function ScheduleTimeList({
         async function fetchBookedTimes() {
             const date = `${selectedDate!.getFullYear()}-${String(selectedDate!.getMonth() + 1).padStart(2, "0")}-${String(selectedDate!.getDate()).padStart(2, "0")}`;
             const res = await fetch(
-                `/api/schedule/get-appointments?userId=${userId}&date=${date}&duration=${serviceDuration}`
+                `/api/schedule/get-appointments?employeeId=${employeeId}&date=${date}&duration=${serviceDuration}`
             );
             const data = await res.json();
             setBookedTimes(data.times ?? []);
         }
 
         fetchBookedTimes();
-    }, [selectedDate, userId, serviceDuration]);
+    }, [selectedDate, employeeId, serviceDuration]);
 
     if (times.length === 0) {
         return (

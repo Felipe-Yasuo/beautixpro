@@ -17,15 +17,28 @@ interface Service {
     duration: number;
 }
 
+interface Employee {
+    id: string;
+    name: string;
+    times: string[];
+    services: Service[];
+}
+
 interface ScheduleFormProps {
     user: {
         id: string;
-        times: string[];
-        services: Service[];
+        employees: Employee[];
     };
 }
 
 export function ScheduleForm({ user }: ScheduleFormProps) {
+    const isMultiEmployee = user.employees.length > 1;
+
+    // FREE/BASIC: usa o único employee direto, sem mostrar seleção
+    const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+        isMultiEmployee ? null : user.employees[0] ?? null
+    );
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
@@ -36,7 +49,7 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
 
-    const isComplete = name && email && phone && selectedService && selectedDate && selectedTime;
+    const isComplete = name && email && phone && selectedEmployee && selectedService && selectedDate && selectedTime;
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -50,6 +63,7 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
         formData.set("email", email);
         formData.set("phone", phone);
         formData.set("serviceId", selectedService.id);
+        formData.set("employeeId", selectedEmployee.id);
         formData.set("appointmentDate", selectedDate.toISOString());
         formData.set("time", selectedTime);
         formData.set("userId", user.id);
@@ -64,6 +78,14 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
 
         setSuccess(true);
         setLoading(false);
+    }
+
+    if (user.employees.length === 0) {
+        return (
+            <p className="text-muted-foreground text-sm text-center py-10">
+                Este salão ainda não possui serviços disponíveis.
+            </p>
+        );
     }
 
     if (success) {
@@ -82,6 +104,32 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
 
     return (
         <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-6 flex flex-col gap-5">
+
+            {/* Seleção de funcionário — só PROFESSIONAL (múltiplos employees) */}
+            {isMultiEmployee && (
+                <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-medium text-foreground">Selecione o profissional:</label>
+                    <Select
+                        onValueChange={(value) => {
+                            const employee = user.employees.find((e) => e.id === value);
+                            setSelectedEmployee(employee ?? null);
+                            setSelectedService(null);
+                            setSelectedTime(null);
+                        }}
+                    >
+                        <SelectTrigger className="w-full bg-background border-border text-foreground">
+                            <SelectValue placeholder="Selecione um profissional" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-card border-border">
+                            {user.employees.map((e) => (
+                                <SelectItem key={e.id} value={e.id} className="text-foreground">
+                                    {e.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+            )}
 
             {/* Nome */}
             <div className="flex flex-col gap-1.5">
@@ -122,68 +170,72 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                 />
             </div>
 
-            {/* Data */}
-            <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-foreground">Data do agendamento:</label>
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <button
-                            type="button"
-                            className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-left flex items-center justify-between hover:border-primary transition-colors cursor-pointer"
-                        >
-                            <span className={selectedDate ? "text-foreground" : "text-muted-foreground"}>
-                                {selectedDate ? format(selectedDate, "dd/MM/yyyy") : "Selecione uma data"}
-                            </span>
-                            <CalendarIcon size={16} className="text-muted-foreground" />
-                        </button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                            mode="single"
-                            selected={selectedDate ?? undefined}
-                            onSelect={(date) => {
-                                setSelectedDate(date ?? null);
-                                setSelectedTime(null);
-                            }}
-                            disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-                            locale={ptBR}
-                        />
-                    </PopoverContent>
-                </Popover>
-            </div>
+            {/* Serviço — só aparece após selecionar employee (ou sempre para FREE/BASIC) */}
+            {selectedEmployee && (
+                <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-medium text-foreground">Selecione o serviço:</label>
+                    <Select
+                        onValueChange={(value) => {
+                            const service = selectedEmployee.services.find((s) => s.id === value);
+                            setSelectedService(service ?? null);
+                            setSelectedTime(null);
+                        }}
+                    >
+                        <SelectTrigger className="w-full bg-background border-border text-foreground">
+                            <SelectValue placeholder="Selecione um serviço" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-card border-border">
+                            {selectedEmployee.services.map((service) => (
+                                <SelectItem key={service.id} value={service.id} className="text-foreground">
+                                    {service.name} — {Math.floor(service.duration / 60) > 0 ? `${Math.floor(service.duration / 60)}h ` : ""}{service.duration % 60 > 0 ? `${service.duration % 60}min` : ""}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+            )}
 
-            {/* Serviço */}
-            <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-foreground">Selecione o serviço:</label>
-                <Select
-                    onValueChange={(value) => {
-                        const service = user.services.find((s) => s.id === value);
-                        setSelectedService(service ?? null);
-                        setSelectedTime(null);
-                    }}
-                >
-                    <SelectTrigger className="w-full bg-background border-border text-foreground">
-                        <SelectValue placeholder="Selecione um serviço" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-card border-border">
-                        {user.services.map((service) => (
-                            <SelectItem key={service.id} value={service.id} className="text-foreground">
-                                {service.name} - {Math.floor(service.duration / 60)}h {service.duration % 60}min
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
+            {/* Data */}
+            {selectedService && (
+                <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-medium text-foreground">Data do agendamento:</label>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <button
+                                type="button"
+                                className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-left flex items-center justify-between hover:border-primary transition-colors cursor-pointer"
+                            >
+                                <span className={selectedDate ? "text-foreground" : "text-muted-foreground"}>
+                                    {selectedDate ? format(selectedDate, "dd/MM/yyyy") : "Selecione uma data"}
+                                </span>
+                                <CalendarIcon size={16} className="text-muted-foreground" />
+                            </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                                mode="single"
+                                selected={selectedDate ?? undefined}
+                                onSelect={(date) => {
+                                    setSelectedDate(date ?? null);
+                                    setSelectedTime(null);
+                                }}
+                                disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                                locale={ptBR}
+                            />
+                        </PopoverContent>
+                    </Popover>
+                </div>
+            )}
 
             {/* Horários */}
-            {selectedService && selectedDate && (
+            {selectedEmployee && selectedService && selectedDate && (
                 <div className="flex flex-col gap-1.5">
                     <label className="text-sm font-medium text-foreground">Horários disponíveis:</label>
                     <ScheduleTimeList
-                        times={user.times}
+                        times={selectedEmployee.times}
                         selectedTime={selectedTime}
                         onSelect={setSelectedTime}
-                        userId={user.id}
+                        employeeId={selectedEmployee.id}
                         selectedDate={selectedDate}
                         serviceDuration={selectedService.duration}
                     />

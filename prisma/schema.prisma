@@ -48,7 +48,7 @@ model Employee {
 }
 
 model Service {
-  id       String  @id @default(uuid())
+  id       String  @id @default(cuid())
   name     String
   price    Int
   duration Int
@@ -64,7 +64,7 @@ model Service {
 }
 
 model Appointment {
-  id              String   @id @default(uuid())
+  id              String   @id @default(cuid())
   name            String
   email           String
   phone           String
@@ -87,7 +87,7 @@ model Appointment {
 }
 
 model Reminder {
-  id          String @id @default(uuid())
+  id          String @id @default(cuid())
   description String
 
   userId String
@@ -103,7 +103,7 @@ enum Plan {
 }
 
 model Subscription {
-  id      String @id @default(uuid())
+  id      String @id @default(cuid())
   status  String
   plan    Plan
   priceId String

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getAppointments, resolveEmployeeTimes } from "../../_data-access/get-appointments";
 import { getInfoUser } from "../../profile/_data-access/get-info-user";
-import { getUserPlan } from "@/lib/get-plan";
+import { getUserPlan } from "@/app/(panel)/dashboard/_data-access/get-plan";
 import { AppointmentsList } from "./appointments-list";
 import { ButtonDate } from "./button-date";
 

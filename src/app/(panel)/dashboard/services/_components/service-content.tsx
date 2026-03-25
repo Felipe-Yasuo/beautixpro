@@ -1,5 +1,5 @@
 import { getAllServices } from "../_data-access/get-all-services";
-import { getUserPlan, UserPlan } from "@/lib/get-plan";
+import { getUserPlan, UserPlan } from "@/app/(panel)/dashboard/_data-access/get-plan";
 import { getInfoUser } from "../../profile/_data-access/get-info-user";
 import { ServicesList } from "./services-list";
 

@@ -1,6 +1,6 @@
 import { getReports } from "../_data-access/get-reports";
 import { formatBRL } from "@/lib/formatters";
-import { getUserPlan } from "@/lib/get-plan";
+import { getUserPlan } from "@/app/(panel)/dashboard/_data-access/get-plan";
 
 export async function ReportsContent() {
     const plan = await getUserPlan();

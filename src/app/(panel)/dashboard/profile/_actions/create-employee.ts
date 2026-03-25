@@ -2,7 +2,7 @@
 
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getUserPlan } from "@/lib/get-plan";
+import { getUserPlan } from "@/app/(panel)/dashboard/_data-access/get-plan";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 

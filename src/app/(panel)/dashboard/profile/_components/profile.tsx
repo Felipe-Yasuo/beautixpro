@@ -1,5 +1,5 @@
 import { getInfoUser } from "../_data-access/get-info-user";
-import { getUserPlan } from "@/lib/get-plan";
+import { getUserPlan } from "@/app/(panel)/dashboard/_data-access/get-plan";
 import { ProfileAvatar } from "./profile-avatar";
 import { ProfileForm } from "./profile-form";
 

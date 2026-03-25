@@ -48,6 +48,12 @@ export async function createAppointment(formData: FormData) {
         return { error: "Este horário já está reservado. Escolha outro." };
     }
 
+    const service = await prisma.service.findFirst({
+        where: { id: serviceId, employeeId, employee: { userId } },
+    });
+
+    if (!service) return { error: "Serviço inválido." };
+
     await prisma.appointment.create({
         data: {
             name,

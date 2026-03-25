@@ -45,6 +45,8 @@ model Employee {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Service {
@@ -61,6 +63,8 @@ model Service {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([employeeId])
 }
 
 model Appointment {
@@ -84,6 +88,10 @@ model Appointment {
   updatedAt DateTime @updatedAt
 
   @@unique([employeeId, time, appointmentDate])
+  @@index([userId])
+  @@index([employeeId])
+  @@index([appointmentDate])
+  @@index([userId, appointmentDate])
 }
 
 model Reminder {

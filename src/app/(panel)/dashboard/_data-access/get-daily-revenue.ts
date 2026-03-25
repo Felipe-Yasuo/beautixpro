@@ -19,25 +19,51 @@ export async function getDailyRevenue() {
     endYesterday.setDate(endYesterday.getDate() - 1);
     endYesterday.setHours(23, 59, 59, 999);
 
-    const [todayAppointments, yesterdayAppointments] = await Promise.all([
-        prisma.appointment.findMany({
+    // Agrega contagens por serviço no banco em vez de buscar todas as linhas
+    const [todayByService, yesterdayByService] = await Promise.all([
+        prisma.appointment.groupBy({
+            by: ["serviceId"],
             where: {
                 userId: session.user.id,
                 appointmentDate: { gte: startToday, lte: endToday },
             },
-            include: { service: { select: { price: true } } },
+            _count: { id: true },
         }),
-        prisma.appointment.findMany({
+        prisma.appointment.groupBy({
+            by: ["serviceId"],
             where: {
                 userId: session.user.id,
                 appointmentDate: { gte: startYesterday, lte: endYesterday },
             },
-            include: { service: { select: { price: true } } },
+            _count: { id: true },
         }),
     ]);
 
-    const today = todayAppointments.reduce((acc, a) => acc + a.service.price, 0);
-    const yesterday = yesterdayAppointments.reduce((acc, a) => acc + a.service.price, 0);
+    // Busca preços apenas dos serviços referenciados nos dois dias
+    const serviceIds = [
+        ...new Set([
+            ...todayByService.map((g) => g.serviceId),
+            ...yesterdayByService.map((g) => g.serviceId),
+        ]),
+    ];
+
+    const services = serviceIds.length > 0
+        ? await prisma.service.findMany({
+              where: { id: { in: serviceIds } },
+              select: { id: true, price: true },
+          })
+        : [];
+
+    const priceMap = new Map(services.map((s) => [s.id, s.price]));
+
+    const today = todayByService.reduce(
+        (acc, g) => acc + g._count.id * (priceMap.get(g.serviceId) ?? 0),
+        0
+    );
+    const yesterday = yesterdayByService.reduce(
+        (acc, g) => acc + g._count.id * (priceMap.get(g.serviceId) ?? 0),
+        0
+    );
 
     return { today, yesterday };
 }

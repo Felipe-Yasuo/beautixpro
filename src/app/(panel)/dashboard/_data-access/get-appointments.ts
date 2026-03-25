@@ -22,22 +22,26 @@ export async function getAppointments(date: Date, employeeId?: string) {
     const end = new Date(date);
     end.setHours(23, 59, 59, 999);
 
-    const appointments = await prisma.appointment.findMany({
-        where: {
-            userId: session.user.id,
-            appointmentDate: { gte: start, lte: end },
-            ...(employeeId ? { employeeId } : {}),
-        },
-        include: {
-            service: {
-                select: { name: true, price: true, duration: true },
+    try {
+        const appointments = await prisma.appointment.findMany({
+            where: {
+                userId: session.user.id,
+                appointmentDate: { gte: start, lte: end },
+                ...(employeeId ? { employeeId } : {}),
             },
-            employee: {
-                select: { id: true, name: true },
+            include: {
+                service: {
+                    select: { name: true, price: true, duration: true },
+                },
+                employee: {
+                    select: { id: true, name: true },
+                },
             },
-        },
-        orderBy: { time: "asc" },
-    });
+            orderBy: { time: "asc" },
+        });
 
-    return appointments;
+        return appointments;
+    } catch {
+        return [];
+    }
 }

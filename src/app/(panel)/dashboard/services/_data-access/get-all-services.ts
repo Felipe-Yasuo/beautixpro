@@ -5,11 +5,15 @@ export async function getAllServices() {
     const session = await auth();
     if (!session?.user?.id) return [];
 
-    const services = await prisma.service.findMany({
-        where: { employee: { userId: session.user.id } },
-        include: { employee: { select: { id: true, name: true } } },
-        orderBy: { createdAt: "desc" },
-    });
+    try {
+        const services = await prisma.service.findMany({
+            where: { employee: { userId: session.user.id } },
+            include: { employee: { select: { id: true, name: true } } },
+            orderBy: { createdAt: "desc" },
+        });
 
-    return services;
+        return services;
+    } catch {
+        return [];
+    }
 }

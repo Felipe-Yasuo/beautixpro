@@ -11,9 +11,13 @@ export async function cancelAppointment(appointmentId: string) {
     const parsed = idSchema.safeParse(appointmentId);
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    await prisma.appointment.delete({
-        where: { id: parsed.data, userId },
-    });
+    try {
+        await prisma.appointment.delete({
+            where: { id: parsed.data, userId },
+        });
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
 
     revalidatePath("/dashboard");
     return { success: true };

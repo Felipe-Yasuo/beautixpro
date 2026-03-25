@@ -11,9 +11,13 @@ export async function deleteEmployee(id: string) {
     const parsed = idSchema.safeParse(id);
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    await prisma.employee.delete({
-        where: { id: parsed.data, userId },
-    });
+    try {
+        await prisma.employee.delete({
+            where: { id: parsed.data, userId },
+        });
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
 
     revalidatePath("/dashboard/profile");
     return { success: true };

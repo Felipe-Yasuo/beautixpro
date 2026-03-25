@@ -6,10 +6,14 @@ export async function getReminders() {
 
     if (!session?.user?.id) return [];
 
-    const reminders = await prisma.reminder.findMany({
-        where: { userId: session.user.id },
-        orderBy: { createdAt: "desc" },
-    });
+    try {
+        const reminders = await prisma.reminder.findMany({
+            where: { userId: session.user.id },
+            orderBy: { createdAt: "desc" },
+        });
 
-    return reminders;
+        return reminders;
+    } catch {
+        return [];
+    }
 }

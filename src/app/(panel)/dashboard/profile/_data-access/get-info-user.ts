@@ -5,28 +5,32 @@ export async function getInfoUser() {
     const session = await auth();
     if (!session?.user?.id) return null;
 
-    const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
-            address: true,
-            phone: true,
-            status: true,
-            timeZone: true,
-            times: true,
-            employees: {
-                select: {
-                    id: true,
-                    name: true,
-                    times: true,
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: session.user.id },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                address: true,
+                phone: true,
+                status: true,
+                timeZone: true,
+                times: true,
+                employees: {
+                    select: {
+                        id: true,
+                        name: true,
+                        times: true,
+                    },
+                    orderBy: { createdAt: "asc" },
                 },
-                orderBy: { createdAt: "asc" },
             },
-        },
-    });
+        });
 
-    return user;
+        return user;
+    } catch {
+        return null;
+    }
 }

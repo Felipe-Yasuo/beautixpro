@@ -11,11 +11,15 @@ export async function deleteService(serviceId: string) {
     const parsed = idSchema.safeParse(serviceId);
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    const result = await prisma.service.deleteMany({
-        where: { id: parsed.data, employee: { userId } },
-    });
+    try {
+        const result = await prisma.service.deleteMany({
+            where: { id: parsed.data, employee: { userId } },
+        });
 
-    if (result.count === 0) return { error: "Serviço não encontrado." };
+        if (result.count === 0) return { error: "Serviço não encontrado." };
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
 
     revalidatePath("/dashboard/services");
     return { success: true };

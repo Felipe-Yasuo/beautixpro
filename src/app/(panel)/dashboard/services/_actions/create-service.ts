@@ -31,63 +31,67 @@ export async function createService(formData: FormData) {
     const plan = await getUserPlan();
     const limit = SERVICE_LIMITS[plan];
 
-    const serviceCount = await prisma.service.count({
-        where: { employee: { userId: userId } },
-    });
-
-    if (serviceCount >= limit) {
-        return { error: UPGRADE_MESSAGES[plan] };
-    }
-
-    const parsed = serviceSchema.safeParse({
-        name: formData.get("name"),
-        price: formData.get("price"),
-        duration: formData.get("duration"),
-        employeeId: formData.get("employeeId") ?? undefined,
-    });
-
-    if (!parsed.success) {
-        return { error: parsed.error.issues[0].message };
-    }
-
-    const { name, price, duration, employeeId } = parsed.data;
-
-    let targetEmployeeId = employeeId;
-
-    if (!targetEmployeeId) {
-        const defaultEmployee = await prisma.employee.findFirst({
-            where: { userId: userId },
+    try {
+        const serviceCount = await prisma.service.count({
+            where: { employee: { userId: userId } },
         });
 
-        if (defaultEmployee) {
-            targetEmployeeId = defaultEmployee.id;
-        } else {
-            const created = await prisma.employee.create({
-                data: {
-                    name: "Padrão",
-                    times: [],
-                    userId: userId,
-                },
-            });
-            targetEmployeeId = created.id;
+        if (serviceCount >= limit) {
+            return { error: UPGRADE_MESSAGES[plan] };
         }
-    }
 
-    if (employeeId) {
-        const owns = await prisma.employee.findFirst({
-            where: { id: targetEmployeeId, userId: userId },
+        const parsed = serviceSchema.safeParse({
+            name: formData.get("name"),
+            price: formData.get("price"),
+            duration: formData.get("duration"),
+            employeeId: formData.get("employeeId") ?? undefined,
         });
-        if (!owns) return { error: "Funcionário inválido." };
-    }
 
-    await prisma.service.create({
-        data: {
-            name,
-            price: Math.round(price * 100),
-            duration,
-            employeeId: targetEmployeeId,
-        },
-    });
+        if (!parsed.success) {
+            return { error: parsed.error.issues[0].message };
+        }
+
+        const { name, price, duration, employeeId } = parsed.data;
+
+        let targetEmployeeId = employeeId;
+
+        if (!targetEmployeeId) {
+            const defaultEmployee = await prisma.employee.findFirst({
+                where: { userId: userId },
+            });
+
+            if (defaultEmployee) {
+                targetEmployeeId = defaultEmployee.id;
+            } else {
+                const created = await prisma.employee.create({
+                    data: {
+                        name: "Padrão",
+                        times: [],
+                        userId: userId,
+                    },
+                });
+                targetEmployeeId = created.id;
+            }
+        }
+
+        if (employeeId) {
+            const owns = await prisma.employee.findFirst({
+                where: { id: targetEmployeeId, userId: userId },
+            });
+            if (!owns) return { error: "Funcionário inválido." };
+        }
+
+        await prisma.service.create({
+            data: {
+                name,
+                price: Math.round(price * 100),
+                duration,
+                employeeId: targetEmployeeId,
+            },
+        });
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
 
     revalidatePath("/dashboard/services");
     return { success: true };

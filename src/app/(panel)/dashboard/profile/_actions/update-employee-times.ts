@@ -16,16 +16,20 @@ export async function updateEmployeeTimes(employeeId: string, times: string[]) {
     const parsed = schema.safeParse({ employeeId, times });
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    const employee = await prisma.employee.findUnique({
-        where: { id: parsed.data.employeeId, userId },
-    });
+    try {
+        const employee = await prisma.employee.findUnique({
+            where: { id: parsed.data.employeeId, userId },
+        });
 
-    if (!employee) return { error: "Funcionário não encontrado." };
+        if (!employee) return { error: "Funcionário não encontrado." };
 
-    await prisma.employee.update({
-        where: { id: parsed.data.employeeId },
-        data: { times: parsed.data.times },
-    });
+        await prisma.employee.update({
+            where: { id: parsed.data.employeeId },
+            data: { times: parsed.data.times },
+        });
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
 
     revalidatePath("/dashboard/profile");
     return { success: true };

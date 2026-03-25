@@ -13,10 +13,14 @@ export async function updateAvatar(imageUrl: string) {
     const parsed = imageUrlSchema.safeParse(imageUrl);
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    await prisma.user.update({
-        where: { id: userId },
-        data: { image: parsed.data },
-    });
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: { image: parsed.data },
+        });
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
 
     revalidatePath("/dashboard/profile");
     return { success: true };

@@ -20,12 +20,16 @@ export async function createReminder(formData: FormData) {
         return { error: parsed.error.issues[0].message };
     }
 
-    await prisma.reminder.create({
-        data: {
-            description: parsed.data.description,
-            userId,
-        },
-    });
+    try {
+        await prisma.reminder.create({
+            data: {
+                description: parsed.data.description,
+                userId,
+            },
+        });
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
 
     revalidatePath("/dashboard");
     return { success: true };

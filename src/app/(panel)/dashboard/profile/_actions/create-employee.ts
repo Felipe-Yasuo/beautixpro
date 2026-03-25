@@ -21,12 +21,16 @@ export async function createEmployee(formData: FormData) {
     const parsed = schema.safeParse({ name: formData.get("name") });
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    await prisma.employee.create({
-        data: {
-            name: parsed.data.name,
-            userId,
-        },
-    });
+    try {
+        await prisma.employee.create({
+            data: {
+                name: parsed.data.name,
+                userId,
+            },
+        });
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
 
     revalidatePath("/dashboard/profile");
     return { success: true };

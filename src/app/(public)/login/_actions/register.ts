@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma/client";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
@@ -25,17 +26,27 @@ export async function register(formData: FormData) {
 
     const { name, email, password } = parsed.data;
 
-    const existing = await prisma.user.findUnique({ where: { email } });
+    try {
+        const existing = await prisma.user.findUnique({ where: { email } });
 
-    if (existing) {
-        return { error: "Este e-mail já está cadastrado." };
+        if (existing) {
+            return { error: "Este e-mail já está cadastrado." };
+        }
+
+        const hashed = await bcrypt.hash(password, 10);
+
+        await prisma.user.create({
+            data: { name, email, password: hashed },
+        });
+    } catch (error: unknown) {
+        if (
+            error instanceof Prisma.PrismaClientKnownRequestError &&
+            error.code === "P2002"
+        ) {
+            return { error: "Este e-mail já está cadastrado." };
+        }
+        return { error: "Algo deu errado. Tente novamente." };
     }
-
-    const hashed = await bcrypt.hash(password, 10);
-
-    await prisma.user.create({
-        data: { name, email, password: hashed },
-    });
 
     return { success: true };
 }

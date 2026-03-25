@@ -36,36 +36,40 @@ export async function createAppointment(formData: FormData) {
 
     const { name, email, phone, serviceId, employeeId, appointmentDate, time, userId } = parsed.data;
 
-    const existing = await prisma.appointment.findFirst({
-        where: {
-            employeeId,
-            time,
-            appointmentDate: new Date(appointmentDate),
-        },
-    });
+    try {
+        const existing = await prisma.appointment.findFirst({
+            where: {
+                employeeId,
+                time,
+                appointmentDate: new Date(appointmentDate),
+            },
+        });
 
-    if (existing) {
-        return { error: "Este horário já está reservado. Escolha outro." };
+        if (existing) {
+            return { error: "Este horário já está reservado. Escolha outro." };
+        }
+
+        const service = await prisma.service.findFirst({
+            where: { id: serviceId, employeeId, employee: { userId } },
+        });
+
+        if (!service) return { error: "Serviço inválido." };
+
+        await prisma.appointment.create({
+            data: {
+                name,
+                email,
+                phone,
+                serviceId,
+                employeeId,
+                appointmentDate: new Date(appointmentDate),
+                time,
+                userId,
+            },
+        });
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
     }
-
-    const service = await prisma.service.findFirst({
-        where: { id: serviceId, employeeId, employee: { userId } },
-    });
-
-    if (!service) return { error: "Serviço inválido." };
-
-    await prisma.appointment.create({
-        data: {
-            name,
-            email,
-            phone,
-            serviceId,
-            employeeId,
-            appointmentDate: new Date(appointmentDate),
-            time,
-            userId,
-        },
-    });
 
     return { success: true };
 }

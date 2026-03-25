@@ -30,16 +30,20 @@ export async function updateProfile(formData: FormData) {
 
     if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-    await prisma.user.update({
-        where: { id: userId },
-        data: {
-            name: parsed.data.name,
-            phone: parsed.data.phone,
-            address: parsed.data.address,
-            status: parsed.data.status,
-            timeZone: parsed.data.timeZone,
-        },
-    });
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                name: parsed.data.name,
+                phone: parsed.data.phone,
+                address: parsed.data.address,
+                status: parsed.data.status,
+                timeZone: parsed.data.timeZone,
+            },
+        });
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
 
     revalidatePath("/dashboard/profile");
     return { success: true };

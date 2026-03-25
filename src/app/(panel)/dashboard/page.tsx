@@ -6,11 +6,11 @@ import { CopyLinkButton } from "./_components/button-copy-link";
 import { getDailyRevenue } from "./_data-access/get-daily-revenue";
 
 interface PageProps {
-    searchParams: Promise<{ date?: string }>;
+    searchParams: Promise<{ date?: string; employeeId?: string }>;
 }
 
 export default async function DashboardPage({ searchParams }: PageProps) {
-    const { date } = await searchParams;
+    const { date, employeeId } = await searchParams;
     const selectedDate = date ? new Date(date + "T00:00:00") : new Date();
     const session = await auth();
     const { today, yesterday } = await getDailyRevenue();
@@ -21,7 +21,6 @@ export default async function DashboardPage({ searchParams }: PageProps) {
 
     return (
         <div className="flex flex-col gap-6">
-            {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
@@ -42,23 +41,18 @@ export default async function DashboardPage({ searchParams }: PageProps) {
                 </div>
             </div>
 
-            {/* Grid principal */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Agendamentos */}
                 <div className="lg:col-span-2">
                     <Suspense>
-                        <Appointments date={selectedDate} />
+                        <Appointments date={selectedDate} employeeId={employeeId} />
                     </Suspense>
                 </div>
 
-                {/* Coluna direita */}
                 <div className="flex flex-col gap-6">
-                    {/* Lembretes */}
                     <Suspense>
                         <Reminders />
                     </Suspense>
 
-                    {/* Produtividade do dia */}
                     <div className="border border-primary/30 bg-primary/10 rounded-lg p-6">
                         <p className="text-primary text-xs tracking-widest uppercase font-medium mb-3">
                             Produtividade do dia

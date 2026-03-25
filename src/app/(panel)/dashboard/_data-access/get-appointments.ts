@@ -1,9 +1,8 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-export async function getAppointments(date: Date) {
+export async function getAppointments(date: Date, employeeId?: string) {
     const session = await auth();
-
     if (!session?.user?.id) return [];
 
     const start = new Date(date);
@@ -15,18 +14,15 @@ export async function getAppointments(date: Date) {
     const appointments = await prisma.appointment.findMany({
         where: {
             userId: session.user.id,
-            appointmentDate: {
-                gte: start,
-                lte: end,
-            },
+            appointmentDate: { gte: start, lte: end },
+            ...(employeeId ? { employeeId } : {}),
         },
         include: {
             service: {
-                select: {
-                    name: true,
-                    price: true,
-                    duration: true,
-                },
+                select: { name: true, price: true, duration: true },
+            },
+            employee: {
+                select: { id: true, name: true },
             },
         },
         orderBy: { time: "asc" },

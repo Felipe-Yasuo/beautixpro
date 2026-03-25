@@ -30,14 +30,8 @@ export async function updateService(formData: FormData) {
 
     const { id, name, price, duration, status } = parsed.data;
 
-    const service = await prisma.service.findFirst({
+    const result = await prisma.service.updateMany({
         where: { id, employee: { userId } },
-    });
-
-    if (!service) return { error: "Serviço não encontrado." };
-
-    await prisma.service.update({
-        where: { id },
         data: {
             name,
             price: Math.round(price * 100),
@@ -45,6 +39,8 @@ export async function updateService(formData: FormData) {
             status,
         },
     });
+
+    if (result.count === 0) return { error: "Serviço não encontrado." };
 
     revalidatePath("/dashboard/services");
     return { success: true };

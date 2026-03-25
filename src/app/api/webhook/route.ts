@@ -16,7 +16,11 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 
     const priceId = subscription.items.data[0].price.id;
     const plan = resolvePlan(priceId);
-    const userId = session.metadata?.userId ?? "";
+    const userId = session.metadata?.userId;
+
+    if (!userId) {
+        return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+    }
 
     await prisma.subscription.upsert({
         where: { userId },
@@ -35,8 +39,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 }
 
 async function handleSubscriptionChange(subscription: Stripe.Subscription) {
+    const userId = subscription.metadata?.userId;
+
+    if (!userId) {
+        return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+    }
+
     await prisma.subscription.updateMany({
-        where: { userId: subscription.metadata?.userId ?? "" },
+        where: { userId },
         data: { status: subscription.status },
     });
 }

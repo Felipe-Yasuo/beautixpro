@@ -15,18 +15,15 @@ const serviceSchema = z.object({
 
 export async function updateService(formData: FormData) {
     const session = await auth();
-
     if (!session?.user?.id) return { error: "Não autorizado." };
 
-    const raw = {
+    const parsed = serviceSchema.safeParse({
         id: formData.get("id"),
         name: formData.get("name"),
         price: formData.get("price"),
         duration: formData.get("duration"),
         status: formData.get("status"),
-    };
-
-    const parsed = serviceSchema.safeParse(raw);
+    });
 
     if (!parsed.success) {
         return { error: parsed.error.issues[0].message };
@@ -34,8 +31,15 @@ export async function updateService(formData: FormData) {
 
     const { id, name, price, duration, status } = parsed.data;
 
+    // Valida ownership via employee → userId
+    const service = await prisma.service.findFirst({
+        where: { id, employee: { userId: session.user.id } },
+    });
+
+    if (!service) return { error: "Serviço não encontrado." };
+
     await prisma.service.update({
-        where: { id, userId: session.user.id },
+        where: { id },
         data: {
             name,
             price: Math.round(price * 100),

@@ -1,4 +1,3 @@
-// dialog-service.tsx
 "use client";
 
 import { useState } from "react";
@@ -14,10 +13,11 @@ interface Service {
 
 interface DialogServiceProps {
     service?: Service;
+    employeeId?: string;
     trigger: React.ReactNode;
 }
 
-export function DialogService({ service, trigger }: DialogServiceProps) {
+export function DialogService({ service, employeeId, trigger }: DialogServiceProps) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -34,7 +34,6 @@ export function DialogService({ service, trigger }: DialogServiceProps) {
                     />
 
                     <div className="relative bg-[var(--surface-lowest)] border border-[var(--outline-variant)] p-8 w-full max-w-md mx-4 z-10">
-                        {/* Linha dourada no topo */}
                         <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#c9a84c]" />
 
                         <h2 className="text-2xl font-serif font-bold text-[var(--on-surface)] mb-1">
@@ -46,6 +45,7 @@ export function DialogService({ service, trigger }: DialogServiceProps) {
 
                         <DialogServiceForm
                             service={service}
+                            employeeId={employeeId}
                             onClose={() => setOpen(false)}
                         />
                     </div>

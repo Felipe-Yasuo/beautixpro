@@ -1,23 +1,26 @@
 import { getAllServices } from "../_data-access/get-all-services";
-import { getUserPlan } from "@/lib/get-plan";
-import { DialogService } from "./dialog-service";
+import { getUserPlan, UserPlan } from "@/lib/get-plan";
+import { getInfoUser } from "../../profile/_data-access/get-info-user";
 import { ServicesList } from "./services-list";
 
-const SERVICE_LIMITS = {
+const SERVICE_LIMITS: Record<UserPlan, number> = {
     FREE: 3,
     BASIC: 10,
     PROFESSIONAL: Infinity,
 };
 
 export async function ServiceContent() {
-    const [services, plan] = await Promise.all([
+    const [services, plan, user] = await Promise.all([
         getAllServices(),
         getUserPlan(),
+        getInfoUser(),
     ]);
 
+    const isProfessional = plan === "PROFESSIONAL";
     const limit = SERVICE_LIMITS[plan];
     const atLimit = services.length >= limit;
     const limitLabel = limit === Infinity ? "∞" : limit;
+    const employees = user?.employees ?? [];
 
     return (
         <div className="flex flex-col gap-8 p-8">
@@ -32,36 +35,19 @@ export async function ServiceContent() {
                     </p>
                 </div>
 
-                <div className="flex flex-col items-end gap-2">
-                    {limit !== Infinity && (
-                        <span className={`text-xs tracking-widest uppercase ${atLimit
-                                ? "text-red-400"
-                                : "text-[var(--on-surface-dim)]"
-                            }`}>
-                            {services.length}/{limitLabel} serviços
-                        </span>
-                    )}
-
-                    {atLimit ? (
-                        <a
-                            href="/dashboard/plans"
-                            className="btn-primary text-[10px] px-4 py-2.5"
-                        >
-                            Fazer upgrade
-                        </a>
-                    ) : (
-                        <DialogService
-                            trigger={
-                                <button className="btn-primary flex items-center gap-2">
-                                    + Novo Serviço
-                                </button>
-                            }
-                        />
-                    )}
-                </div>
+                {limit !== Infinity && (
+                    <span className={`text-xs tracking-widest uppercase mt-2 ${atLimit ? "text-red-400" : "text-[var(--on-surface-dim)]"}`}>
+                        {services.length}/{limitLabel} serviços
+                    </span>
+                )}
             </div>
 
-            <ServicesList services={services} />
+            <ServicesList
+                services={services}
+                employees={employees}
+                isProfessional={isProfessional}
+                atLimit={atLimit}
+            />
         </div>
     );
 }

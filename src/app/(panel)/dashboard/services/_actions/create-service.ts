@@ -4,15 +4,15 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { getUserPlan } from "@/lib/get-plan";
+import { getUserPlan, UserPlan } from "@/lib/get-plan";
 
-const SERVICE_LIMITS = {
+const SERVICE_LIMITS: Record<UserPlan, number> = {
     FREE: 3,
     BASIC: 10,
     PROFESSIONAL: Infinity,
 };
 
-const UPGRADE_MESSAGES = {
+const UPGRADE_MESSAGES: Record<UserPlan, string> = {
     FREE: "Plano gratuito permite até 3 serviços. Faça upgrade para o Basic ou Professional.",
     BASIC: "Plano Basic permite até 10 serviços. Faça upgrade para o Professional.",
     PROFESSIONAL: "",
@@ -22,6 +22,7 @@ const serviceSchema = z.object({
     name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres."),
     price: z.coerce.number().min(1, "Preço inválido."),
     duration: z.coerce.number().min(1, "Duração inválida."),
+    employeeId: z.string().optional(),
 });
 
 export async function createService(formData: FormData) {
@@ -31,8 +32,9 @@ export async function createService(formData: FormData) {
     const plan = await getUserPlan();
     const limit = SERVICE_LIMITS[plan];
 
+    // Contagem via relação employee → userId
     const serviceCount = await prisma.service.count({
-        where: { userId: session.user.id },
+        where: { employee: { userId: session.user.id } },
     });
 
     if (serviceCount >= limit) {
@@ -43,20 +45,51 @@ export async function createService(formData: FormData) {
         name: formData.get("name"),
         price: formData.get("price"),
         duration: formData.get("duration"),
+        employeeId: formData.get("employeeId") ?? undefined,
     });
 
     if (!parsed.success) {
         return { error: parsed.error.issues[0].message };
     }
 
-    const { name, price, duration } = parsed.data;
+    const { name, price, duration, employeeId } = parsed.data;
+
+    let targetEmployeeId = employeeId;
+
+    // FREE/BASIC: busca ou cria employee padrão invisível
+    if (!targetEmployeeId) {
+        const defaultEmployee = await prisma.employee.findFirst({
+            where: { userId: session.user.id },
+        });
+
+        if (defaultEmployee) {
+            targetEmployeeId = defaultEmployee.id;
+        } else {
+            const created = await prisma.employee.create({
+                data: {
+                    name: "Padrão",
+                    times: [],
+                    userId: session.user.id,
+                },
+            });
+            targetEmployeeId = created.id;
+        }
+    }
+
+    // Valida que o employee pertence ao usuário (segurança para PROFESSIONAL)
+    if (employeeId) {
+        const owns = await prisma.employee.findFirst({
+            where: { id: targetEmployeeId, userId: session.user.id },
+        });
+        if (!owns) return { error: "Funcionário inválido." };
+    }
 
     await prisma.service.create({
         data: {
             name,
             price: Math.round(price * 100),
             duration,
-            userId: session.user.id,
+            employeeId: targetEmployeeId,
         },
     });
 

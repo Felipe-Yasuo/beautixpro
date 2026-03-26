@@ -71,15 +71,22 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Webhook inválido." }, { status: 400 });
     }
 
-    switch (event.type) {
-        case "checkout.session.completed":
-            await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
-            break;
+    try {
+        switch (event.type) {
+            case "checkout.session.completed":
+                await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+                break;
 
-        case "customer.subscription.updated":
-        case "customer.subscription.deleted":
-            await handleSubscriptionChange(event.data.object as Stripe.Subscription);
-            break;
+            case "customer.subscription.updated":
+            case "customer.subscription.deleted":
+                await handleSubscriptionChange(event.data.object as Stripe.Subscription);
+                break;
+        }
+    } catch {
+        return NextResponse.json(
+            { error: "Erro ao processar evento do webhook." },
+            { status: 500 }
+        );
     }
 
     return NextResponse.json({ received: true });

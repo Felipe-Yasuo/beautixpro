@@ -6,19 +6,19 @@ import { revalidatePath } from "next/cache";
 import { idSchema } from "@/lib/schemas";
 
 export async function deleteEmployee(id: string) {
-    const userId = await requireAuth();
-
-    const parsed = idSchema.safeParse(id);
-    if (!parsed.success) return { error: parsed.error.issues[0].message };
-
     try {
+        const userId = await requireAuth();
+
+        const parsed = idSchema.safeParse(id);
+        if (!parsed.success) return { error: parsed.error.issues[0].message };
+
         await prisma.employee.delete({
             where: { id: parsed.data, userId },
         });
+
+        revalidatePath("/dashboard/profile");
+        return { success: true };
     } catch {
         return { error: "Algo deu errado. Tente novamente." };
     }
-
-    revalidatePath("/dashboard/profile");
-    return { success: true };
 }

@@ -29,7 +29,7 @@ export async function Professionals() {
                             >
                                 <div className="relative w-full h-44">
                                     <Image
-                                        src={pro.image ?? "/foto.png"}
+                                        src={pro.image ?? "/foto.webp"}
                                         alt={pro.name ?? "Salão"}
                                         fill
                                         className="object-cover object-top"

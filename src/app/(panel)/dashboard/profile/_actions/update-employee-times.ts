@@ -11,12 +11,12 @@ const schema = z.object({
 });
 
 export async function updateEmployeeTimes(employeeId: string, times: string[]) {
-    const userId = await requireAuth();
-
-    const parsed = schema.safeParse({ employeeId, times });
-    if (!parsed.success) return { error: parsed.error.issues[0].message };
-
     try {
+        const userId = await requireAuth();
+
+        const parsed = schema.safeParse({ employeeId, times });
+        if (!parsed.success) return { error: parsed.error.issues[0].message };
+
         const employee = await prisma.employee.findUnique({
             where: { id: parsed.data.employeeId, userId },
         });
@@ -27,10 +27,10 @@ export async function updateEmployeeTimes(employeeId: string, times: string[]) {
             where: { id: parsed.data.employeeId },
             data: { times: parsed.data.times },
         });
+
+        revalidatePath("/dashboard/profile");
+        return { success: true };
     } catch {
         return { error: "Algo deu errado. Tente novamente." };
     }
-
-    revalidatePath("/dashboard/profile");
-    return { success: true };
 }

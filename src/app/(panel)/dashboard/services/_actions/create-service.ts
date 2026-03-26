@@ -26,12 +26,11 @@ const serviceSchema = z.object({
 });
 
 export async function createService(formData: FormData) {
-    const userId = await requireAuth();
-
-    const plan = await getUserPlan();
-    const limit = SERVICE_LIMITS[plan];
-
     try {
+        const userId = await requireAuth();
+
+        const plan = await getUserPlan();
+        const limit = SERVICE_LIMITS[plan];
         const serviceCount = await prisma.service.count({
             where: { employee: { userId: userId } },
         });
@@ -89,10 +88,9 @@ export async function createService(formData: FormData) {
                 employeeId: targetEmployeeId,
             },
         });
+        revalidatePath("/dashboard/services");
+        return { success: true };
     } catch {
         return { error: "Algo deu errado. Tente novamente." };
     }
-
-    revalidatePath("/dashboard/services");
-    return { success: true };
 }

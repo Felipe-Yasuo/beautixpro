@@ -18,19 +18,19 @@ const profileSchema = z.object({
 });
 
 export async function updateProfile(formData: FormData) {
-    const userId = await requireAuth();
-
-    const parsed = profileSchema.safeParse({
-        name: formData.get("name"),
-        phone: formData.get("phone"),
-        address: formData.get("address"),
-        status: formData.get("status"),
-        timeZone: formData.get("timeZone"),
-    });
-
-    if (!parsed.success) return { error: parsed.error.issues[0].message };
-
     try {
+        const userId = await requireAuth();
+
+        const parsed = profileSchema.safeParse({
+            name: formData.get("name"),
+            phone: formData.get("phone"),
+            address: formData.get("address"),
+            status: formData.get("status"),
+            timeZone: formData.get("timeZone"),
+        });
+
+        if (!parsed.success) return { error: parsed.error.issues[0].message };
+
         await prisma.user.update({
             where: { id: userId },
             data: {
@@ -41,10 +41,10 @@ export async function updateProfile(formData: FormData) {
                 timeZone: parsed.data.timeZone,
             },
         });
+
+        revalidatePath("/dashboard/profile");
+        return { success: true };
     } catch {
         return { error: "Algo deu errado. Tente novamente." };
     }
-
-    revalidatePath("/dashboard/profile");
-    return { success: true };
 }

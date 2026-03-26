@@ -41,20 +41,27 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
-        cloudinary.uploader
-            .upload_stream(
-                {
-                    folder: "beautixpro/avatars",
-                    transformation: [{ width: 400, height: 400, crop: "fill" }],
-                },
-                (error, uploadResult) => {
-                    if (error) reject(error);
-                    else resolve(uploadResult as { secure_url: string });
-                }
-            )
-            .end(buffer);
-    });
+    try {
+        const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
+            cloudinary.uploader
+                .upload_stream(
+                    {
+                        folder: "beautixpro/avatars",
+                        transformation: [{ width: 400, height: 400, crop: "fill" }],
+                    },
+                    (error, uploadResult) => {
+                        if (error) reject(error);
+                        else resolve(uploadResult as { secure_url: string });
+                    }
+                )
+                .end(buffer);
+        });
 
-    return NextResponse.json({ url: result.secure_url });
+        return NextResponse.json({ url: result.secure_url });
+    } catch {
+        return NextResponse.json(
+            { error: "Erro ao enviar imagem. Tente novamente." },
+            { status: 500 }
+        );
+    }
 }

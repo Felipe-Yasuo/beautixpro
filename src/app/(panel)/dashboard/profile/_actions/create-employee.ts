@@ -11,27 +11,27 @@ const schema = z.object({
 });
 
 export async function createEmployee(formData: FormData) {
-    const userId = await requireAuth();
-
-    const plan = await getUserPlan();
-    if (plan !== "PROFESSIONAL") {
-        return { error: "Gerenciar funcionários é exclusivo do plano Professional." };
-    }
-
-    const parsed = schema.safeParse({ name: formData.get("name") });
-    if (!parsed.success) return { error: parsed.error.issues[0].message };
-
     try {
+        const userId = await requireAuth();
+
+        const plan = await getUserPlan();
+        if (plan !== "PROFESSIONAL") {
+            return { error: "Gerenciar funcionários é exclusivo do plano Professional." };
+        }
+
+        const parsed = schema.safeParse({ name: formData.get("name") });
+        if (!parsed.success) return { error: parsed.error.issues[0].message };
+
         await prisma.employee.create({
             data: {
                 name: parsed.data.name,
                 userId,
             },
         });
+
+        revalidatePath("/dashboard/profile");
+        return { success: true };
     } catch {
         return { error: "Algo deu errado. Tente novamente." };
     }
-
-    revalidatePath("/dashboard/profile");
-    return { success: true };
 }

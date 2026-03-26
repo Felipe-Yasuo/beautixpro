@@ -101,7 +101,7 @@ function SidebarContent({
                     <div className="flex items-center gap-3">
                         <div className="relative w-8 h-8 flex-shrink-0">
                             <Image
-                                src={user.image ?? "/foto.png"}
+                                src={user.image ?? "/foto.webp"}
                                 alt={user.name ?? "Usuário"}
                                 fill
                                 className="object-cover rounded-full"

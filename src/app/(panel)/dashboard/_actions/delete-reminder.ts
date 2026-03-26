@@ -6,19 +6,19 @@ import { revalidatePath } from "next/cache";
 import { idSchema } from "@/lib/schemas";
 
 export async function deleteReminder(reminderId: string) {
-    const userId = await requireAuth();
-
-    const parsed = idSchema.safeParse(reminderId);
-    if (!parsed.success) return { error: parsed.error.issues[0].message };
-
     try {
+        const userId = await requireAuth();
+
+        const parsed = idSchema.safeParse(reminderId);
+        if (!parsed.success) return { error: parsed.error.issues[0].message };
+
         await prisma.reminder.delete({
             where: { id: parsed.data, userId },
         });
+
+        revalidatePath("/dashboard");
+        return { success: true };
     } catch {
         return { error: "Algo deu errado. Tente novamente." };
     }
-
-    revalidatePath("/dashboard");
-    return { success: true };
 }

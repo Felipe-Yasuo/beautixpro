@@ -5,9 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 
 export async function createPortalCustomer() {
-    const userId = await requireAuth();
-
     try {
+        const userId = await requireAuth();
         const user = await prisma.user.findUnique({
             where: { id: userId },
             select: { stripe_customer_id: true },

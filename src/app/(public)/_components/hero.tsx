@@ -51,7 +51,7 @@ export function Hero() {
 
             <div className="absolute right-0 top-0 h-full w-[55%]">
                 <Image
-                    src="/hairdresser-hero.png"
+                    src="/hairdresser-hero.webp"
                     alt="Profissional BeautixPro"
                     fill
                     className="object-cover object-center"

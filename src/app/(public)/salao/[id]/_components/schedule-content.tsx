@@ -26,7 +26,7 @@ export async function ScheduleContent({ userId }: ScheduleContentProps) {
             <div className="flex flex-col items-center -mt-16 pb-10">
                 <div className="relative w-32 h-32 flex-shrink-0">
                     <Image
-                        src={user.image ?? "/foto.png"}
+                        src={user.image ?? "/foto.webp"}
                         alt={user.name ?? "Salão"}
                         fill
                         className="object-cover rounded-full border-4 border-background"

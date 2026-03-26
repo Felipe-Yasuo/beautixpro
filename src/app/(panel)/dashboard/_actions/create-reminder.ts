@@ -10,27 +10,27 @@ const reminderSchema = z.object({
 });
 
 export async function createReminder(formData: FormData) {
-    const userId = await requireAuth();
-
-    const parsed = reminderSchema.safeParse({
-        description: formData.get("description"),
-    });
-
-    if (!parsed.success) {
-        return { error: parsed.error.issues[0].message };
-    }
-
     try {
+        const userId = await requireAuth();
+
+        const parsed = reminderSchema.safeParse({
+            description: formData.get("description"),
+        });
+
+        if (!parsed.success) {
+            return { error: parsed.error.issues[0].message };
+        }
+
         await prisma.reminder.create({
             data: {
                 description: parsed.data.description,
                 userId,
             },
         });
+
+        revalidatePath("/dashboard");
+        return { success: true };
     } catch {
         return { error: "Algo deu errado. Tente novamente." };
     }
-
-    revalidatePath("/dashboard");
-    return { success: true };
 }

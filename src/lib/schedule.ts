@@ -26,17 +26,31 @@ export function computeBlockedSlots(
     return blocked;
 }
 
-export function computeUnavailableStarts(blockedSlots: Set<string>, duration: number): Set<string> {
+export function computeUnavailableStarts(
+    blockedSlots: Set<string>,
+    duration: number,
+    employeeTimes?: string[],
+): Set<string> {
     const unavailable = new Set<string>();
     if (duration <= 0) return unavailable;
 
     const DAY_START = 8 * 60;
     const DAY_END = 23 * 60;
+    const availableSet = employeeTimes ? new Set(employeeTimes) : null;
 
     for (let t = DAY_START; t <= DAY_END; t += 30) {
+        const startLabel = formatTime(t);
+
         for (let s = t; s < t + duration; s += 30) {
-            if (blockedSlots.has(formatTime(s))) {
-                unavailable.add(formatTime(t));
+            const slotLabel = formatTime(s);
+
+            if (blockedSlots.has(slotLabel)) {
+                unavailable.add(startLabel);
+                break;
+            }
+
+            if (availableSet && !availableSet.has(slotLabel)) {
+                unavailable.add(startLabel);
                 break;
             }
         }

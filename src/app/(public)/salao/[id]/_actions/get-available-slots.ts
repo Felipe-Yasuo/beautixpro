@@ -23,19 +23,25 @@ export async function getAvailableSlots(input: {
     const { employeeId, date, duration } = parsed.data;
 
     try {
-        const appointments = await prisma.appointment.findMany({
-            where: {
-                employeeId,
-                appointmentDate: new Date(`${date}T00:00:00`),
-            },
-            select: {
-                time: true,
-                service: { select: { duration: true } },
-            },
-        });
+        const [appointments, employee] = await Promise.all([
+            prisma.appointment.findMany({
+                where: {
+                    employeeId,
+                    appointmentDate: new Date(`${date}T00:00:00`),
+                },
+                select: {
+                    time: true,
+                    service: { select: { duration: true } },
+                },
+            }),
+            prisma.employee.findUnique({
+                where: { id: employeeId },
+                select: { times: true },
+            }),
+        ]);
 
         const blockedSlots = computeBlockedSlots(appointments);
-        const unavailableStarts = computeUnavailableStarts(blockedSlots, duration);
+        const unavailableStarts = computeUnavailableStarts(blockedSlots, duration, employee?.times ?? undefined);
 
         return Array.from(new Set([...blockedSlots, ...unavailableStarts]));
     } catch {

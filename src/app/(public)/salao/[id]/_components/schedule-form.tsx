@@ -101,6 +101,7 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                     selectedTime={selectedTime}
                     onSelect={setSelectedTime}
                     bookedTimes={bookedTimes}
+                    selectedDate={selectedDate}
                 />
             )}
 

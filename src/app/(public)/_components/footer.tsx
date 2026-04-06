@@ -1,8 +1,8 @@
 export function Footer() {
     return (
-        <footer className="border-t border-border px-12 py-8 flex items-center justify-center">
-            <p className="text-muted-foreground text-sm">
-                © 2026 Felipe Yasuo. Todos os direitos reservados.
+        <footer className="shrink-0 border-t border-border px-6 md:px-12 py-4 flex items-center justify-center">
+            <p className="text-muted-foreground text-xs md:text-sm text-center">
+                © 2036 BeautixPro. Todos os direitos reservados.
             </p>
         </footer>
     );

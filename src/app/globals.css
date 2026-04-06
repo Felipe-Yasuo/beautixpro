@@ -343,6 +343,16 @@
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   }
 
+  /* Scrollbar escondida */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Label uppercase padrão */
   .label-overline {
     font-size: 0.625rem;

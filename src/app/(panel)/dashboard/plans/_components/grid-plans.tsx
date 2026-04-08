@@ -70,21 +70,21 @@ export async function GridPlans() {
 
                         {/* Header */}
                         <div>
-                            <p className="text-[var(--on-surface-dim)] text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase mb-2">
+                            <p className="text-[var(--on-surface-dim)] text-[10px] xl:text-xs tracking-widest uppercase mb-2">
                                 {plan.label}
                             </p>
-                            <h2 className={`text-3xl sm:text-4xl xl:text-5xl 2xl:text-6xl font-serif font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
+                            <h2 className={`text-3xl sm:text-4xl xl:text-5xl font-serif font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
                                 {plan.name}
                             </h2>
                         </div>
 
                         {/* Preço */}
                         <div className="flex items-baseline gap-1">
-                            <span className="text-[var(--on-surface-variant)] text-sm xl:text-base 2xl:text-lg">R$</span>
-                            <span className={`text-4xl sm:text-5xl xl:text-6xl 2xl:text-7xl font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
+                            <span className="text-[var(--on-surface-variant)] text-sm xl:text-base">R$</span>
+                            <span className={`text-4xl sm:text-5xl xl:text-6xl font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
                                 {plan.priceDisplay}
                             </span>
-                            <span className="text-[var(--on-surface-dim)] text-sm xl:text-base 2xl:text-lg">{plan.period}</span>
+                            <span className="text-[var(--on-surface-dim)] text-sm xl:text-base">{plan.period}</span>
                         </div>
 
                         {/* Features */}
@@ -98,7 +98,7 @@ export async function GridPlans() {
                                             size={16}
                                             className="text-[var(--gold)] shrink-0"
                                         />
-                                        <span className={`text-sm xl:text-base 2xl:text-lg ${bold ? "font-semibold text-[var(--on-surface)]" : "text-[var(--on-surface-variant)]"}`}>
+                                        <span className={`text-sm xl:text-base ${bold ? "font-semibold text-[var(--on-surface)]" : "text-[var(--on-surface-variant)]"}`}>
                                             {text}
                                         </span>
                                     </li>

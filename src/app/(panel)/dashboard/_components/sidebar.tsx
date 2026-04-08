@@ -70,7 +70,7 @@ function SidebarContent({
                     return (
                         <div key={group} className="flex flex-col gap-1">
                             {!collapsed && (
-                                <p className="text-muted-foreground text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase px-2 mb-1">
+                                <p className="text-muted-foreground text-[10px] xl:text-xs tracking-widest uppercase px-2 mb-1">
                                     {group}
                                 </p>
                             )}
@@ -80,7 +80,7 @@ function SidebarContent({
                                     <Link
                                         key={href}
                                         href={href}
-                                        className={`flex items-center gap-3 px-3 py-2.5 xl:py-3 rounded-sm text-sm xl:text-base 2xl:text-lg transition-colors ${isActive
+                                        className={`flex items-center gap-3 px-3 py-2.5 xl:py-3 rounded-sm text-sm xl:text-base transition-colors ${isActive
                                                 ? "bg-primary text-primary-foreground"
                                                 : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                                             }`}
@@ -107,15 +107,15 @@ function SidebarContent({
                             />
                         </div>
                         <div className="flex flex-col overflow-hidden">
-                            <p className="text-foreground text-xs xl:text-sm 2xl:text-base font-medium truncate">{user.name}</p>
-                            <p className="text-muted-foreground text-[10px] xl:text-xs 2xl:text-sm truncate">{user.email}</p>
+                            <p className="text-foreground text-xs xl:text-sm font-medium truncate">{user.name}</p>
+                            <p className="text-muted-foreground text-[10px] xl:text-xs truncate">{user.email}</p>
                         </div>
                     </div>
                 )}
                 <button
                     onClick={() => signOut({ callbackUrl: "/login" })}
                     aria-label="Sair da conta"
-                    className={`flex items-center gap-3 text-muted-foreground hover:text-destructive text-sm xl:text-base 2xl:text-lg transition-colors cursor-pointer ${collapsed ? "justify-center" : ""}`}
+                    className={`flex items-center gap-3 text-muted-foreground hover:text-destructive text-sm xl:text-base transition-colors cursor-pointer ${collapsed ? "justify-center" : ""}`}
                 >
                     <LogOut size={16} aria-hidden="true" />
                     {!collapsed && <span>Sair</span>}

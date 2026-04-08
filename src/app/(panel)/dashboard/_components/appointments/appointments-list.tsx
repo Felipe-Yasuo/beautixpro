@@ -108,8 +108,8 @@ export function AppointmentsList({
                             key={time}
                             className={`flex gap-0 ${!isLast ? "border-b border-[var(--outline)]" : ""}`}
                         >
-                            <div className="w-14 sm:w-20 xl:w-24 2xl:w-28 shrink-0 flex items-start pt-4 pl-3 sm:pl-6">
-                                <span className="text-muted-foreground text-xs sm:text-sm xl:text-base 2xl:text-lg font-medium">{time}</span>
+                            <div className="w-14 sm:w-20 xl:w-24 shrink-0 flex items-start pt-4 pl-3 sm:pl-6">
+                                <span className="text-muted-foreground text-xs sm:text-sm xl:text-base font-medium">{time}</span>
                             </div>
 
                             <div className="w-px bg-[var(--outline)] mx-1 sm:mx-2 self-stretch" />
@@ -123,20 +123,20 @@ export function AppointmentsList({
                                         }}
                                     >
                                         <div className="flex items-center gap-3 min-w-0">
-                                            <div className="w-9 h-9 sm:w-10 sm:h-10 2xl:w-12 2xl:h-12 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0">
-                                                <span className="text-primary text-xs sm:text-sm 2xl:text-base font-bold">
+                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0">
+                                                <span className="text-primary text-xs sm:text-sm font-bold">
                                                     {slot.appointment.name.charAt(0).toUpperCase()}
                                                 </span>
                                             </div>
                                             <div className="min-w-0">
-                                                <p className="text-foreground text-sm sm:text-lg xl:text-xl 2xl:text-2xl font-bold truncate">
+                                                <p className="text-foreground text-sm sm:text-lg xl:text-xl font-bold truncate">
                                                     {slot.appointment.name}
                                                 </p>
-                                                <p className="text-muted-foreground text-xs sm:text-base xl:text-lg 2xl:text-xl mt-0.5 truncate">
+                                                <p className="text-muted-foreground text-xs sm:text-base xl:text-lg mt-0.5 truncate">
                                                     {slot.appointment.service.name}
                                                 </p>
                                                 {slot.totalSlots > 1 && (
-                                                    <p className="text-primary/60 text-xs sm:text-sm xl:text-base 2xl:text-lg mt-1 flex items-center gap-1">
+                                                    <p className="text-primary/60 text-xs sm:text-sm xl:text-base mt-1 flex items-center gap-1">
                                                         ⏱ Duração: {slot.appointment.service.duration} min
                                                     </p>
                                                 )}
@@ -147,7 +147,7 @@ export function AppointmentsList({
                                         </div>
                                     </div>
                                 ) : (
-                                    <p className="text-muted-foreground/40 text-xs sm:text-sm xl:text-base 2xl:text-lg italic py-3 pl-2">
+                                    <p className="text-muted-foreground/40 text-xs sm:text-sm xl:text-base italic py-3 pl-2">
                                         Disponível
                                     </p>
                                 )}

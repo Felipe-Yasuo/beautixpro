@@ -60,16 +60,16 @@ function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;
 }
 
-const LABEL_CLASS = "text-[var(--gold)] text-xs xl:text-sm 2xl:text-base tracking-widest uppercase";
+const LABEL_CLASS = "text-[var(--gold)] text-xs xl:text-sm tracking-widest uppercase";
 
 const INPUT_CLASS =
-    "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base 2xl:text-lg outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
+    "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
 
 const INPUT_ERROR_CLASS =
-    "bg-[var(--surface-low)] border border-red-500 text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base 2xl:text-lg outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
+    "bg-[var(--surface-low)] border border-red-500 text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
 
 const SELECT_CLASS =
-    "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base 2xl:text-lg outline-none focus:border-[var(--gold)] transition-colors cursor-pointer w-full rounded-lg";
+    "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base outline-none focus:border-[var(--gold)] transition-colors cursor-pointer w-full rounded-lg";
 
 export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
     const [loading, setLoading] = useState(false);

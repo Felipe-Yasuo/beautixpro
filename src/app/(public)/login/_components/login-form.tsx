@@ -115,17 +115,17 @@ export function LoginForm() {
                     {/* Logo */}
                     <Link
                         href="/"
-                        className="absolute top-8 left-8 2xl:top-10 2xl:left-10 z-10 font-serif text-2xl 2xl:text-3xl text-[#c9a84c]"
+                        className="absolute top-8 left-8 z-10 font-serif text-2xl text-[#c9a84c]"
                     >
                         BeautixPro
                     </Link>
 
                     {/* Bottom text */}
-                    <div className="absolute bottom-12 left-8 2xl:bottom-16 2xl:left-10 z-10">
-                        <p className="text-[#c9a84c] text-xs 2xl:text-sm tracking-[0.3em] uppercase mb-4">
+                    <div className="absolute bottom-12 left-8 z-10">
+                        <p className="text-[#c9a84c] text-xs tracking-[0.3em] uppercase mb-4">
                             Excelência em Beleza
                         </p>
-                        <h2 className="font-serif text-5xl xl:text-6xl 2xl:text-7xl text-white leading-tight">
+                        <h2 className="font-serif text-5xl xl:text-6xl text-white leading-tight">
                             Defina Sua{" "}
                             <span className="italic text-[#c9a84c]">Arte.</span>
                         </h2>
@@ -133,8 +133,8 @@ export function LoginForm() {
                 </div>
 
                 {/* Right - Form */}
-                <div className="flex-1 flex items-center justify-center px-6 sm:px-12 lg:px-16 2xl:px-20">
-                    <div className="w-full max-w-md 2xl:max-w-lg">
+                <div className="flex-1 flex items-center justify-center px-6 sm:px-12 lg:px-16">
+                    <div className="w-full max-w-md">
                         {/* Mobile logo */}
                         <Link
                             href="/"
@@ -143,19 +143,19 @@ export function LoginForm() {
                             BeautixPro
                         </Link>
 
-                        <h1 className="font-serif text-3xl sm:text-4xl 2xl:text-5xl text-white mb-2 2xl:mb-3">
+                        <h1 className="font-serif text-3xl sm:text-4xl text-white mb-2">
                             {isRegister ? "Crie sua Conta" : "Bem-vindo de Volta"}
                         </h1>
-                        <p className="text-[#5a5045] text-xs 2xl:text-sm tracking-[0.15em] uppercase mb-10 2xl:mb-12">
+                        <p className="text-[#5a5045] text-xs tracking-[0.15em] uppercase mb-10">
                             {isRegister
                                 ? "Preencha seus dados para começar"
                                 : "Insira suas credenciais para acessar o painel"}
                         </p>
 
-                        <form onSubmit={handleSubmit} className="flex flex-col gap-6 2xl:gap-8">
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                             {isRegister && (
-                                <div className="flex flex-col gap-1.5 2xl:gap-2">
-                                    <label className="text-[#5a5045] text-[10px] 2xl:text-xs tracking-[0.2em] uppercase">
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-[#5a5045] text-[10px] tracking-[0.2em] uppercase">
                                         Nome Completo
                                     </label>
                                     <input
@@ -163,16 +163,16 @@ export function LoginForm() {
                                         type="text"
                                         placeholder="Seu nome"
                                         onBlur={(e) => validateField("name", e.target.value)}
-                                        className="bg-transparent border-b border-[#c9a84c33] text-[#f0ead6] pb-3 text-sm 2xl:text-base outline-none focus:border-[#c9a84c] placeholder:text-[#2a2420] transition-colors"
+                                        className="bg-transparent border-b border-[#c9a84c33] text-[#f0ead6] pb-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#2a2420] transition-colors"
                                     />
                                     {fieldErrors.name && (
-                                        <p className="text-red-400 text-xs 2xl:text-sm">{fieldErrors.name}</p>
+                                        <p className="text-red-400 text-xs">{fieldErrors.name}</p>
                                     )}
                                 </div>
                             )}
 
-                            <div className="flex flex-col gap-1.5 2xl:gap-2">
-                                <label className="text-[#5a5045] text-[10px] 2xl:text-xs tracking-[0.2em] uppercase">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[#5a5045] text-[10px] tracking-[0.2em] uppercase">
                                     E-mail Profissional
                                 </label>
                                 <input
@@ -180,22 +180,22 @@ export function LoginForm() {
                                     type="email"
                                     placeholder="nome@estudio.com"
                                     onBlur={(e) => validateField("email", e.target.value)}
-                                    className="bg-transparent border-b border-[#c9a84c33] text-[#f0ead6] pb-3 text-sm 2xl:text-base outline-none focus:border-[#c9a84c] placeholder:text-[#2a2420] transition-colors"
+                                    className="bg-transparent border-b border-[#c9a84c33] text-[#f0ead6] pb-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#2a2420] transition-colors"
                                 />
                                 {fieldErrors.email && (
-                                    <p className="text-red-400 text-xs 2xl:text-sm">{fieldErrors.email}</p>
+                                    <p className="text-red-400 text-xs">{fieldErrors.email}</p>
                                 )}
                             </div>
 
-                            <div className="flex flex-col gap-1.5 2xl:gap-2">
+                            <div className="flex flex-col gap-1.5">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-[#5a5045] text-[10px] 2xl:text-xs tracking-[0.2em] uppercase">
+                                    <label className="text-[#5a5045] text-[10px] tracking-[0.2em] uppercase">
                                         Senha
                                     </label>
                                     {!isRegister && (
                                         <button
                                             type="button"
-                                            className="text-[#c9a84c] text-[10px] 2xl:text-xs tracking-[0.15em] uppercase hover:text-[#e8c97a] transition-colors"
+                                            className="text-[#c9a84c] text-[10px] tracking-[0.15em] uppercase hover:text-[#e8c97a] transition-colors"
                                         >
                                             Esqueceu a senha?
                                         </button>
@@ -207,7 +207,7 @@ export function LoginForm() {
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••"
                                         onBlur={(e) => validateField("password", e.target.value)}
-                                        className="w-full bg-transparent border-b border-[#c9a84c33] text-[#f0ead6] pb-3 text-sm 2xl:text-base outline-none focus:border-[#c9a84c] placeholder:text-[#2a2420] transition-colors pr-10"
+                                        className="w-full bg-transparent border-b border-[#c9a84c33] text-[#f0ead6] pb-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#2a2420] transition-colors pr-10"
                                     />
                                     <button
                                         type="button"
@@ -228,18 +228,18 @@ export function LoginForm() {
                                     </button>
                                 </div>
                                 {fieldErrors.password && (
-                                    <p className="text-red-400 text-xs 2xl:text-sm">{fieldErrors.password}</p>
+                                    <p className="text-red-400 text-xs">{fieldErrors.password}</p>
                                 )}
                             </div>
 
                             {serverError && (
-                                <p className="text-red-400 text-xs 2xl:text-sm text-center">{serverError}</p>
+                                <p className="text-red-400 text-xs text-center">{serverError}</p>
                             )}
 
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="mt-2 bg-[#c9a84c] text-black py-3.5 2xl:py-4 text-xs 2xl:text-sm tracking-[0.2em] uppercase font-medium hover:bg-[#e8c97a] transition-colors disabled:opacity-50 cursor-pointer"
+                                className="mt-2 bg-[#c9a84c] text-black py-3.5 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#e8c97a] transition-colors disabled:opacity-50 cursor-pointer"
                             >
                                 {loading
                                     ? "Aguarde..."
@@ -249,21 +249,21 @@ export function LoginForm() {
                             </button>
                         </form>
 
-                        <div className="flex items-center gap-4 w-full my-6 2xl:my-8">
+                        <div className="flex items-center gap-4 w-full my-6">
                             <div className="flex-1 h-px bg-[#c9a84c22]" />
-                            <span className="text-[#3a3028] text-xs 2xl:text-sm">ou</span>
+                            <span className="text-[#3a3028] text-xs">ou</span>
                             <div className="flex-1 h-px bg-[#c9a84c22]" />
                         </div>
 
                         <button
                             onClick={handleGoogle}
-                            className="w-full flex items-center justify-center gap-3 border border-[#c9a84c33] text-[#c9a84c] py-3 2xl:py-3.5 text-xs 2xl:text-sm tracking-[0.15em] uppercase hover:bg-[#c9a84c11] transition-colors cursor-pointer"
+                            className="w-full flex items-center justify-center gap-3 border border-[#c9a84c33] text-[#c9a84c] py-3 text-xs tracking-[0.15em] uppercase hover:bg-[#c9a84c11] transition-colors cursor-pointer"
                         >
                             Continuar com Google
                         </button>
 
-                        <div className="text-center mt-8 2xl:mt-10">
-                            <p className="text-[#5a5045] text-xs 2xl:text-sm tracking-[0.1em] uppercase">
+                        <div className="text-center mt-8">
+                            <p className="text-[#5a5045] text-xs tracking-[0.1em] uppercase">
                                 {isRegister
                                     ? "Já tem uma conta?"
                                     : "Novo na plataforma?"}
@@ -274,7 +274,7 @@ export function LoginForm() {
                                     setFieldErrors({});
                                     setServerError("");
                                 }}
-                                className="text-[#c9a84c] text-xs 2xl:text-sm tracking-[0.15em] uppercase mt-1.5 hover:text-[#e8c97a] transition-colors cursor-pointer"
+                                className="text-[#c9a84c] text-xs tracking-[0.15em] uppercase mt-1.5 hover:text-[#e8c97a] transition-colors cursor-pointer"
                             >
                                 {isRegister ? "Entrar" : "Criar uma Conta"}
                             </button>
@@ -284,18 +284,18 @@ export function LoginForm() {
             </div>
 
             {/* Footer */}
-            <footer className="border-t border-[#c9a84c15] px-8 py-5 2xl:py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <p className="text-[#3a3028] text-[10px] 2xl:text-xs tracking-[0.15em] uppercase">
+            <footer className="border-t border-[#c9a84c15] px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p className="text-[#3a3028] text-[10px] tracking-[0.15em] uppercase">
                     &copy; 2024 BeautixPro. Todos os direitos reservados.
                 </p>
                 <div className="flex items-center gap-6">
-                    <span className="text-[#3a3028] text-[10px] 2xl:text-xs tracking-[0.15em] uppercase hover:text-[#5a5045] transition-colors cursor-pointer">
+                    <span className="text-[#3a3028] text-[10px] tracking-[0.15em] uppercase hover:text-[#5a5045] transition-colors cursor-pointer">
                         Política de Privacidade
                     </span>
-                    <span className="text-[#3a3028] text-[10px] 2xl:text-xs tracking-[0.15em] uppercase hover:text-[#5a5045] transition-colors cursor-pointer">
+                    <span className="text-[#3a3028] text-[10px] tracking-[0.15em] uppercase hover:text-[#5a5045] transition-colors cursor-pointer">
                         Termos de Uso
                     </span>
-                    <span className="text-[#3a3028] text-[10px] 2xl:text-xs tracking-[0.15em] uppercase hover:text-[#5a5045] transition-colors cursor-pointer">
+                    <span className="text-[#3a3028] text-[10px] tracking-[0.15em] uppercase hover:text-[#5a5045] transition-colors cursor-pointer">
                         Política de Cookies
                     </span>
                 </div>

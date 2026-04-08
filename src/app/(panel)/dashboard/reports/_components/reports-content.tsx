@@ -44,19 +44,19 @@ export async function ReportsContent() {
     return (
         <div className="flex flex-col gap-10">
             <div>
-                <p className="text-[#c9a84c] text-xs xl:text-sm 2xl:text-base tracking-widest uppercase">
+                <p className="text-[#c9a84c] text-xs xl:text-sm tracking-widest uppercase">
                     Métricas
                 </p>
-                <h1 className="text-3xl xl:text-4xl 2xl:text-5xl font-light text-[#f0ead6] mt-1">Relatórios</h1>
+                <h1 className="text-3xl xl:text-4xl font-light text-[#f0ead6] mt-1">Relatórios</h1>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {metrics.map((metric) => (
                     <div key={metric.label} className="border border-[#c9a84c22] p-6 xl:p-8">
-                        <p className="text-[#3a3028] text-xs xl:text-sm 2xl:text-base tracking-widest uppercase mb-2">
+                        <p className="text-[#3a3028] text-xs xl:text-sm tracking-widest uppercase mb-2">
                             {metric.label}
                         </p>
-                        <p className={`text-4xl xl:text-5xl 2xl:text-6xl font-light ${metric.highlight ? "text-[#c9a84c]" : "text-[#f0ead6]"}`}>
+                        <p className={`text-4xl xl:text-5xl font-light ${metric.highlight ? "text-[#c9a84c]" : "text-[#f0ead6]"}`}>
                             {metric.value}
                         </p>
                     </div>
@@ -64,7 +64,7 @@ export async function ReportsContent() {
             </div>
 
             <div className="flex flex-col gap-4">
-                <p className="text-[#c9a84c] text-xs xl:text-sm 2xl:text-base tracking-widest uppercase">
+                <p className="text-[#c9a84c] text-xs xl:text-sm tracking-widest uppercase">
                     Serviços mais populares
                 </p>
 
@@ -80,12 +80,12 @@ export async function ReportsContent() {
                                 className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border border-[#c9a84c22] px-6 py-4"
                             >
                                 <div className="flex items-center gap-4 min-w-0">
-                                    <p className="text-[#f0ead6] text-sm xl:text-base 2xl:text-lg truncate">{service.name}</p>
-                                    <p className="text-[#3a3028] text-xs xl:text-sm 2xl:text-base whitespace-nowrap">
+                                    <p className="text-[#f0ead6] text-sm xl:text-base truncate">{service.name}</p>
+                                    <p className="text-[#3a3028] text-xs xl:text-sm whitespace-nowrap">
                                         {service.count} agendamento{service.count !== 1 ? "s" : ""}
                                     </p>
                                 </div>
-                                <p className="text-[#c9a84c] text-sm xl:text-base 2xl:text-lg whitespace-nowrap">
+                                <p className="text-[#c9a84c] text-sm xl:text-base whitespace-nowrap">
                                     R$ {formatBRL(service.revenue)}
                                 </p>
                             </div>

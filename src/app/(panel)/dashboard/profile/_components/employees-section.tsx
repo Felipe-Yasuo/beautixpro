@@ -22,7 +22,7 @@ function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;
 }
 
-const LABEL_CLASS = "text-[var(--gold)] text-xs xl:text-sm 2xl:text-base tracking-widest uppercase";
+const LABEL_CLASS = "text-[var(--gold)] text-xs xl:text-sm tracking-widest uppercase";
 
 export function EmployeesSection({ employees, isProfessional }: EmployeesSectionProps) {
     const [loading, setLoading] = useState(false);
@@ -106,7 +106,7 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                         placeholder="Nome do funcionário"
-                        className="bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base 2xl:text-lg outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors flex-1 rounded-lg"
+                        className="bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors flex-1 rounded-lg"
                     />
                     <button
                         type="button"
@@ -134,7 +134,7 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                                             {employee.name.charAt(0).toUpperCase()}
                                         </span>
                                     </div>
-                                    <span className="text-[var(--on-surface)] text-sm xl:text-base 2xl:text-lg truncate">
+                                    <span className="text-[var(--on-surface)] text-sm xl:text-base truncate">
                                         {employee.name}
                                     </span>
                                 </div>
@@ -143,7 +143,7 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                                     <button
                                         type="button"
                                         onClick={() => openTimesModal(employee)}
-                                        className="flex items-center gap-1.5 text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors text-xs xl:text-sm 2xl:text-base cursor-pointer"
+                                        className="flex items-center gap-1.5 text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors text-xs xl:text-sm cursor-pointer"
                                     >
                                         <Clock size={13} />
                                         <span className="whitespace-nowrap">

@@ -22,11 +22,11 @@ export async function SubscriptionDetail() {
                     <span className="text-[#c9a84c] text-lg">✦</span>
                 </div>
                 <div className="min-w-0">
-                    <p className="text-white text-sm xl:text-base 2xl:text-lg">
+                    <p className="text-white text-sm xl:text-base">
                         Seu Plano:{" "}
                         <span className="font-bold text-[#c9a84c]">{planName}</span>
                     </p>
-                    <p className="text-[#ffffff40] text-xs xl:text-sm 2xl:text-base mt-0.5 truncate">
+                    <p className="text-[#ffffff40] text-xs xl:text-sm mt-0.5 truncate">
                         {subscription.status === "active"
                             ? "Sua assinatura está ativa e renova automaticamente."
                             : `Status: ${subscription.status}`}

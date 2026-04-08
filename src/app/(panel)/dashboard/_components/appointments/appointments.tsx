@@ -24,7 +24,7 @@ export async function Appointments({ date, employeeId }: AppointmentsProps) {
     return (
         <div className="bg-[var(--surface-low)] border border-[var(--outline)] rounded-xl overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 sm:px-6 py-4 sm:py-5 border-b border-[var(--outline)]">
-                <h2 className="text-lg sm:text-xl xl:text-2xl 2xl:text-3xl font-bold text-foreground">Seus Agendamentos</h2>
+                <h2 className="text-lg sm:text-xl xl:text-2xl font-bold text-foreground">Seus Agendamentos</h2>
                 <Suspense>
                     <ButtonDate />
                 </Suspense>

@@ -20,10 +20,10 @@ export async function Profile() {
     return (
         <div className="flex flex-col gap-8 p-8">
             <div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl 2xl:text-6xl font-serif font-bold text-[var(--on-surface)]">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[var(--on-surface)]">
                     Perfil
                 </h1>
-                <p className="text-[var(--on-surface-variant)] text-sm xl:text-base 2xl:text-lg mt-2">
+                <p className="text-[var(--on-surface-variant)] text-sm xl:text-base mt-2">
                     Gerencie as informações do seu ateliê e horários de atendimento.
                 </p>
             </div>

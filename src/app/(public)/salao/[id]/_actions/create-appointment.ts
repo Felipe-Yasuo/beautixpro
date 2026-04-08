@@ -1,6 +1,8 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
+import { headers } from "next/headers";
 import { z } from "zod";
 
 const appointmentSchema = z.object({
@@ -19,6 +21,12 @@ const appointmentSchema = z.object({
 });
 
 export async function createAppointment(formData: FormData) {
+    const headersList = await headers();
+    const ip = headersList.get("x-forwarded-for") ?? "unknown";
+    const { success } = rateLimit(`appointment:${ip}`, 10, 60_000);
+    if (!success) {
+        return { error: "Muitas requisições. Tente novamente em 1 minuto." };
+    }
     const parsed = appointmentSchema.safeParse({
         name: formData.get("name"),
         email: formData.get("email"),

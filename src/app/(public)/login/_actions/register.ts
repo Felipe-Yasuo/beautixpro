@@ -1,7 +1,9 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 import { Prisma } from "@/generated/prisma/client";
+import { headers } from "next/headers";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
@@ -12,6 +14,12 @@ const registerSchema = z.object({
 });
 
 export async function register(formData: FormData) {
+    const headersList = await headers();
+    const ip = headersList.get("x-forwarded-for") ?? "unknown";
+    const { success } = rateLimit(`register:${ip}`, 5, 60_000);
+    if (!success) {
+        return { error: "Muitas tentativas. Tente novamente em 1 minuto." };
+    }
     const raw = {
         name: formData.get("name"),
         email: formData.get("email"),

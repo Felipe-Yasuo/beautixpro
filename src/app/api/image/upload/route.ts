@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { auth } from "@/lib/auth";
+import { rateLimit } from "@/lib/rate-limit";
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -21,6 +22,14 @@ export async function POST(req: NextRequest) {
     const session = await auth();
     if (!session?.user?.id) {
         return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+    }
+
+    const { success } = rateLimit(`upload:${session.user.id}`, 10, 60_000);
+    if (!success) {
+        return NextResponse.json(
+            { error: "Muitas requisições. Tente novamente em 1 minuto." },
+            { status: 429 }
+        );
     }
 
     const formData = await req.formData();

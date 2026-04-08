@@ -23,20 +23,20 @@ export async function ServiceContent() {
     const employees = user?.employees ?? [];
 
     return (
-        <div className="flex flex-col gap-8 p-8">
-            <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-6 sm:gap-8">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                 <div>
-                    <h1 className="text-5xl font-serif font-bold text-[var(--on-surface)]">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl 2xl:text-6xl font-serif font-bold text-[var(--on-surface)]">
                         Serviços
                     </h1>
-                    <p className="text-[var(--on-surface-variant)] text-sm mt-2 max-w-sm leading-relaxed">
+                    <p className="text-[var(--on-surface-variant)] text-sm xl:text-base 2xl:text-lg mt-2 max-w-sm leading-relaxed">
                         Gerencie o catálogo de luxo do seu ateliê. Defina preços,
                         durações e a disponibilidade de cada experiência.
                     </p>
                 </div>
 
                 {limit !== Infinity && (
-                    <span className={`text-xs tracking-widest uppercase mt-2 ${atLimit ? "text-red-400" : "text-[var(--on-surface-dim)]"}`}>
+                    <span className={`text-xs xl:text-sm 2xl:text-base tracking-widest uppercase sm:mt-2 ${atLimit ? "text-red-400" : "text-[var(--on-surface-dim)]"}`}>
                         {services.length}/{limitLabel} serviços
                     </span>
                 )}

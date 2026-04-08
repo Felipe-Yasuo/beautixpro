@@ -22,7 +22,7 @@ function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;
 }
 
-const LABEL_CLASS = "text-[var(--gold)] text-xs tracking-widest uppercase";
+const LABEL_CLASS = "text-[var(--gold)] text-xs xl:text-sm 2xl:text-base tracking-widest uppercase";
 
 export function EmployeesSection({ employees, isProfessional }: EmployeesSectionProps) {
     const [loading, setLoading] = useState(false);
@@ -100,19 +100,19 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
             <div className="flex flex-col gap-3">
                 <label className={LABEL_CLASS}>Funcionários</label>
 
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                     <input
                         type="text"
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                         placeholder="Nome do funcionário"
-                        className="bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors flex-1 rounded-lg"
+                        className="bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base 2xl:text-lg outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors flex-1 rounded-lg"
                     />
                     <button
                         type="button"
                         onClick={handleCreate}
                         disabled={loading || !newName.trim()}
-                        className="btn-primary px-4 py-3 flex items-center gap-2 disabled:opacity-50 rounded-lg shrink-0"
+                        className="btn-primary px-4 py-3 flex items-center justify-center gap-2 disabled:opacity-50 rounded-lg shrink-0"
                     >
                         <UserPlus size={15} />
                         <span>{loading ? "..." : "Adicionar"}</span>
@@ -126,27 +126,27 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                         {employees.map((employee) => (
                             <div
                                 key={employee.id}
-                                className="bg-[var(--surface-low)] border border-[var(--outline-variant)] rounded-lg px-4 py-3 flex items-center justify-between"
+                                className="bg-[var(--surface-low)] border border-[var(--outline-variant)] rounded-lg px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between"
                             >
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-3 min-w-0">
                                     <div className="w-8 h-8 rounded-full bg-[var(--gold-ghost)] border border-[var(--outline-variant)] flex items-center justify-center shrink-0">
                                         <span className="text-[var(--gold)] text-xs font-semibold">
                                             {employee.name.charAt(0).toUpperCase()}
                                         </span>
                                     </div>
-                                    <span className="text-[var(--on-surface)] text-sm">
+                                    <span className="text-[var(--on-surface)] text-sm xl:text-base 2xl:text-lg truncate">
                                         {employee.name}
                                     </span>
                                 </div>
 
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-3 shrink-0">
                                     <button
                                         type="button"
                                         onClick={() => openTimesModal(employee)}
-                                        className="flex items-center gap-1.5 text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors text-xs cursor-pointer"
+                                        className="flex items-center gap-1.5 text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors text-xs xl:text-sm 2xl:text-base cursor-pointer"
                                     >
                                         <Clock size={13} />
-                                        <span>
+                                        <span className="whitespace-nowrap">
                                             {employee.times.length > 0
                                                 ? `${employee.times.length} ${pluralize(employee.times.length, "horário", "horários")}`
                                                 : "Definir horários"}
@@ -211,7 +211,7 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                         </div>
 
                         <div className="px-6 pb-6">
-                            <div className="grid grid-cols-5 gap-2">
+                            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                                 {ALL_TIMES.map((time) => {
                                     const isSelected = selectedTimes.includes(time);
                                     return (

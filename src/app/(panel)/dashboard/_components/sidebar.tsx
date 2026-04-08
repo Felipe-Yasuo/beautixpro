@@ -47,7 +47,7 @@ function SidebarContent({
     user: SidebarProps["user"];
 }) {
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col flex-1 h-full min-h-0">
             <div className="p-4 mb-4">
                 {collapsed ? (
                     <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center text-primary-foreground font-bold text-sm">
@@ -57,9 +57,9 @@ function SidebarContent({
                     <Image
                         src="/logo.png"
                         alt="BeautixPro"
-                        width={130}
-                        height={40}
-                        className="object-contain"
+                        width={160}
+                        height={48}
+                        className="object-contain w-32.5 xl:w-40"
                     />
                 )}
             </div>
@@ -70,7 +70,7 @@ function SidebarContent({
                     return (
                         <div key={group} className="flex flex-col gap-1">
                             {!collapsed && (
-                                <p className="text-muted-foreground text-[10px] tracking-widest uppercase px-2 mb-1">
+                                <p className="text-muted-foreground text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase px-2 mb-1">
                                     {group}
                                 </p>
                             )}
@@ -80,11 +80,10 @@ function SidebarContent({
                                     <Link
                                         key={href}
                                         href={href}
-                                        className={`flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm transition-colors ${
-                                            isActive
+                                        className={`flex items-center gap-3 px-3 py-2.5 xl:py-3 rounded-sm text-sm xl:text-base 2xl:text-lg transition-colors ${isActive
                                                 ? "bg-primary text-primary-foreground"
                                                 : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                                        }`}
+                                            }`}
                                     >
                                         <Icon size={16} className="flex-shrink-0" />
                                         {!collapsed && label}
@@ -108,15 +107,15 @@ function SidebarContent({
                             />
                         </div>
                         <div className="flex flex-col overflow-hidden">
-                            <p className="text-foreground text-xs font-medium truncate">{user.name}</p>
-                            <p className="text-muted-foreground text-[10px] truncate">{user.email}</p>
+                            <p className="text-foreground text-xs xl:text-sm 2xl:text-base font-medium truncate">{user.name}</p>
+                            <p className="text-muted-foreground text-[10px] xl:text-xs 2xl:text-sm truncate">{user.email}</p>
                         </div>
                     </div>
                 )}
                 <button
                     onClick={() => signOut({ callbackUrl: "/login" })}
                     aria-label="Sair da conta"
-                    className={`flex items-center gap-3 text-muted-foreground hover:text-destructive text-sm transition-colors cursor-pointer ${collapsed ? "justify-center" : ""}`}
+                    className={`flex items-center gap-3 text-muted-foreground hover:text-destructive text-sm xl:text-base 2xl:text-lg transition-colors cursor-pointer ${collapsed ? "justify-center" : ""}`}
                 >
                     <LogOut size={16} aria-hidden="true" />
                     {!collapsed && <span>Sair</span>}
@@ -138,7 +137,7 @@ export function Sidebar({ user, mobileOnly }: SidebarProps) {
                         <Menu size={20} aria-hidden="true" />
                     </button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-64 p-0 bg-card border-border">
+                <SheetContent side="left" className="w-64 p-0 bg-card border-border flex flex-col">
                     <SheetTitle className="sr-only">Menu</SheetTitle>
                     <SidebarContent pathname={pathname} user={user} />
                 </SheetContent>
@@ -148,9 +147,8 @@ export function Sidebar({ user, mobileOnly }: SidebarProps) {
 
     return (
         <aside
-            className={`hidden md:flex flex-col border-r border-border sticky top-0 h-screen transition-all duration-300 ${
-                collapsed ? "w-16" : "w-64"
-            }`}
+            className={`hidden md:flex flex-col shrink-0 border-r border-border sticky top-0 h-screen transition-all duration-300 ${collapsed ? "w-16" : "w-94"
+                }`}
         >
             <button
                 onClick={() => setCollapsed(!collapsed)}

@@ -73,7 +73,7 @@ export function AppointmentsList({
     return (
         <div className="flex flex-col">
             {isProfessional && employees.length > 0 && (
-                <div className="px-6 py-4 border-b border-[var(--outline)]">
+                <div className="px-4 sm:px-6 py-4 border-b border-[var(--outline)]">
                     <select
                         value={selectedEmployeeId ?? employees[0]?.id}
                         onChange={(e) => handleEmployeeChange(e.target.value)}
@@ -108,44 +108,46 @@ export function AppointmentsList({
                             key={time}
                             className={`flex gap-0 ${!isLast ? "border-b border-[var(--outline)]" : ""}`}
                         >
-                            <div className="w-20 flex-shrink-0 flex items-start pt-4 pl-6">
-                                <span className="text-muted-foreground text-sm font-medium">{time}</span>
+                            <div className="w-14 sm:w-20 xl:w-24 2xl:w-28 shrink-0 flex items-start pt-4 pl-3 sm:pl-6">
+                                <span className="text-muted-foreground text-xs sm:text-sm xl:text-base 2xl:text-lg font-medium">{time}</span>
                             </div>
 
-                            <div className="w-px bg-[var(--outline)] mx-2 self-stretch" />
+                            <div className="w-px bg-[var(--outline)] mx-1 sm:mx-2 self-stretch" />
 
-                            <div className="flex-1 py-3 pr-4">
+                            <div className="flex-1 py-3 pr-3 sm:pr-4 min-w-0">
                                 {slot ? (
                                     <div
-                                        className="rounded-lg border border-[var(--outline)] bg-gradient-to-r from-[#3a2f0b] to-[var(--surface-lowest)] p-4 flex items-center justify-between"
+                                        className="rounded-lg border border-[var(--outline)] bg-linear-to-r from-[#3a2f0b] to-[var(--surface-lowest)] p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
                                         style={{
                                             minHeight: slot.totalSlots > 1 ? `${slot.totalSlots * 64}px` : "auto",
                                         }}
                                     >
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center flex-shrink-0">
-                                                <span className="text-primary text-sm font-bold">
+                                        <div className="flex items-center gap-3 min-w-0">
+                                            <div className="w-9 h-9 sm:w-10 sm:h-10 2xl:w-12 2xl:h-12 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0">
+                                                <span className="text-primary text-xs sm:text-sm 2xl:text-base font-bold">
                                                     {slot.appointment.name.charAt(0).toUpperCase()}
                                                 </span>
                                             </div>
-                                            <div>
-                                                <p className="text-foreground text-lg font-bold">
+                                            <div className="min-w-0">
+                                                <p className="text-foreground text-sm sm:text-lg xl:text-xl 2xl:text-2xl font-bold truncate">
                                                     {slot.appointment.name}
                                                 </p>
-                                                <p className="text-muted-foreground text-md mt-0.5">
+                                                <p className="text-muted-foreground text-xs sm:text-base xl:text-lg 2xl:text-xl mt-0.5 truncate">
                                                     {slot.appointment.service.name}
                                                 </p>
                                                 {slot.totalSlots > 1 && (
-                                                    <p className="text-primary/60 text-sm mt-1 flex items-center gap-1">
+                                                    <p className="text-primary/60 text-xs sm:text-sm xl:text-base 2xl:text-lg mt-1 flex items-center gap-1">
                                                         ⏱ Duração: {slot.appointment.service.duration} min
                                                     </p>
                                                 )}
                                             </div>
                                         </div>
-                                        <DialogAppointment appointment={slot.appointment} />
+                                        <div className="shrink-0 self-end sm:self-center">
+                                            <DialogAppointment appointment={slot.appointment} />
+                                        </div>
                                     </div>
                                 ) : (
-                                    <p className="text-muted-foreground/40 text-sm italic py-3 pl-2">
+                                    <p className="text-muted-foreground/40 text-xs sm:text-sm xl:text-base 2xl:text-lg italic py-3 pl-2">
                                         Disponível
                                     </p>
                                 )}

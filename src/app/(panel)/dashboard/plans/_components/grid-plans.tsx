@@ -53,7 +53,7 @@ export async function GridPlans() {
                 return (
                     <div
                         key={plan.name}
-                        className={`relative bg-[var(--surface-low)] rounded-xl flex flex-col gap-6 p-8 border transition-colors ${isCurrentPlan
+                        className={`relative bg-[var(--surface-low)] rounded-xl flex flex-col gap-5 sm:gap-6 p-5 sm:p-8 border transition-colors ${isCurrentPlan
                                 ? "border-[var(--gold)]"
                                 : isPro
                                     ? "border-[#c9a84c55] hover:border-[#c9a84c88]"
@@ -62,7 +62,7 @@ export async function GridPlans() {
                     >
                         {/* Badge plano atual */}
                         {isCurrentPlan && (
-                            <div className="absolute top-4 right-4 bg-[#c9a84c] text-black text-[10px] tracking-widest uppercase font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
+                            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#c9a84c] text-black text-[9px] sm:text-[10px] tracking-widest uppercase font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5">
                                 <span>✦</span>
                                 Plano Atual
                             </div>
@@ -70,21 +70,21 @@ export async function GridPlans() {
 
                         {/* Header */}
                         <div>
-                            <p className="text-[var(--on-surface-dim)] text-[10px] tracking-widest uppercase mb-2">
+                            <p className="text-[var(--on-surface-dim)] text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase mb-2">
                                 {plan.label}
                             </p>
-                            <h2 className={`text-4xl font-serif font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
+                            <h2 className={`text-3xl sm:text-4xl xl:text-5xl 2xl:text-6xl font-serif font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
                                 {plan.name}
                             </h2>
                         </div>
 
                         {/* Preço */}
                         <div className="flex items-baseline gap-1">
-                            <span className="text-[var(--on-surface-variant)] text-sm">R$</span>
-                            <span className={`text-5xl font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
+                            <span className="text-[var(--on-surface-variant)] text-sm xl:text-base 2xl:text-lg">R$</span>
+                            <span className={`text-4xl sm:text-5xl xl:text-6xl 2xl:text-7xl font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
                                 {plan.priceDisplay}
                             </span>
-                            <span className="text-[var(--on-surface-dim)] text-sm">{plan.period}</span>
+                            <span className="text-[var(--on-surface-dim)] text-sm xl:text-base 2xl:text-lg">{plan.period}</span>
                         </div>
 
                         {/* Features */}
@@ -98,7 +98,7 @@ export async function GridPlans() {
                                             size={16}
                                             className="text-[var(--gold)] shrink-0"
                                         />
-                                        <span className={`text-sm ${bold ? "font-semibold text-[var(--on-surface)]" : "text-[var(--on-surface-variant)]"}`}>
+                                        <span className={`text-sm xl:text-base 2xl:text-lg ${bold ? "font-semibold text-[var(--on-surface)]" : "text-[var(--on-surface-variant)]"}`}>
                                             {text}
                                         </span>
                                     </li>

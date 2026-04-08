@@ -8,7 +8,7 @@ export async function Reminders() {
     return (
         <div className="bg-[var(--surface-low)] border border-[var(--outline)] rounded-xl overflow-hidden">
             <div className="px-6 py-5 border-b border-[var(--outline)]">
-                <h2 className="text-xl font-bold text-foreground">Meus Lembretes</h2>
+                <h2 className="text-xl xl:text-2xl 2xl:text-3xl font-bold text-foreground">Meus Lembretes</h2>
             </div>
             <div className="p-4 flex flex-col gap-3">
                 <ReminderForm />

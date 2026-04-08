@@ -1,91 +1,72 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Heart, MapPin, ArrowRight } from "lucide-react";
 import { getProfessionals } from "../_data-access/get-professionals";
 
 export async function Professionals() {
     const professionals = await getProfessionals();
 
     return (
-        <section id="saloes" className="shrink-0 pb-2">
-            <h2 className="text-lg md:text-2xl font-bold text-foreground px-6 md:px-12 mb-4">
+        <section id="saloes" className="py-8 md:py-12 2xl:py-16">
+            <h2 className="font-serif text-xl sm:text-2xl md:text-3xl 2xl:text-4xl font-bold text-gradient-gold px-5 sm:px-6 md:px-12 mb-6 md:mb-8 2xl:mb-10">
                 Profissionais disponíveis
             </h2>
 
             {professionals.length === 0 ? (
-                <p className="text-muted-foreground text-sm text-center py-8 px-6">
+                <p className="text-muted-foreground text-sm 2xl:text-base text-center py-12 px-6">
                     Nenhum salão disponível no momento.
                 </p>
             ) : (
-                <div className="flex gap-3 md:gap-4 overflow-x-auto px-6 md:px-12 pb-3 scrollbar-hide">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 2xl:gap-8 px-5 sm:px-6 md:px-12">
                     {professionals.map((pro) => {
                         const services = pro.employees.flatMap((e) => e.services);
 
                         return (
                             <div
                                 key={pro.id}
-                                className="bg-card border border-border hover:border-primary/50 transition-colors flex flex-col rounded-xl overflow-hidden w-44 md:w-48 shrink-0"
+                                className="group bg-card rounded-xl border border-border overflow-hidden transition-all duration-300 hover:border-primary/40 hover:shadow-gold flex flex-col"
                             >
-                                <div className="relative w-full h-28 md:h-32">
+                                <div className="relative aspect-4/5 overflow-hidden bg-muted">
                                     <Image
-                                        src={pro.image ?? "/foto.webp"}
+                                        src={pro.image || "/foto.webp"}
                                         alt={pro.name ?? "Salão"}
                                         fill
-                                        className="object-cover object-top"
+                                        className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                                     />
                                     <button
-                                        className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/40 text-white/70 hover:text-primary transition-colors"
+                                        className="absolute top-3 right-3 w-8 h-8 2xl:w-10 2xl:h-10 flex items-center justify-center rounded-full bg-black/40 text-white/70 hover:text-primary transition-colors"
                                         aria-label="Favoritar"
                                     >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="14"
-                                            height="14"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                                        </svg>
+                                        <Heart className="w-4 h-4 2xl:w-5 2xl:h-5" />
                                     </button>
                                 </div>
 
-                                <div className="p-3 flex flex-col gap-2 flex-1">
+                                <div className="p-4 2xl:p-5 flex flex-col gap-3 flex-1">
                                     <div>
-                                        <p className="text-foreground font-semibold text-xs">
+                                        <p className="font-serif text-foreground font-semibold text-sm 2xl:text-base">
                                             {pro.name}
                                         </p>
                                         {pro.address && (
-                                            <p className="text-muted-foreground text-[10px] mt-0.5 flex items-center gap-1">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="10"
-                                                    height="10"
-                                                    viewBox="0 0 24 24"
-                                                    fill="currentColor"
-                                                    className="text-primary shrink-0"
-                                                >
-                                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                                                </svg>
+                                            <p className="text-muted-foreground text-xs 2xl:text-sm mt-1 flex items-center gap-1">
+                                                <MapPin className="w-3 h-3 2xl:w-4 2xl:h-4 text-primary shrink-0" />
                                                 <span className="truncate">{pro.address}</span>
                                             </p>
                                         )}
                                     </div>
 
                                     {services.length > 0 && (
-                                        <div className="flex flex-wrap gap-1">
+                                        <div className="flex flex-wrap gap-1.5">
                                             {services.slice(0, 3).map((service) => (
                                                 <span
                                                     key={service.name}
-                                                    className="text-muted-foreground text-[8px] tracking-wider uppercase border border-border px-1.5 py-0.5 rounded-sm"
+                                                    className="bg-secondary text-muted-foreground text-[10px] 2xl:text-xs tracking-wider uppercase px-2 py-0.5 rounded"
                                                 >
                                                     {service.name}
                                                 </span>
                                             ))}
                                             {services.length > 3 && (
-                                                <span className="text-primary text-[8px] tracking-wider uppercase border border-primary/30 bg-primary/5 px-1.5 py-0.5 rounded-sm">
+                                                <span className="text-primary text-[10px] 2xl:text-xs tracking-wider uppercase border border-primary/30 bg-primary/5 px-2 py-0.5 rounded">
                                                     +{services.length - 3} serviços
                                                 </span>
                                             )}
@@ -94,23 +75,10 @@ export async function Professionals() {
 
                                     <Link
                                         href={`/salao/${pro.id}`}
-                                        className="mt-auto w-full bg-primary text-primary-foreground py-2 text-xs font-medium text-center hover:bg-primary/90 transition-colors rounded-lg flex items-center justify-center gap-1.5"
+                                        className="mt-auto w-full bg-primary text-primary-foreground py-2.5 2xl:py-3 text-sm 2xl:text-base font-medium text-center hover:bg-primary/90 transition-colors rounded-lg flex items-center justify-center gap-2"
                                     >
                                         Agendar horário
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <path d="M5 12h14" />
-                                            <path d="m12 5 7 7-7 7" />
-                                        </svg>
+                                        <ArrowRight className="w-3.5 h-3.5 2xl:w-4 2xl:h-4" />
                                     </Link>
                                 </div>
                             </div>

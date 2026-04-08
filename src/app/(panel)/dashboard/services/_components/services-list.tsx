@@ -65,7 +65,7 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
             <DialogService
                 employeeId={employeeId}
                 trigger={
-                    <button className="btn-primary flex items-center gap-2 text-sm px-4 py-2.5">
+                    <button className="btn-primary flex items-center gap-2 text-sm xl:text-base 2xl:text-lg px-4 xl:px-6 py-2.5 xl:py-3">
                         + Novo Serviço
                     </button>
                 }
@@ -76,7 +76,7 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
     return (
         <div className="flex flex-col gap-4">
             {isProfessional && (
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <select
                         value={selectedEmployeeId}
                         onChange={(e) => {
@@ -84,7 +84,7 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                             setPage(0);
                         }}
                         aria-label="Filtrar por funcionário"
-                        className="bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-2.5 text-sm outline-none focus:border-[var(--gold)] transition-colors cursor-pointer rounded-lg"
+                        className="bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-2.5 xl:py-3 text-sm xl:text-base 2xl:text-lg outline-none focus:border-[var(--gold)] transition-colors cursor-pointer rounded-lg"
                     >
                         {employees.length === 0 && (
                             <option value="">Nenhum funcionário cadastrado</option>
@@ -114,13 +114,14 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                         : "Nenhum serviço cadastrado ainda."}
                 </p>
             ) : (
-                <div className="flex flex-col gap-0 border border-[var(--outline)] bg-[var(--surface-low)]">
-                    <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-4 border-b border-[var(--outline)]">
-                        <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">Nome do Serviço</span>
-                        <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">Duração</span>
-                        <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">Status</span>
-                        <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">Preço</span>
-                        <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)] text-right">Ações</span>
+                <div className="flex flex-col border border-[var(--outline)] bg-[var(--surface-low)]">
+                    {/* Desktop table header */}
+                    <div className="hidden md:grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-4 xl:py-5 border-b border-[var(--outline)]">
+                        <span className="text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase text-[var(--on-surface)]">Nome do Serviço</span>
+                        <span className="text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase text-[var(--on-surface)]">Duração</span>
+                        <span className="text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase text-[var(--on-surface)]">Status</span>
+                        <span className="text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase text-[var(--on-surface)]">Preço</span>
+                        <span className="text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase text-[var(--on-surface)] text-right">Ações</span>
                     </div>
 
                     {paginated.map((service, i) => {
@@ -128,67 +129,125 @@ export function ServicesList({ services, employees, isProfessional, atLimit }: S
                         return (
                             <div
                                 key={service.id}
-                                className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-5 border-b border-[var(--outline)] last:border-b-0 hover:bg-[var(--surface-high)] transition-colors items-center"
+                                className="border-b border-[var(--outline)] last:border-b-0 hover:bg-[var(--surface-high)] transition-colors"
                             >
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 bg-[#1f1a0e] border border-[var(--outline-variant)] flex items-center justify-center shrink-0">
-                                        <Icon size={16} className="text-[var(--gold)]" />
+                                {/* Desktop row */}
+                                <div className="hidden md:grid grid-cols-[2fr_1fr_1fr_1fr_80px] px-6 py-5 xl:py-6 items-center">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-10 h-10 2xl:w-12 2xl:h-12 bg-[#1f1a0e] border border-[var(--outline-variant)] flex items-center justify-center shrink-0">
+                                            <Icon size={16} className="text-[var(--gold)] 2xl:scale-125" />
+                                        </div>
+                                        <span className="text-[var(--on-surface)] text-sm xl:text-base 2xl:text-lg font-medium">
+                                            {service.name}
+                                        </span>
                                     </div>
-                                    <span className="text-[var(--on-surface)] text-sm font-medium">
-                                        {service.name}
+
+                                    <span className="text-[var(--on-surface-variant)] text-sm xl:text-base 2xl:text-lg">
+                                        {service.duration} min
                                     </span>
+
+                                    <div>
+                                        <span className={`text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase px-3 py-1 flex items-center gap-1.5 w-fit ${
+                                            service.status
+                                                ? "bg-[#c9a84c22] text-[var(--gold)] border border-[#c9a84c44]"
+                                                : "bg-[#ffffff08] text-[var(--on-surface-dim)] border border-[#ffffff15]"
+                                        }`}>
+                                            <span className={`w-1.5 h-1.5 rounded-full ${service.status ? "bg-[var(--gold)]" : "bg-[var(--on-surface-dim)]"}`} />
+                                            {service.status ? "Ativo" : "Inativo"}
+                                        </span>
+                                    </div>
+
+                                    <div>
+                                        <span className="text-[var(--on-surface-variant)] text-xs xl:text-sm 2xl:text-base">R$</span>
+                                        <span className="text-[var(--gold)] font-semibold ml-1 xl:text-base 2xl:text-lg">
+                                            {formatBRL(service.price)}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex items-center gap-3 justify-end">
+                                        <DialogService
+                                            service={service}
+                                            employeeId={service.employee.id}
+                                            trigger={
+                                                <button
+                                                    aria-label={`Editar serviço ${service.name}`}
+                                                    className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer"
+                                                >
+                                                    <Pencil size={14} aria-hidden="true" />
+                                                </button>
+                                            }
+                                        />
+                                        <button
+                                            onClick={() => handleDelete(service.id)}
+                                            disabled={deletingId === service.id}
+                                            aria-label={`Excluir serviço ${service.name}`}
+                                            className="text-[var(--on-surface-dim)] hover:text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
+                                        >
+                                            <Trash2 size={14} aria-hidden="true" />
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <span className="text-[var(--on-surface-variant)] text-sm">
-                                    {service.duration} min
-                                </span>
-
-                                <div>
-                                    <span className={`text-[10px] tracking-widest uppercase px-3 py-1 flex items-center gap-1.5 w-fit ${
-                                        service.status
-                                            ? "bg-[#c9a84c22] text-[var(--gold)] border border-[#c9a84c44]"
-                                            : "bg-[#ffffff08] text-[var(--on-surface-dim)] border border-[#ffffff15]"
-                                    }`}>
-                                        <span className={`w-1.5 h-1.5 rounded-full ${service.status ? "bg-[var(--gold)]" : "bg-[var(--on-surface-dim)]"}`} />
-                                        {service.status ? "Ativo" : "Inativo"}
-                                    </span>
-                                </div>
-
-                                <div>
-                                    <span className="text-[var(--on-surface-variant)] text-xs">R$</span>
-                                    <span className="text-[var(--gold)] font-semibold ml-1">
-                                        {formatBRL(service.price)}
-                                    </span>
-                                </div>
-
-                                <div className="flex items-center gap-3 justify-end">
-                                    <DialogService
-                                        service={service}
-                                        employeeId={service.employee.id}
-                                        trigger={
+                                {/* Mobile card */}
+                                <div className="md:hidden flex flex-col gap-3 px-4 py-4">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3 min-w-0">
+                                            <div className="w-9 h-9 bg-[#1f1a0e] border border-[var(--outline-variant)] flex items-center justify-center shrink-0">
+                                                <Icon size={14} className="text-[var(--gold)]" />
+                                            </div>
+                                            <span className="text-[var(--on-surface)] text-sm font-medium truncate">
+                                                {service.name}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-3 shrink-0">
+                                            <DialogService
+                                                service={service}
+                                                employeeId={service.employee.id}
+                                                trigger={
+                                                    <button
+                                                        aria-label={`Editar serviço ${service.name}`}
+                                                        className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer"
+                                                    >
+                                                        <Pencil size={14} aria-hidden="true" />
+                                                    </button>
+                                                }
+                                            />
                                             <button
-                                                aria-label={`Editar serviço ${service.name}`}
-                                                className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer"
+                                                onClick={() => handleDelete(service.id)}
+                                                disabled={deletingId === service.id}
+                                                aria-label={`Excluir serviço ${service.name}`}
+                                                className="text-[var(--on-surface-dim)] hover:text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
                                             >
-                                                <Pencil size={14} aria-hidden="true" />
+                                                <Trash2 size={14} aria-hidden="true" />
                                             </button>
-                                        }
-                                    />
-                                    <button
-                                        onClick={() => handleDelete(service.id)}
-                                        disabled={deletingId === service.id}
-                                        aria-label={`Excluir serviço ${service.name}`}
-                                        className="text-[var(--on-surface-dim)] hover:text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
-                                    >
-                                        <Trash2 size={14} aria-hidden="true" />
-                                    </button>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-4 text-sm">
+                                        <span className="text-[var(--on-surface-variant)]">
+                                            {service.duration} min
+                                        </span>
+                                        <span className={`text-[10px] tracking-widest uppercase px-2.5 py-0.5 flex items-center gap-1.5 w-fit ${
+                                            service.status
+                                                ? "bg-[#c9a84c22] text-[var(--gold)] border border-[#c9a84c44]"
+                                                : "bg-[#ffffff08] text-[var(--on-surface-dim)] border border-[#ffffff15]"
+                                        }`}>
+                                            <span className={`w-1.5 h-1.5 rounded-full ${service.status ? "bg-[var(--gold)]" : "bg-[var(--on-surface-dim)]"}`} />
+                                            {service.status ? "Ativo" : "Inativo"}
+                                        </span>
+                                        <span className="ml-auto">
+                                            <span className="text-[var(--on-surface-variant)] text-xs">R$ </span>
+                                            <span className="text-[var(--gold)] font-semibold">
+                                                {formatBRL(service.price)}
+                                            </span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         );
                     })}
 
-                    <div className="flex items-center justify-between px-6 py-4 border-t border-[var(--outline)]">
-                        <span className="text-[10px] tracking-widest uppercase text-[var(--on-surface)]">
+                    <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-[var(--outline)]">
+                        <span className="text-[10px] xl:text-xs 2xl:text-sm tracking-widest uppercase text-[var(--on-surface)]">
                             Exibindo {paginated.length} de {filtered.length} serviços
                         </span>
                         <div className="flex items-center gap-2">

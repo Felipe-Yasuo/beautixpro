@@ -12,10 +12,10 @@ const plans = [
         period: "/mês",
         priceId: process.env.STRIPE_BASIC_PRICE_ID!,
         features: [
-            "Gestão de até 50 clientes mensais",
-            "Agenda digital sincronizada",
-            "Lembretes via E-mail",
-            "Portfólio digital básico",
+            "Serviços limitados até 10 serviços",
+            "Não tem acesso aos relatórios do salão",
+            "Não é possivel registrar outros funcionários",
+            "Menos destaque na landing page",
         ],
     },
     {
@@ -25,11 +25,11 @@ const plans = [
         period: "/mês",
         priceId: process.env.STRIPE_PROFESSIONAL_PRICE_ID!,
         features: [
-            "Clientes ilimitados",
+            "Serviços ilimitados",
             "Lembretes automáticos via WhatsApp",
-            "Analytics avançado de faturamento",
+            "Pode registrar outros funcionários",
             { text: "Suporte prioritário 24/7", bold: true },
-            "Personalização de Branding",
+            "Acesso aos relatórios do salão",
         ],
     },
 ];
@@ -54,10 +54,10 @@ export async function GridPlans() {
                     <div
                         key={plan.name}
                         className={`relative bg-[var(--surface-low)] rounded-xl flex flex-col gap-5 sm:gap-6 p-5 sm:p-8 border transition-colors ${isCurrentPlan
-                                ? "border-[var(--gold)]"
-                                : isPro
-                                    ? "border-[#c9a84c55] hover:border-[#c9a84c88]"
-                                    : "border-[var(--outline)] hover:border-[var(--outline-variant)]"
+                            ? "border-[var(--gold)]"
+                            : isPro
+                                ? "border-[#c9a84c55] hover:border-[#c9a84c88]"
+                                : "border-[var(--outline)] hover:border-[var(--outline-variant)]"
                             }`}
                     >
                         {/* Badge plano atual */}

@@ -1,72 +1,115 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Star } from "lucide-react";
 
 export function Hero() {
     return (
-        <div>
-            <section className="relative flex items-end min-h-[70vh] sm:min-h-[75vh] md:min-h-[85vh] overflow-hidden">
+        <section className="relative">
+            {/* Foto fullbleed cinematográfica */}
+            <div className="relative flex min-h-[75vh] items-end overflow-hidden lg:min-h-[88vh]">
                 <Image
                     src="/hairdresser-hero.webp"
-                    alt="Profissional BeautixPro"
+                    alt="Ateliê de beleza"
                     fill
                     className="object-cover object-top"
                     priority
                     sizes="100vw"
                 />
-                <div className="absolute inset-0 bg-linear-to-r from-background via-background/90 to-background/30" />
 
-                <div className="relative z-10 w-full max-w-screen-2xl mx-auto px-5 sm:px-6 md:px-12 lg:px-16 pb-10 sm:pb-12 md:pb-16 lg:pb-20">
-                    <div className="flex flex-col gap-4 md:gap-6 max-w-[85vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-3xl">
-                        <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1]">
-                            <span className="italic text-gradient-gold">
-                                Encontre os melhores profissionais de beleza
-                            </span>{" "}
-                            <span className="text-foreground">em um único local!</span>
+                {/* Mobile: vinheta vertical — escurece base pra texto, foto vira atmosfera no topo */}
+                <div className="absolute inset-0 bg-linear-to-t from-surface-lowest via-surface-lowest/90 to-surface-lowest/20 lg:hidden" />
+
+                {/* Desktop: vinheta lateral cinematográfica */}
+                <div className="absolute inset-0 hidden bg-linear-to-r from-surface-lowest via-surface-lowest/85 to-surface-lowest/10 lg:block" />
+
+                {/* Vinheta superior fina pra integrar com header */}
+                <div className="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-surface-lowest/80 to-transparent" />
+
+                {/* Vinheta inferior — desce pra próxima seção */}
+                <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-surface-lowest via-surface-lowest/60 to-transparent" />
+
+                {/* Halo dourado discreto atrás da tipografia */}
+                <div
+                    className="pointer-events-none absolute left-0 top-1/2 h-150 w-225 -translate-y-1/2 opacity-40"
+                    style={{
+                        background:
+                            "radial-gradient(ellipse at left center, rgba(201,168,76,0.15) 0%, rgba(201,168,76,0.04) 35%, transparent 70%)",
+                    }}
+                />
+
+                {/* Conteúdo */}
+                <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-12 lg:px-12 lg:pb-32">
+                    <div className="max-w-3xl">
+                        <div className="flex items-center gap-3">
+                            <span className="h-px w-10 bg-gold" />
+                            <span className="label-overline text-gold">
+                                Convite ao agendamento · 2026
+                            </span>
+                        </div>
+
+                        <h1 className="mt-6 font-serif text-5xl leading-[1.05] tracking-tight text-on-surface sm:text-6xl lg:text-7xl xl:text-8xl">
+                            <span className="italic text-on-surface">Encontre o</span>
+                            <br />
+                            <span className="text-gradient-gold font-bold">ateliê</span>
+                            <span className="italic text-on-surface"> que</span>
+                            <br />
+                            <span className="italic text-on-surface-variant">entende você.</span>
                         </h1>
 
-                        <p className="text-muted-foreground text-sm md:text-base lg:text-lg leading-relaxed max-w-md lg:max-w-lg">
-                            Conectamos você aos melhores profissionais de beleza da sua cidade.
-                            Agendamento online, rápido e sem complicação.
+                        <p className="mt-8 max-w-xl font-serif text-base italic text-on-surface-variant sm:text-lg">
+                            Uma curadoria de profissionais e estúdios de beleza,
+                            agendados em segundos, confirmados em tempo real.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 md:gap-4">
-                            <Link
-                                href="#saloes"
-                                className="bg-primary text-primary-foreground px-6 md:px-8 py-3 sm:py-2.5 text-sm md:text-base font-semibold rounded-full hover:bg-primary/90 transition-colors text-center"
-                            >
-                                Encontrar Salão
+                        <div className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
+                            <Link href="#atelies" className="btn-primary text-center">
+                                Explorar ateliês
                             </Link>
                             <Link
                                 href="/login"
-                                className="border border-white/20 text-foreground px-6 md:px-8 py-3 sm:py-2.5 text-sm md:text-base font-medium rounded-full hover:border-primary/50 hover:text-primary transition-colors text-center"
+                                className="font-serif text-sm italic text-on-surface-variant underline decoration-gold/40 underline-offset-4 transition-colors hover:text-gold sm:ml-2"
                             >
-                                Sou Profissional
+                                Sou um profissional →
                             </Link>
                         </div>
-                    </div>
-                </div>
-            </section>
 
-            <div className="border-y border-border/50 bg-secondary/50">
-                <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-16 py-5 sm:py-6 md:py-8 max-w-screen-2xl mx-auto px-5">
-                    <div className="text-center">
-                        <p className="text-foreground text-xl sm:text-2xl md:text-3xl font-bold">500+</p>
-                        <p className="text-muted-foreground text-[9px] sm:text-[10px] md:text-xs uppercase tracking-wider">Salões</p>
-                    </div>
-                    <div className="text-center">
-                        <p className="text-foreground text-xl sm:text-2xl md:text-3xl font-bold">12k+</p>
-                        <p className="text-muted-foreground text-[9px] sm:text-[10px] md:text-xs uppercase tracking-wider">Agendamentos</p>
-                    </div>
-                    <div className="text-center">
-                        <p className="text-foreground text-xl sm:text-2xl md:text-3xl font-bold inline-flex items-center gap-1">
-                            4.9
-                            <Star className="w-5 h-5 md:w-6 md:h-6 fill-primary text-primary" />
+                        {/* Assinatura editorial discreta */}
+                        <p className="mt-16 hidden font-serif text-xs italic tracking-wide text-on-surface-variant lg:block">
+                            — fotografia editorial · BeautixPro Curadoria
                         </p>
-                        <p className="text-muted-foreground text-[9px] sm:text-[10px] md:text-xs uppercase tracking-wider">Avaliação</p>
                     </div>
                 </div>
             </div>
+
+            {/* Tira de promessas — separa hero da próxima seção */}
+            <div className="relative z-10 border-y border-outline-variant bg-surface-low">
+                <div className="mx-auto flex max-w-7xl flex-col items-stretch gap-px bg-outline-variant sm:flex-row">
+                    <Promise label="Curadoria" value="Profissionais selecionados" />
+                    <Promise label="Reserva" value="Agende em 60 segundos" />
+                    <Promise label="Confirmação" value="Resposta em tempo real" accent />
+                </div>
+            </div>
+        </section>
+    );
+}
+
+function Promise({
+    label,
+    value,
+    accent,
+}: {
+    label: string;
+    value: string;
+    accent?: boolean;
+}) {
+    return (
+        <div className="flex-1 bg-surface-low px-6 py-8 lg:px-10">
+            <p className="label-overline text-gold">{label}</p>
+            <p
+                className={`mt-2 font-serif text-lg ${accent ? "text-gold italic" : "text-on-surface"
+                    }`}
+            >
+                {value}
+            </p>
         </div>
     );
 }

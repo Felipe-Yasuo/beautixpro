@@ -2,25 +2,34 @@ import Link from "next/link";
 
 export function Header() {
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-            <div className="flex items-center justify-between px-5 sm:px-6 md:px-12 lg:px-16 py-4 max-w-screen-2xl mx-auto w-full">
-                <Link href="/" className="font-serif text-xl sm:text-2xl italic text-gradient-gold">
+        <header className="fixed top-0 right-0 left-0 z-50 border-b border-outline-variant bg-surface-lowest/70 backdrop-blur-md">
+            <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-4 sm:px-6 lg:px-12">
+                <Link
+                    href="/"
+                    className="text-gradient-gold font-serif text-xl italic sm:text-2xl"
+                >
                     BeautixPro
                 </Link>
 
-                <nav className="flex items-center gap-4 sm:gap-6 md:gap-8">
+                <nav className="flex items-center gap-5 sm:gap-8">
                     <Link
-                        href="#saloes"
-                        className="hidden sm:inline text-muted-foreground text-sm hover:text-primary transition-colors"
+                        href="#atelies"
+                        className="label-overline hidden text-on-surface-variant transition-colors hover:text-gold sm:inline"
                     >
-                        Profissionais
+                        Ateliês
                     </Link>
-
+                    <Link
+                        href="#como-funciona"
+                        className="label-overline hidden text-on-surface-variant transition-colors hover:text-gold lg:inline"
+                    >
+                        Como funciona
+                    </Link>
                     <Link
                         href="/login"
-                        className="flex items-center gap-2 border border-primary/60 text-primary px-4 sm:px-5 py-2 text-xs sm:text-sm font-medium rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
+                        className="btn-ghost px-3 py-2 text-[0.65rem] sm:px-5 sm:py-3 sm:text-xs"
                     >
-                        Portal do Salão
+                        <span className="sm:hidden">Profissional</span>
+                        <span className="hidden sm:inline">Sou profissional</span>
                     </Link>
                 </nav>
             </div>

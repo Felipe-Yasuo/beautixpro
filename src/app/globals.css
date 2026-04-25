@@ -141,16 +141,16 @@
   /* era text-black */
 
   --on-surface: #f0ead6;
-  /* era text-[#f0ead6] */
-  --on-surface-variant: #5a5045;
-  /* era text-[#5a5045] */
-  --on-surface-dim: #3a3028;
-  /* era text-[#3a3028] */
+  /* texto principal — ~13:1 contraste */
+  --on-surface-variant: #a89a7d;
+  /* texto secundário — ~7:1 contraste, AA+ */
+  --on-surface-dim: #7a6f5d;
+  /* placeholders / texto fraco — ~4.6:1, AA pass */
   /* ── Bordas ── */
   --outline: #4d4635;
   /* borda padrão */
-  --outline-variant: #4d463526;
-  /* ghost border — 15% opacidade */
+  --outline-variant: #4d463559;
+  /* ghost border — 35% opacidade, visível */
 }
 
 @layer base {

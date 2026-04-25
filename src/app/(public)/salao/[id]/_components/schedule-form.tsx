@@ -51,9 +51,17 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
 
     if (user.employees.length === 0) {
         return (
-            <p className="text-muted-foreground text-sm text-center py-10">
-                Este salão ainda não possui serviços disponíveis.
-            </p>
+            <div className="border border-outline-variant px-8 py-20 text-center">
+                <p className="label-overline mb-4">Indisponível</p>
+                <h3 className="font-serif text-3xl italic text-on-surface">
+                    Este ateliê está preparando
+                    <br />
+                    suas próximas experiências.
+                </h3>
+                <p className="mt-6 text-sm text-on-surface-variant">
+                    Volte em breve para conhecer o catálogo.
+                </p>
+            </div>
         );
     }
 
@@ -61,59 +69,107 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
         return <SuccessStep />;
     }
 
+    let stepNumber = 0;
+    const nextRomanNumeral = () => {
+        stepNumber += 1;
+        return ROMAN[stepNumber - 1] ?? String(stepNumber);
+    };
+
     return (
-        <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-6 flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="flex flex-col">
             {isMultiEmployee && (
-                <EmployeeStep
-                    employees={user.employees}
-                    onEmployeeChange={handleEmployeeChange}
-                />
+                <Step roman={nextRomanNumeral()} title="Profissional">
+                    <EmployeeStep
+                        employees={user.employees}
+                        onEmployeeChange={handleEmployeeChange}
+                    />
+                </Step>
             )}
 
-            <CustomerStep
-                name={name}
-                email={email}
-                phone={phone}
-                fieldErrors={fieldErrors}
-                onNameChange={setName}
-                onEmailChange={setEmail}
-                onPhoneChange={setPhone}
-                onValidateField={validateField}
-            />
+            <Step roman={nextRomanNumeral()} title="Suas informações">
+                <CustomerStep
+                    name={name}
+                    email={email}
+                    phone={phone}
+                    fieldErrors={fieldErrors}
+                    onNameChange={setName}
+                    onEmailChange={setEmail}
+                    onPhoneChange={setPhone}
+                    onValidateField={validateField}
+                />
+            </Step>
 
             {selectedEmployee && (
-                <ServiceStep
-                    services={selectedEmployee.services}
-                    onServiceChange={handleServiceChange}
-                />
+                <Step roman={nextRomanNumeral()} title="Serviço">
+                    <ServiceStep
+                        services={selectedEmployee.services}
+                        onServiceChange={handleServiceChange}
+                    />
+                </Step>
             )}
 
             {selectedService && (
-                <DateStep
-                    selectedDate={selectedDate}
-                    onDateChange={handleDateChange}
-                />
+                <Step roman={nextRomanNumeral()} title="Data">
+                    <DateStep
+                        selectedDate={selectedDate}
+                        onDateChange={handleDateChange}
+                    />
+                </Step>
             )}
 
             {selectedEmployee && selectedService && selectedDate && (
-                <TimeStep
-                    times={selectedEmployee.times}
-                    selectedTime={selectedTime}
-                    onSelect={setSelectedTime}
-                    bookedTimes={bookedTimes}
-                    selectedDate={selectedDate}
-                />
+                <Step roman={nextRomanNumeral()} title="Horário">
+                    <TimeStep
+                        times={selectedEmployee.times}
+                        selectedTime={selectedTime}
+                        onSelect={setSelectedTime}
+                        bookedTimes={bookedTimes}
+                        selectedDate={selectedDate}
+                    />
+                </Step>
             )}
 
-            {serverError && <p className="text-destructive text-xs">{serverError}</p>}
+            <div className="mt-12 border-t border-outline-variant pt-8">
+                {serverError && (
+                    <p className="mb-4 font-serif text-sm italic text-destructive">
+                        {serverError}
+                    </p>
+                )}
 
-            <button
-                type="submit"
-                disabled={!isComplete || loading}
-                className="w-full bg-primary text-primary-foreground py-3 text-sm font-medium rounded-md hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            >
-                {loading ? "Aguarde..." : "Realizar agendamento"}
-            </button>
+                <button
+                    type="submit"
+                    disabled={!isComplete || loading}
+                    className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                    {loading ? "Confirmando reserva..." : "Reservar minha hora"}
+                </button>
+
+                <p className="mt-4 text-center font-serif text-xs italic text-on-surface-variant">
+                    Você receberá uma confirmação após a aprovação do ateliê.
+                </p>
+            </div>
         </form>
+    );
+}
+
+const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
+
+function Step({
+    roman,
+    title,
+    children,
+}: {
+    roman: string;
+    title: string;
+    children: React.ReactNode;
+}) {
+    return (
+        <section className="border-t border-outline-variant py-10 first:border-t-0 first:pt-0">
+            <header className="mb-6 flex items-baseline gap-4">
+                <span className="font-serif text-2xl italic text-gold/70">{roman}</span>
+                <h3 className="font-serif text-xl text-on-surface">{title}</h3>
+            </header>
+            <div className="flex flex-col gap-6">{children}</div>
+        </section>
     );
 }

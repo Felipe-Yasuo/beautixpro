@@ -2,7 +2,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ptBR } from "date-fns/locale";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 
 const today = () => new Date(new Date().setHours(0, 0, 0, 0));
 
@@ -13,21 +12,26 @@ interface DateStepProps {
 
 export function DateStep({ selectedDate, onDateChange }: DateStepProps) {
     return (
-        <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-foreground">Data do agendamento:</label>
+        <label className="flex flex-col">
+            <span className="label-overline mb-2">Quando deseja vir</span>
             <Popover>
                 <PopoverTrigger asChild>
                     <button
                         type="button"
-                        className="w-full border border-border rounded-md px-3 py-2 text-sm bg-background text-left flex items-center justify-between hover:border-primary transition-colors cursor-pointer"
+                        className="flex w-full items-center justify-between border-b border-outline-variant py-2.5 text-left transition-colors hover:border-gold focus:border-gold focus:outline-none"
                     >
-                        <span className={selectedDate ? "text-foreground" : "text-muted-foreground"}>
-                            {selectedDate ? format(selectedDate, "dd/MM/yyyy") : "Selecione uma data"}
+                        <span
+                            className={`font-serif text-base ${selectedDate ? "text-on-surface" : "text-on-surface-dim"
+                                }`}
+                        >
+                            {selectedDate
+                                ? format(selectedDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
+                                : "Selecione uma data"}
                         </span>
-                        <CalendarIcon size={16} className="text-muted-foreground" />
+                        <span className="label-overline text-gold">Calendário</span>
                     </button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto border-outline-variant bg-surface-high p-0" align="start">
                     <Calendar
                         mode="single"
                         selected={selectedDate ?? undefined}
@@ -37,6 +41,6 @@ export function DateStep({ selectedDate, onDateChange }: DateStepProps) {
                     />
                 </PopoverContent>
             </Popover>
-        </div>
+        </label>
     );
 }

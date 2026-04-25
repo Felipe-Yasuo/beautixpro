@@ -28,8 +28,8 @@ export function ScheduleTimeList({
 }: ScheduleTimeListProps) {
     if (times.length === 0) {
         return (
-            <p className="text-muted-foreground text-sm">
-                Nenhum horário disponível.
+            <p className="font-serif text-sm italic text-on-surface-variant">
+                Não há horários cadastrados para este profissional.
             </p>
         );
     }
@@ -41,7 +41,7 @@ export function ScheduleTimeList({
     });
 
     return (
-        <div className="border border-border rounded-md p-3 grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-3 gap-px bg-outline-variant sm:grid-cols-4 md:grid-cols-5">
             {sortedTimes.map((time) => {
                 const isBooked = bookedTimes.includes(time);
                 const isPast = isTimeInPast(time, selectedDate);
@@ -54,14 +54,17 @@ export function ScheduleTimeList({
                         type="button"
                         disabled={isDisabled}
                         onClick={() => onSelect(time)}
-                        className={`py-2 text-xs rounded-md border transition-colors cursor-pointer ${isDisabled
-                                ? "border-border text-muted-foreground/30 cursor-not-allowed"
-                                : isSelected
-                                    ? "border-primary bg-primary/10 text-primary"
-                                    : "border-border text-foreground hover:border-primary"
+                        className={`relative bg-surface-lowest py-4 font-serif text-sm transition-all duration-200 ${isDisabled
+                            ? "text-on-surface-dim line-through cursor-not-allowed"
+                            : isSelected
+                                ? "bg-gold text-on-gold font-semibold"
+                                : "text-on-surface hover:bg-gold/10 hover:text-gold cursor-pointer"
                             }`}
                     >
                         {time}
+                        {isSelected && (
+                            <span className="absolute inset-x-0 top-0 h-px bg-on-gold/40" />
+                        )}
                     </button>
                 );
             })}

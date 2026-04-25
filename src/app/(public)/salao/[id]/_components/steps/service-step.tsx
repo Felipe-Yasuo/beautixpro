@@ -1,4 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { formatBRL } from "@/lib/formatters";
 import type { Service } from "../../_hooks/useScheduleForm";
 
 function formatDuration(minutes: number): string {
@@ -16,20 +17,29 @@ interface ServiceStepProps {
 
 export function ServiceStep({ services, onServiceChange }: ServiceStepProps) {
     return (
-        <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-foreground">Selecione o serviço:</label>
+        <label className="flex flex-col">
+            <span className="label-overline mb-2">A experiência</span>
             <Select onValueChange={onServiceChange}>
-                <SelectTrigger className="w-full bg-background border-border text-foreground">
-                    <SelectValue placeholder="Selecione um serviço" />
+                <SelectTrigger className="h-auto rounded-none border-0 border-b border-outline-variant bg-transparent px-0 py-2.5 font-serif text-base text-on-surface shadow-none focus:border-gold focus-visible:ring-0 data-placeholder:text-on-surface-dim">
+                    <SelectValue placeholder="Escolha um serviço do catálogo" />
                 </SelectTrigger>
-                <SelectContent className="bg-card border-border">
+                <SelectContent className="border-outline-variant bg-surface-high">
                     {services.map((service) => (
-                        <SelectItem key={service.id} value={service.id} className="text-foreground">
-                            {service.name} — {formatDuration(service.duration)}
+                        <SelectItem
+                            key={service.id}
+                            value={service.id}
+                            className="font-serif text-base text-on-surface focus:bg-gold/10 focus:text-gold"
+                        >
+                            <div className="flex w-full items-center justify-between gap-6">
+                                <span>{service.name}</span>
+                                <span className="font-sans text-xs tracking-wider text-on-surface-variant">
+                                    {formatDuration(service.duration)} · R$ {formatBRL(service.price)}
+                                </span>
+                            </div>
                         </SelectItem>
                     ))}
                 </SelectContent>
             </Select>
-        </div>
+        </label>
     );
 }

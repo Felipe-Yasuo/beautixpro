@@ -66,7 +66,7 @@ export async function ScheduleContent({ userId }: ScheduleContentProps) {
                             </span>
                             <br />
                             <span className="text-gradient-gold font-bold">
-                                {user.name ?? "ateliê"}
+                                {user.name ?? "salão"}
                             </span>
                             <span className="text-on-surface">.</span>
                         </h1>
@@ -88,7 +88,7 @@ export async function ScheduleContent({ userId }: ScheduleContentProps) {
                             />
                             <Divider />
                             <Credential
-                                label="Catálogo"
+                                label="Serviços"
                                 value={`${totalServices} ${totalServices === 1 ? "serviço" : "serviços"}`}
                             />
                             <Divider />
@@ -120,7 +120,7 @@ export async function ScheduleContent({ userId }: ScheduleContentProps) {
 
                         {/* Assinatura sob a foto */}
                         <p className="mt-4 text-right font-serif text-xs italic tracking-wide text-on-surface-variant">
-                            — atelier de beleza
+                            — salão de beleza
                         </p>
                     </div>
                 </div>
@@ -143,7 +143,7 @@ export async function ScheduleContent({ userId }: ScheduleContentProps) {
                             </h2>
                             <p className="mt-6 max-w-sm text-sm leading-relaxed text-on-surface-variant">
                                 Preencha os campos ao lado para reservar seu horário.
-                                A confirmação chega assim que o ateliê aprovar.
+                                A confirmação chega assim que o salão aprovar.
                             </p>
                         </div>
                     </aside>

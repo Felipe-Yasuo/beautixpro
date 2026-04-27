@@ -54,9 +54,9 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
             <div className="border border-outline-variant px-8 py-20 text-center">
                 <p className="label-overline mb-4">Indisponível</p>
                 <h3 className="font-serif text-3xl italic text-on-surface">
-                    Este ateliê está preparando
+                    Este salão está preparando
                     <br />
-                    suas próximas experiências.
+                    seus próximos serviços.
                 </h3>
                 <p className="mt-6 text-sm text-on-surface-variant">
                     Volte em breve para conhecer o catálogo.
@@ -145,7 +145,7 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                 </button>
 
                 <p className="mt-4 text-center font-serif text-xs italic text-on-surface-variant">
-                    Você receberá uma confirmação após a aprovação do ateliê.
+                    Você receberá uma confirmação após a aprovação do salão.
                 </p>
             </div>
         </form>

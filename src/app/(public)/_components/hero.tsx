@@ -43,20 +43,20 @@ export function Hero() {
                         <h1 className="mt-6 font-serif text-5xl leading-[1.05] tracking-tight text-on-surface sm:text-6xl lg:text-7xl xl:text-8xl">
                             <span className="italic text-on-surface">Encontre o</span>
                             <br />
-                            <span className="text-gradient-gold font-bold">ateliê</span>
+                            <span className="text-gradient-gold font-bold">salão</span>
                             <span className="italic text-on-surface"> que</span>
                             <br />
                             <span className="italic text-on-surface-variant">entende você.</span>
                         </h1>
 
                         <p className="mt-8 max-w-xl font-serif text-base italic text-on-surface-variant sm:text-lg">
-                            Uma curadoria de profissionais e estúdios de beleza,
+                            Profissionais e salões de beleza,
                             agendados em segundos, confirmados em tempo real.
                         </p>
 
                         <div className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
                             <Link href="#atelies" className="btn-primary text-center">
-                                Explorar ateliês
+                                Explorar salões
                             </Link>
                             <Link
                                 href="/login"

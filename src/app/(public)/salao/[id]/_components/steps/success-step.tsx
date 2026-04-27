@@ -18,7 +18,7 @@ export function SuccessStep() {
                 <span className="text-gradient-gold not-italic font-bold">reservada</span>.
             </h2>
             <p className="mt-6 max-w-sm font-serif text-base italic text-on-surface-variant">
-                O ateliê receberá sua reserva e enviará a confirmação em instantes.
+                O salão receberá sua reserva e enviará a confirmação em instantes.
             </p>
 
             <div className="mt-12 flex items-center gap-3 text-on-surface-variant">

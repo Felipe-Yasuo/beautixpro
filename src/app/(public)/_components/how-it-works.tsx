@@ -21,15 +21,15 @@ export function HowItWorks() {
                             .
                         </h2>
                         <p className="mt-6 max-w-sm font-serif text-base italic text-on-surface-variant">
-                            Três passos entre o seu desejo e a confirmação do ateliê.
+                            Três passos entre o seu desejo e a confirmação do salão.
                         </p>
                     </header>
 
                     <ol className="lg:col-span-8 flex flex-col">
                         <Step
                             roman="I"
-                            title="Escolha o ateliê"
-                            body="Explore a curadoria de profissionais selecionados. Veja o catálogo, os horários e a localização de cada estúdio."
+                            title="Escolha o salão"
+                            body="Explore os profissionais disponíveis. Veja os serviços, os horários e a localização de cada salão."
                         />
                         <Step
                             roman="II"
@@ -39,7 +39,7 @@ export function HowItWorks() {
                         <Step
                             roman="III"
                             title="Receba a confirmação"
-                            body="O ateliê analisa sua reserva e confirma em tempo real. Você recebe a notificação assim que aprovado."
+                            body="O salão analisa sua reserva e confirma em tempo real. Você recebe a notificação assim que aprovado."
                         />
                     </ol>
                 </div>

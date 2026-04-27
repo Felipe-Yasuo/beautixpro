@@ -14,7 +14,7 @@ export function Footer() {
                             BeautixPro
                         </Link>
                         <p className="mt-4 max-w-xs font-serif text-sm italic text-on-surface-variant">
-                            Curadoria de ateliês de beleza.
+                            Salões de beleza perto de você.
                             <br />
                             Reservas em segundos, confirmação em tempo real.
                         </p>
@@ -24,7 +24,7 @@ export function Footer() {
                         <FooterColumn
                             title="Plataforma"
                             links={[
-                                { label: "Ateliês", href: "#atelies" },
+                                { label: "Salões", href: "#atelies" },
                                 { label: "Como funciona", href: "#como-funciona" },
                             ]}
                         />

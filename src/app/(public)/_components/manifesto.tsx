@@ -31,13 +31,13 @@ export function Manifesto() {
 
                 <p className="mx-auto mt-10 max-w-2xl font-serif text-base italic leading-relaxed text-on-surface-variant lg:text-lg">
                     Acreditamos no tempo dedicado, na escolha cuidadosa e na confiança
-                    construída entre você e o profissional. Por isso curamos cada ateliê
+                    construída entre você e o profissional. Por isso selecionamos cada salão
                     que entra na nossa plataforma.
                 </p>
 
                 <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
                     <Link href="#atelies" className="btn-primary">
-                        Encontre seu ateliê
+                        Encontre seu salão
                     </Link>
                 </div>
             </div>

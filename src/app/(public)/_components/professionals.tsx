@@ -17,14 +17,14 @@ export async function Professionals() {
                         <div className="flex items-center gap-3">
                             <span className="h-px w-8 bg-gold" />
                             <span className="label-overline text-gold">
-                                Ateliês da semana
+                                Salões da semana
                             </span>
                         </div>
                         <h2 className="mt-6 font-serif text-5xl italic leading-tight text-on-surface lg:text-6xl">
                             Nossa
                             <br />
                             <span className="text-gradient-gold not-italic font-bold">
-                                curadoria
+                                seleção
                             </span>
                             .
                         </h2>
@@ -39,12 +39,12 @@ export async function Professionals() {
                     <div className="border border-outline-variant px-8 py-20 text-center">
                         <p className="label-overline mb-4">Em breve</p>
                         <h3 className="font-serif text-3xl italic text-on-surface">
-                            Nossa curadoria está
+                            Nossa seleção está
                             <br />
                             em formação.
                         </h3>
                         <p className="mt-6 text-sm text-on-surface-variant">
-                            Volte em breve para conhecer os primeiros ateliês.
+                            Volte em breve para conhecer os primeiros salões.
                         </p>
                     </div>
                 ) : (

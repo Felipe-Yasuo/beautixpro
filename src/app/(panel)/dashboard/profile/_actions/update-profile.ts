@@ -9,9 +9,13 @@ const profileSchema = z.object({
     name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres."),
     phone: z
         .string()
-        .regex(/^\d+$/, "Telefone deve conter apenas números.")
-        .min(8, "Telefone deve ter pelo menos 8 números.")
-        .max(15, "Telefone deve ter no máximo 15 números."),
+        .transform((v) => v.replace(/\D/g, ""))
+        .pipe(
+            z
+                .string()
+                .min(8, "Telefone deve ter pelo menos 8 números.")
+                .max(15, "Telefone deve ter no máximo 15 números.")
+        ),
     address: z.string().min(2, "Endereço inválido."),
     addressNumber: z.string().min(1, "Número é obrigatório."),
     status: z.coerce.boolean(),

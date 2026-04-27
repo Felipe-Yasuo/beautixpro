@@ -102,7 +102,7 @@ export function useScheduleForm({ user }: UseScheduleFormProps) {
         const formData = new FormData();
         formData.set("name", name);
         formData.set("email", email);
-        formData.set("phone", phone);
+        formData.set("phone", phone.replace(/\D/g, ""));
         formData.set("serviceId", selectedService.id);
         formData.set("employeeId", selectedEmployee.id);
         formData.set("appointmentDate", selectedDate.toISOString());

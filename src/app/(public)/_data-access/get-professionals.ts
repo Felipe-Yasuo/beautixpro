@@ -35,11 +35,13 @@ export async function getProfessionals() {
             },
         });
 
-        return users.sort((a, b) => {
-            if (a.subscription?.plan === "PROFESSIONAL") return -1;
-            if (b.subscription?.plan === "PROFESSIONAL") return 1;
-            return 0;
-        });
+        return users
+            .sort((a, b) => {
+                if (a.subscription?.plan === "PROFESSIONAL") return -1;
+                if (b.subscription?.plan === "PROFESSIONAL") return 1;
+                return 0;
+            })
+            .slice(0, 6);
     } catch {
         return [];
     }

@@ -48,22 +48,27 @@ export function ScheduleTimeList({
                 const isDisabled = isBooked || isPast;
                 const isSelected = selectedTime === time;
 
+                const stateClasses = isDisabled
+                    ? "bg-surface-lowest text-on-surface-dim line-through cursor-not-allowed"
+                    : isSelected
+                        ? "bg-gold text-on-gold font-semibold shadow-[0_0_0_1px_var(--color-gold),inset_0_0_0_1px_rgba(10,10,10,0.15)] z-10"
+                        : "bg-surface-lowest text-on-surface hover:bg-gold/10 hover:text-gold cursor-pointer";
+
                 return (
                     <button
                         key={time}
                         type="button"
                         disabled={isDisabled}
                         onClick={() => onSelect(time)}
-                        className={`relative bg-surface-lowest py-4 font-serif text-sm transition-all duration-200 ${isDisabled
-                            ? "text-on-surface-dim line-through cursor-not-allowed"
-                            : isSelected
-                                ? "bg-gold text-on-gold font-semibold"
-                                : "text-on-surface hover:bg-gold/10 hover:text-gold cursor-pointer"
-                            }`}
+                        aria-pressed={isSelected}
+                        className={`relative py-4 font-serif text-sm tracking-wide transition-all duration-200 ${stateClasses}`}
                     >
                         {time}
                         {isSelected && (
-                            <span className="absolute inset-x-0 top-0 h-px bg-on-gold/40" />
+                            <>
+                                <span className="absolute inset-x-3 top-1.5 h-px bg-on-gold/50" />
+                                <span className="absolute inset-x-3 bottom-1.5 h-px bg-on-gold/50" />
+                            </>
                         )}
                     </button>
                 );

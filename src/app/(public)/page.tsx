@@ -5,6 +5,8 @@ import { Professionals } from "./_components/professionals";
 import { Manifesto } from "./_components/manifesto";
 import { Footer } from "./_components/footer";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
     return (
         <div className="relative min-h-screen bg-surface-lowest text-on-surface">

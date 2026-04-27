@@ -49,10 +49,28 @@ const INPUT_ERROR_CLASS =
 const SELECT_CLASS =
     "bg-[var(--surface-lowest)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 text-sm outline-none focus:border-[var(--gold)] transition-colors cursor-pointer w-full";
 
+function formatPrice(value: string): string {
+    const digits = value.replace(/\D/g, "");
+    if (digits.length === 0) return "";
+    const cents = parseInt(digits, 10);
+    return (cents / 100).toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+}
+
+function priceToCents(formatted: string): string {
+    const digits = formatted.replace(/\D/g, "");
+    return digits ? String(parseInt(digits, 10) / 100) : "";
+}
+
 export function DialogServiceForm({ service, employeeId, onClose }: DialogServiceFormProps) {
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
     const [serverError, setServerError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [price, setPrice] = useState(
+        service ? formatPrice(String(service.price)) : ""
+    );
 
     const isEditing = !!service;
     const defaultHours = service ? Math.floor(service.duration / 60) : 0;
@@ -129,15 +147,15 @@ export function DialogServiceForm({ service, employeeId, onClose }: DialogServic
             <div className="flex flex-col gap-1.5">
                 <label className={LABEL_CLASS}>Valor do serviço (R$)</label>
                 <input
-                    name="price"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    defaultValue={service ? (service.price / 100).toFixed(2) : ""}
+                    type="text"
+                    inputMode="numeric"
+                    value={price}
+                    onChange={(e) => setPrice(formatPrice(e.target.value))}
                     placeholder="Ex: 120,00"
-                    onBlur={(e) => validateField("price", e.target.value)}
+                    onBlur={() => validateField("price", priceToCents(price))}
                     className={fieldErrors.price ? INPUT_ERROR_CLASS : INPUT_CLASS}
                 />
+                <input type="hidden" name="price" value={priceToCents(price)} />
                 {fieldErrors.price && <p className="text-red-400 text-xs">{fieldErrors.price}</p>}
             </div>
 

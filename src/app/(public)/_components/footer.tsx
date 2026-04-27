@@ -5,7 +5,7 @@ export function Footer() {
         <footer className="relative border-t border-outline-variant bg-surface-lowest">
             <div className="mx-auto max-w-7xl px-6 py-16 lg:px-12 lg:py-20">
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-                    {/* Marca + tagline */}
+
                     <div className="lg:col-span-5">
                         <Link
                             href="/"
@@ -20,7 +20,6 @@ export function Footer() {
                         </p>
                     </div>
 
-                    {/* Links */}
                     <div className="grid grid-cols-2 gap-8 lg:col-span-7">
                         <FooterColumn
                             title="Plataforma"
@@ -39,7 +38,6 @@ export function Footer() {
                     </div>
                 </div>
 
-                {/* Linha inferior */}
                 <div className="mt-16 flex flex-col items-start justify-between gap-3 border-t border-outline-variant pt-8 sm:flex-row sm:items-center">
                     <p className="font-serif text-xs italic text-on-surface-variant">
                         © {new Date().getFullYear()} BeautixPro. Todos os direitos reservados.

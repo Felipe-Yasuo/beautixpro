@@ -100,7 +100,7 @@ export function LoginForm() {
     return (
         <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
             <div className="flex flex-1">
-                {/* Left - Image */}
+
                 <div className="hidden lg:flex relative w-[55%]">
                     <Image
                         src="/atriz.png"
@@ -112,7 +112,6 @@ export function LoginForm() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
 
-                    {/* Logo */}
                     <Link
                         href="/"
                         className="absolute top-8 left-8 z-10 font-serif text-2xl text-[#c9a84c]"
@@ -120,7 +119,6 @@ export function LoginForm() {
                         BeautixPro
                     </Link>
 
-                    {/* Bottom text */}
                     <div className="absolute bottom-12 left-8 z-10">
                         <p className="text-[#c9a84c] text-xs tracking-[0.3em] uppercase mb-4">
                             Excelência em Beleza
@@ -132,10 +130,9 @@ export function LoginForm() {
                     </div>
                 </div>
 
-                {/* Right - Form */}
                 <div className="flex-1 flex items-center justify-center px-6 sm:px-12 lg:px-16">
                     <div className="w-full max-w-md">
-                        {/* Mobile logo */}
+
                         <Link
                             href="/"
                             className="lg:hidden block font-serif text-3xl text-[#c9a84c] mb-10"
@@ -244,8 +241,8 @@ export function LoginForm() {
                                 {loading
                                     ? "Aguarde..."
                                     : isRegister
-                                      ? "Criar Conta"
-                                      : "Entrar"}
+                                        ? "Criar Conta"
+                                        : "Entrar"}
                             </button>
                         </form>
 

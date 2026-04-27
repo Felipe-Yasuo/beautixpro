@@ -73,11 +73,30 @@ const INPUT_ERROR_CLASS =
 const SELECT_CLASS =
     "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base outline-none focus:border-[var(--gold)] transition-colors cursor-pointer w-full rounded-lg";
 
+function formatPhone(value: string): string {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+
+    const ddd = digits.slice(0, 2);
+    const part1 = digits.length > 10
+        ? digits.slice(2, 7)
+        : digits.slice(2, 6);
+    const part2 = digits.length > 10
+        ? digits.slice(7)
+        : digits.slice(6);
+
+    if (!digits) return "";
+    if (digits.length <= 2) return `(${ddd}`;
+    if (digits.length <= 6) return `(${ddd}) ${digits.slice(2)}`;
+
+    return `(${ddd}) ${part1}-${part2}`;
+}
+
 export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
     const [loading, setLoading] = useState(false);
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
     const [serverError, setServerError] = useState("");
     const [success, setSuccess] = useState(false);
+    const [phone, setPhone] = useState(formatPhone(user.phone ?? ""));
 
     const [showTimesModal, setShowTimesModal] = useState(false);
     const [selectedTimes, setSelectedTimes] = useState<string[]>(user.times);
@@ -193,9 +212,9 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
                         name="phone"
                         type="tel"
                         inputMode="numeric"
-                        pattern="[0-9]*"
-                        defaultValue={user.phone ?? ""}
-                        placeholder="Apenas números"
+                        value={phone}
+                        onChange={(e) => setPhone(formatPhone(e.target.value))}
+                        placeholder="(43) 99800-8265"
                         onBlur={(e) => validateField("phone", e.target.value)}
                         className={fieldErrors.phone ? INPUT_ERROR_CLASS : INPUT_CLASS}
                     />

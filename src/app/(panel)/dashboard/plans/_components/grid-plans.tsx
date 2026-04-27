@@ -1,4 +1,3 @@
-// _components/grid-plans.tsx
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { SubscriptionButton } from "./subscription-button";
@@ -60,7 +59,6 @@ export async function GridPlans() {
                                 : "border-[var(--outline)] hover:border-[var(--outline-variant)]"
                             }`}
                     >
-                        {/* Badge plano atual */}
                         {isCurrentPlan && (
                             <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#c9a84c] text-black text-[9px] sm:text-[10px] tracking-widest uppercase font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5">
                                 <span>✦</span>
@@ -68,7 +66,6 @@ export async function GridPlans() {
                             </div>
                         )}
 
-                        {/* Header */}
                         <div>
                             <p className="text-[var(--on-surface-dim)] text-[10px] xl:text-xs tracking-widest uppercase mb-2">
                                 {plan.label}
@@ -78,7 +75,6 @@ export async function GridPlans() {
                             </h2>
                         </div>
 
-                        {/* Preço */}
                         <div className="flex items-baseline gap-1">
                             <span className="text-[var(--on-surface-variant)] text-sm xl:text-base">R$</span>
                             <span className={`text-4xl sm:text-5xl xl:text-6xl font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
@@ -87,7 +83,6 @@ export async function GridPlans() {
                             <span className="text-[var(--on-surface-dim)] text-sm xl:text-base">{plan.period}</span>
                         </div>
 
-                        {/* Features */}
                         <ul className="flex flex-col gap-3 flex-1">
                             {plan.features.map((feature, i) => {
                                 const text = typeof feature === "string" ? feature : feature.text;
@@ -106,7 +101,6 @@ export async function GridPlans() {
                             })}
                         </ul>
 
-                        {/* Botão */}
                         <SubscriptionButton
                             priceId={plan.priceId}
                             hasSubscription={!!subscription}

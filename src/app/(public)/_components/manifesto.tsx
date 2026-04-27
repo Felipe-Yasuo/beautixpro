@@ -3,9 +3,9 @@ import Link from "next/link";
 export function Manifesto() {
     return (
         <section className="relative border-t border-outline-variant overflow-hidden bg-surface-high">
-            {/* Linha dourada decorativa no topo */}
+
             <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold/60 to-transparent" />
-            {/* Halo dourado de fundo */}
+
             <div
                 className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-150 w-225 -translate-x-1/2 -translate-y-1/2 opacity-25"
                 style={{

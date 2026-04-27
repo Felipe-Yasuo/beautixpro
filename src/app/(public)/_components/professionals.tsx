@@ -11,7 +11,7 @@ export async function Professionals() {
             className="relative border-t border-outline-variant bg-surface-lowest"
         >
             <div className="mx-auto max-w-7xl px-6 py-20 lg:px-12 lg:py-28">
-                {/* Cabeçalho editorial */}
+
                 <header className="mb-16 grid grid-cols-1 items-end gap-8 lg:grid-cols-12">
                     <div className="lg:col-span-8">
                         <div className="flex items-center gap-3">
@@ -58,7 +58,7 @@ export async function Professionals() {
                                     key={pro.id}
                                     className="group flex flex-col"
                                 >
-                                    {/* Foto com moldura dourada */}
+
                                     <div className="relative aspect-4/5 w-full overflow-hidden">
                                         <div className="absolute inset-0 z-20 border border-gold/40 transition-colors duration-300 group-hover:border-gold" />
                                         <div
@@ -81,7 +81,7 @@ export async function Professionals() {
                                         )}
                                     </div>
 
-                                    {/* Conteúdo */}
+
                                     <div className="mt-6 flex flex-1 flex-col">
                                         <h3 className="font-serif text-2xl italic text-on-surface">
                                             {pro.name}

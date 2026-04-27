@@ -29,6 +29,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "BeautixPro",
   description: "Plataforma premium de agendamento para salões de beleza",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

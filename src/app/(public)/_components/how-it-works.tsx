@@ -4,11 +4,9 @@ export function HowItWorks() {
             id="como-funciona"
             className="relative border-t border-outline-variant bg-surface-low"
         >
-            {/* Linha dourada decorativa no topo */}
             <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold/40 to-transparent" />
             <div className="mx-auto max-w-7xl px-6 py-20 lg:px-12 lg:py-28">
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-                    {/* Cabeçalho */}
                     <header className="lg:col-span-4">
                         <div className="flex items-center gap-3">
                             <span className="h-px w-8 bg-gold" />
@@ -27,7 +25,6 @@ export function HowItWorks() {
                         </p>
                     </header>
 
-                    {/* Etapas */}
                     <ol className="lg:col-span-8 flex flex-col">
                         <Step
                             roman="I"

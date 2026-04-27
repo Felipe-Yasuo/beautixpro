@@ -1,4 +1,3 @@
-// _components/subscription-button.tsx
 "use client";
 
 import { useState } from "react";

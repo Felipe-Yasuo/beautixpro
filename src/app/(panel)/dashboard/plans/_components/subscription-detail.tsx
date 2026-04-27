@@ -1,4 +1,3 @@
-// _components/subscription-detail.tsx
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { PortalButton } from "./portal-button";

@@ -4,7 +4,7 @@ import Link from "next/link";
 export function Hero() {
     return (
         <section className="relative">
-            {/* Foto fullbleed cinematográfica */}
+
             <div className="relative flex min-h-[75vh] items-end overflow-hidden lg:min-h-[88vh]">
                 <Image
                     src="/hairdresser-hero.webp"
@@ -15,19 +15,14 @@ export function Hero() {
                     sizes="100vw"
                 />
 
-                {/* Mobile: vinheta vertical — escurece base pra texto, foto vira atmosfera no topo */}
                 <div className="absolute inset-0 bg-linear-to-t from-surface-lowest via-surface-lowest/90 to-surface-lowest/20 lg:hidden" />
 
-                {/* Desktop: vinheta lateral cinematográfica */}
                 <div className="absolute inset-0 hidden bg-linear-to-r from-surface-lowest via-surface-lowest/85 to-surface-lowest/10 lg:block" />
 
-                {/* Vinheta superior fina pra integrar com header */}
                 <div className="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-surface-lowest/80 to-transparent" />
 
-                {/* Vinheta inferior — desce pra próxima seção */}
                 <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-surface-lowest via-surface-lowest/60 to-transparent" />
 
-                {/* Halo dourado discreto atrás da tipografia */}
                 <div
                     className="pointer-events-none absolute left-0 top-1/2 h-150 w-225 -translate-y-1/2 opacity-40"
                     style={{
@@ -36,7 +31,6 @@ export function Hero() {
                     }}
                 />
 
-                {/* Conteúdo */}
                 <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-12 lg:px-12 lg:pb-32">
                     <div className="max-w-3xl">
                         <div className="flex items-center gap-3">
@@ -72,7 +66,6 @@ export function Hero() {
                             </Link>
                         </div>
 
-                        {/* Assinatura editorial discreta */}
                         <p className="mt-16 hidden font-serif text-xs italic tracking-wide text-on-surface-variant lg:block">
                             — fotografia editorial · BeautixPro Curadoria
                         </p>
@@ -80,7 +73,6 @@ export function Hero() {
                 </div>
             </div>
 
-            {/* Tira de promessas — separa hero da próxima seção */}
             <div className="relative z-10 border-y border-outline-variant bg-surface-low">
                 <div className="mx-auto flex max-w-7xl flex-col items-stretch gap-px bg-outline-variant sm:flex-row">
                     <Promise label="Curadoria" value="Profissionais selecionados" />

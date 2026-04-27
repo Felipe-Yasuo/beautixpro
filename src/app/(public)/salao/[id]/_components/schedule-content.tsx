@@ -74,6 +74,9 @@ export async function ScheduleContent({ userId }: ScheduleContentProps) {
                         {user.address && (
                             <p className="mt-6 max-w-xl font-serif text-base italic text-on-surface-variant sm:text-lg">
                                 {user.address}
+                                {user.addressNumber && (
+                                    <>, Nº <span className="not-italic text-on-surface">{user.addressNumber}</span></>
+                                )}
                             </p>
                         )}
 

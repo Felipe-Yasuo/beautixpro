@@ -12,6 +12,7 @@ import { extractFieldErrors } from "@/lib/schemas";
 const profileSchema = z.object({
     name: z.string().min(3, "Nome deve ter ao menos 3 caracteres"),
     address: z.string().min(5, "Endereço deve ter ao menos 5 caracteres"),
+    addressNumber: z.string().min(1, "Número é obrigatório"),
     phone: z
         .string()
         .min(10, "Telefone inválido")
@@ -47,6 +48,7 @@ interface ProfileFormProps {
         name?: string | null;
         phone?: string | null;
         address?: string | null;
+        addressNumber?: string | null;
         status: boolean;
         timeZone?: string | null;
         times: string[];
@@ -112,6 +114,7 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
         const raw = {
             name: formData.get("name") as string,
             address: formData.get("address") as string,
+            addressNumber: formData.get("addressNumber") as string,
             phone: formData.get("phone") as string,
             status: formData.get("status") as string,
             timeZone: formData.get("timeZone") as string,
@@ -168,6 +171,20 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
                         className={fieldErrors.address ? INPUT_ERROR_CLASS : INPUT_CLASS}
                     />
                     {fieldErrors.address && <p className="text-red-400 text-xs">{fieldErrors.address}</p>}
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                    <label className={LABEL_CLASS}>Número</label>
+                    <input
+                        name="addressNumber"
+                        type="text"
+                        inputMode="numeric"
+                        defaultValue={user.addressNumber ?? ""}
+                        placeholder="Ex: 123, S/N"
+                        onBlur={(e) => validateField("addressNumber", e.target.value)}
+                        className={fieldErrors.addressNumber ? INPUT_ERROR_CLASS : INPUT_CLASS}
+                    />
+                    {fieldErrors.addressNumber && <p className="text-red-400 text-xs">{fieldErrors.addressNumber}</p>}
                 </div>
 
                 <div className="flex flex-col gap-1.5">

@@ -14,6 +14,7 @@ export async function getInfoUser() {
                 email: true,
                 image: true,
                 address: true,
+                addressNumber: true,
                 phone: true,
                 status: true,
                 timeZone: true,

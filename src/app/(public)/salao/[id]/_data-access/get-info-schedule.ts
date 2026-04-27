@@ -9,6 +9,7 @@ export async function getInfoSchedule(userId: string) {
                 name: true,
                 image: true,
                 address: true,
+                addressNumber: true,
                 employees: {
                     select: {
                         id: true,

@@ -13,6 +13,7 @@ const profileSchema = z.object({
         .min(8, "Telefone deve ter pelo menos 8 números.")
         .max(15, "Telefone deve ter no máximo 15 números."),
     address: z.string().min(2, "Endereço inválido."),
+    addressNumber: z.string().min(1, "Número é obrigatório."),
     status: z.coerce.boolean(),
     timeZone: z.string().min(1, "Fuso horário inválido."),
 });
@@ -25,6 +26,7 @@ export async function updateProfile(formData: FormData) {
             name: formData.get("name"),
             phone: formData.get("phone"),
             address: formData.get("address"),
+            addressNumber: formData.get("addressNumber"),
             status: formData.get("status"),
             timeZone: formData.get("timeZone"),
         });
@@ -37,6 +39,7 @@ export async function updateProfile(formData: FormData) {
                 name: parsed.data.name,
                 phone: parsed.data.phone,
                 address: parsed.data.address,
+                addressNumber: parsed.data.addressNumber,
                 status: parsed.data.status,
                 timeZone: parsed.data.timeZone,
             },

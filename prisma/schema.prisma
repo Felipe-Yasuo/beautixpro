@@ -15,6 +15,7 @@ model User {
   image              String?
   password           String?
   address            String?   @default("")
+  addressNumber      String?   @default("")
   phone              String?   @default("")
   status             Boolean   @default(true)
   timeZone           String?

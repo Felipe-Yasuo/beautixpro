@@ -1,101 +1,26 @@
 "use client";
 
-import { useState } from "react";
-import { z } from "zod";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { register } from "../_actions/register";
 import Image from "next/image";
 import Link from "next/link";
-
-const loginSchema = z.object({
-    email: z.string().email("E-mail inválido"),
-    password: z.string().min(6, "Senha deve ter ao menos 6 caracteres"),
-});
-
-const registerSchema = loginSchema.extend({
-    name: z.string().min(2, "Nome deve ter ao menos 2 caracteres"),
-});
-
-type FieldErrors = Partial<Record<string, string>>;
-
-function extractErrors(error: z.ZodError): FieldErrors {
-    const errors: FieldErrors = {};
-    for (const issue of error.issues) {
-        const field = String(issue.path[0]);
-        errors[field] ??= issue.message;
-    }
-    return errors;
-}
+import { useLoginForm } from "./use-login-form";
+import { DemoCard } from "./demo-card";
 
 export function LoginForm() {
-    const [mode, setMode] = useState<"login" | "register">("login");
-    const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-    const [serverError, setServerError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const router = useRouter();
-
-    const isRegister = mode === "register";
-    const schema = isRegister ? registerSchema : loginSchema;
-
-    function validateField(field: string, value: string) {
-        const fieldSchema = (schema.shape as Record<string, z.ZodTypeAny>)[field];
-        if (!fieldSchema) return;
-        const result = fieldSchema.safeParse(value);
-        setFieldErrors((prev) => ({
-            ...prev,
-            [field]: result.success ? undefined : result.error.issues[0]?.message,
-        }));
-    }
-
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setServerError("");
-
-        const formData = new FormData(e.currentTarget);
-        const raw: Record<string, string> = {
-            email: formData.get("email") as string,
-            password: formData.get("password") as string,
-        };
-        if (isRegister) raw.name = formData.get("name") as string;
-
-        const validation = schema.safeParse(raw);
-        if (!validation.success) {
-            setFieldErrors(extractErrors(validation.error));
-            return;
-        }
-
-        setFieldErrors({});
-        setLoading(true);
-
-        if (isRegister) {
-            const result = await register(formData);
-            if (result?.error) {
-                setServerError(result.error);
-                setLoading(false);
-                return;
-            }
-        }
-
-        const res = await signIn("credentials", {
-            email: raw.email,
-            password: raw.password,
-            redirect: false,
-        });
-
-        if (res?.error) {
-            setServerError("E-mail ou senha inválidos.");
-            setLoading(false);
-            return;
-        }
-
-        router.push("/dashboard");
-    }
-
-    async function handleGoogle() {
-        await signIn("google", { callbackUrl: "/dashboard" });
-    }
+    const {
+        isRegister,
+        fieldErrors,
+        serverError,
+        loading,
+        showPassword,
+        emailRef,
+        passwordRef,
+        validateField,
+        switchMode,
+        fillDemo,
+        handleSubmit,
+        handleGoogle,
+        setShowPassword,
+    } = useLoginForm();
 
     return (
         <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
@@ -173,6 +98,7 @@ export function LoginForm() {
                                     E-mail Profissional
                                 </label>
                                 <input
+                                    ref={emailRef}
                                     name="email"
                                     type="email"
                                     placeholder="nome@estudio.com"
@@ -200,6 +126,7 @@ export function LoginForm() {
                                 </div>
                                 <div className="relative">
                                     <input
+                                        ref={passwordRef}
                                         name="password"
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••"
@@ -238,11 +165,7 @@ export function LoginForm() {
                                 disabled={loading}
                                 className="mt-2 bg-[#c9a84c] text-black py-3.5 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#e8c97a] transition-colors disabled:opacity-50 cursor-pointer"
                             >
-                                {loading
-                                    ? "Aguarde..."
-                                    : isRegister
-                                        ? "Criar Conta"
-                                        : "Entrar"}
+                                {loading ? "Aguarde..." : isRegister ? "Criar Conta" : "Entrar"}
                             </button>
                         </form>
 
@@ -260,27 +183,22 @@ export function LoginForm() {
                         </button>
 
                         <div className="text-center mt-8">
-                            <p className="text-[#5a5045] text-xs tracking-[0.1em] uppercase">
-                                {isRegister
-                                    ? "Já tem uma conta?"
-                                    : "Novo na plataforma?"}
+                            <p className="text-[#5a5045] text-xs tracking-widest uppercase">
+                                {isRegister ? "Já tem uma conta?" : "Novo na plataforma?"}
                             </p>
                             <button
-                                onClick={() => {
-                                    setMode(isRegister ? "login" : "register");
-                                    setFieldErrors({});
-                                    setServerError("");
-                                }}
+                                onClick={switchMode}
                                 className="text-[#c9a84c] text-xs tracking-[0.15em] uppercase mt-1.5 hover:text-[#e8c97a] transition-colors cursor-pointer"
                             >
                                 {isRegister ? "Entrar" : "Criar uma Conta"}
                             </button>
                         </div>
+
+                        {!isRegister && <DemoCard onFill={fillDemo} />}
                     </div>
                 </div>
             </div>
 
-            {/* Footer */}
             <footer className="border-t border-[#c9a84c15] px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <p className="text-[#3a3028] text-[10px] tracking-[0.15em] uppercase">
                     &copy; 2024 BeautixPro. Todos os direitos reservados.

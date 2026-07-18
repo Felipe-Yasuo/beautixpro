@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { createAppointment } from "../_actions/create-appointment";
-import { extractFieldErrors } from "@/lib/schemas";
+import { extractFieldErrors } from "@/lib/validations/utils";
 
 const scheduleSchema = z.object({
     name: z.string().min(3, "Nome deve ter ao menos 3 caracteres"),

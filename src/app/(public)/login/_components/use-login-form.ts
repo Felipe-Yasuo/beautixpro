@@ -5,26 +5,10 @@ import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { register } from "../_actions/register";
-
-const loginSchema = z.object({
-    email: z.string().email("E-mail inválido"),
-    password: z.string().min(6, "Senha deve ter ao menos 6 caracteres"),
-});
-
-const registerSchema = loginSchema.extend({
-    name: z.string().min(2, "Nome deve ter ao menos 2 caracteres"),
-});
+import { loginSchema, registerSchema } from "@/lib/validations/login";
+import { extractFieldErrors } from "@/lib/validations/utils";
 
 type FieldErrors = Partial<Record<string, string>>;
-
-function extractErrors(error: z.ZodError): FieldErrors {
-    const errors: FieldErrors = {};
-    for (const issue of error.issues) {
-        const field = String(issue.path[0]);
-        errors[field] ??= issue.message;
-    }
-    return errors;
-}
 
 export function useLoginForm() {
     const [mode, setMode] = useState<"login" | "register">("login");
@@ -73,7 +57,7 @@ export function useLoginForm() {
 
         const validation = schema.safeParse(raw);
         if (!validation.success) {
-            setFieldErrors(extractErrors(validation.error));
+            setFieldErrors(extractFieldErrors(validation.error));
             return;
         }
 

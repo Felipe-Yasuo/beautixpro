@@ -3,7 +3,7 @@
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { idSchema } from "@/lib/schemas";
+import { idSchema } from "@/lib/validations/utils";
 
 export async function deleteService(serviceId: string) {
     try {

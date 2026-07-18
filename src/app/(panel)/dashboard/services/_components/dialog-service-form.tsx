@@ -4,9 +4,9 @@ import { useState } from "react";
 import { z } from "zod";
 import { createService } from "../_actions/create-service";
 import { updateService } from "../_actions/update-service";
-import { extractFieldErrors } from "@/lib/schemas";
+import { extractFieldErrors } from "@/lib/validations/utils";
 
-const serviceSchema = z.object({
+const serviceFieldsSchema = z.object({
     name: z.string().min(2, "Nome deve ter ao menos 2 caracteres"),
     price: z
         .string()
@@ -20,7 +20,7 @@ const serviceSchema = z.object({
         .refine((v) => !isNaN(Number(v)) && Number(v) >= 0 && Number(v) <= 59, "Minutos inválidos"),
 });
 
-type ServiceFields = z.infer<typeof serviceSchema>;
+type ServiceFields = z.infer<typeof serviceFieldsSchema>;
 type FieldErrors = Partial<Record<keyof ServiceFields, string>>;
 
 interface Service {
@@ -77,7 +77,7 @@ export function DialogServiceForm({ service, employeeId, onClose }: DialogServic
     const defaultMinutes = service ? service.duration % 60 : 30;
 
     function validateField(field: keyof ServiceFields, value: string) {
-        const shape = serviceSchema.shape[field] as z.ZodTypeAny;
+        const shape = serviceFieldsSchema.shape[field] as z.ZodTypeAny;
         const result = shape.safeParse(value);
         setFieldErrors((prev) => ({
             ...prev,
@@ -97,7 +97,7 @@ export function DialogServiceForm({ service, employeeId, onClose }: DialogServic
             minutes: formData.get("minutes") as string,
         };
 
-        const validation = serviceSchema.safeParse(raw);
+        const validation = serviceFieldsSchema.safeParse(raw);
         if (!validation.success) {
             setFieldErrors(extractFieldErrors(validation.error));
             return;

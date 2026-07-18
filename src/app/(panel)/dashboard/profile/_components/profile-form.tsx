@@ -7,19 +7,8 @@ import { updateProfile } from "../_actions/update-profile";
 import { updateUserTimes } from "../_actions/update-user-times";
 import { EmployeesSection } from "./employees-section";
 import { TimePickerModal } from "./time-picker-modal";
-import { extractFieldErrors } from "@/lib/schemas";
-
-const profileSchema = z.object({
-    name: z.string().min(3, "Nome deve ter ao menos 3 caracteres"),
-    address: z.string().min(5, "Endereço deve ter ao menos 5 caracteres"),
-    addressNumber: z.string().min(1, "Número é obrigatório"),
-    phone: z
-        .string()
-        .min(10, "Telefone inválido")
-        .regex(/^[\d\s()\-+]+$/, "Telefone inválido"),
-    status: z.enum(["true", "false"]),
-    timeZone: z.string().min(1, "Selecione o fuso horário"),
-});
+import { extractFieldErrors } from "@/lib/validations/utils";
+import { profileSchema } from "@/lib/validations/profile";
 
 type ProfileFields = z.infer<typeof profileSchema>;
 type FieldErrors = Partial<Record<keyof ProfileFields, string>>;

@@ -2,16 +2,8 @@
 
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
-
-const serviceSchema = z.object({
-    id: z.string().uuid(),
-    name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres."),
-    price: z.coerce.number().min(1, "Preço inválido."),
-    duration: z.coerce.number().min(1, "Duração inválida."),
-    status: z.coerce.boolean(),
-});
+import { updateServiceSchema as serviceSchema } from "@/lib/validations/service";
 
 export async function updateService(formData: FormData) {
     try {

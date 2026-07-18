@@ -2,9 +2,9 @@
 
 import { requireAuth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { getUserPlan, UserPlan } from "@/app/(panel)/dashboard/_data-access/get-plan";
+import { serviceSchema } from "@/lib/validations/service";
 
 const SERVICE_LIMITS: Record<UserPlan, number> = {
     FREE: 3,
@@ -17,13 +17,6 @@ const UPGRADE_MESSAGES: Record<UserPlan, string> = {
     BASIC: "Plano Basic permite até 10 serviços. Faça upgrade para o Professional.",
     PROFESSIONAL: "",
 };
-
-const serviceSchema = z.object({
-    name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres."),
-    price: z.coerce.number().min(1, "Preço inválido."),
-    duration: z.coerce.number().min(1, "Duração inválida."),
-    employeeId: z.string().optional(),
-});
 
 export async function createService(formData: FormData) {
     try {

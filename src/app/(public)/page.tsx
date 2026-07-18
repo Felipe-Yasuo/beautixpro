@@ -1,9 +1,9 @@
-import { Header } from "./_components/header";
-import { Hero } from "./_components/hero";
-import { HowItWorks } from "./_components/how-it-works";
-import { Professionals } from "./_components/professionals";
-import { Manifesto } from "./_components/manifesto";
-import { Footer } from "./_components/footer";
+import { Header } from "@/components/features/home/header";
+import { Hero } from "@/components/features/home/hero";
+import { HowItWorks } from "@/components/features/home/how-it-works";
+import { Professionals } from "@/components/features/home/professionals";
+import { Manifesto } from "@/components/features/home/manifesto";
+import { Footer } from "@/components/features/home/footer";
 
 export const dynamic = "force-dynamic";
 

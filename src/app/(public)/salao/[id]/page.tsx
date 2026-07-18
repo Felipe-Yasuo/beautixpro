@@ -1,4 +1,4 @@
-import { ScheduleContent } from "./_components/schedule-content";
+import { ScheduleContent } from "@/components/features/salao/schedule-content";
 
 interface PageProps {
     params: Promise<{ id: string }>;

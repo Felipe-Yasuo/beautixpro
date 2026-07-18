@@ -1,0 +1,94 @@
+"use server";
+
+import { requireAuth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import { getUserPlan, UserPlan } from "@/lib/services/get-plan";
+import { serviceSchema } from "@/lib/validations/service";
+
+const SERVICE_LIMITS: Record<UserPlan, number> = {
+    FREE: 3,
+    BASIC: 10,
+    PROFESSIONAL: Infinity,
+};
+
+const UPGRADE_MESSAGES: Record<UserPlan, string> = {
+    FREE: "Plano gratuito permite até 3 serviços. Faça upgrade para o Basic ou Professional.",
+    BASIC: "Plano Basic permite até 10 serviços. Faça upgrade para o Professional.",
+    PROFESSIONAL: "",
+};
+
+export async function createService(formData: FormData) {
+    try {
+        const userId = await requireAuth();
+
+        const plan = await getUserPlan();
+        const limit = SERVICE_LIMITS[plan];
+        const serviceCount = await prisma.service.count({
+            where: { employee: { userId: userId } },
+        });
+
+        if (serviceCount >= limit) {
+            return { error: UPGRADE_MESSAGES[plan] };
+        }
+
+        const parsed = serviceSchema.safeParse({
+            name: formData.get("name"),
+            price: formData.get("price"),
+            duration: formData.get("duration"),
+            employeeId: formData.get("employeeId") ?? undefined,
+        });
+
+        if (!parsed.success) {
+            return { error: parsed.error.issues[0].message };
+        }
+
+        const { name, price, duration, employeeId } = parsed.data;
+
+        let targetEmployeeId = employeeId;
+
+        if (!targetEmployeeId) {
+            const defaultEmployee = await prisma.employee.findFirst({
+                where: { userId: userId },
+            });
+
+            if (defaultEmployee) {
+                targetEmployeeId = defaultEmployee.id;
+            } else {
+                const defaultTimes = [
+                    "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
+                    "11:00", "11:30", "13:00", "13:30", "14:00", "14:30",
+                    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+                ];
+                const created = await prisma.employee.create({
+                    data: {
+                        name: "Padrão",
+                        times: defaultTimes,
+                        userId: userId,
+                    },
+                });
+                targetEmployeeId = created.id;
+            }
+        }
+
+        if (employeeId) {
+            const owns = await prisma.employee.findFirst({
+                where: { id: targetEmployeeId, userId: userId },
+            });
+            if (!owns) return { error: "Funcionário inválido." };
+        }
+
+        await prisma.service.create({
+            data: {
+                name,
+                price: Math.round(price * 100),
+                duration,
+                employeeId: targetEmployeeId,
+            },
+        });
+        revalidatePath("/dashboard/services");
+        return { success: true };
+    } catch {
+        return { error: "Algo deu errado. Tente novamente." };
+    }
+}

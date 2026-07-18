@@ -1,5 +1,5 @@
-import { GridPlans } from "./_components/grid-plans";
-import { SubscriptionDetail } from "./_components/subscription-detail";
+import { GridPlans } from "@/components/features/plans/grid-plans";
+import { SubscriptionDetail } from "@/components/features/plans/subscription-detail";
 
 export default async function PlansPage() {
     return (

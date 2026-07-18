@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import { auth } from "@/lib/auth";
-import { Appointments } from "./_components/appointments/appointments";
-import { Reminders } from "./_components/reminder/reminders";
-import { CopyLinkButton } from "./_components/button-copy-link";
-import { getDailyRevenue } from "./_data-access/get-daily-revenue";
+import { Appointments } from "@/components/features/dashboard/appointments/appointments";
+import { Reminders } from "@/components/features/dashboard/reminder/reminders";
+import { CopyLinkButton } from "@/components/features/dashboard/button-copy-link";
+import { getDailyRevenue } from "@/lib/services/get-daily-revenue";
 import { formatBRL } from "@/lib/formatters";
 
 interface PageProps {

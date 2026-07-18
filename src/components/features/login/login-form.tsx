@@ -1,0 +1,220 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useLoginForm } from "@/hooks/use-login-form";
+import { DemoCard } from "./demo-card";
+
+export function LoginForm() {
+    const {
+        isRegister,
+        fieldErrors,
+        serverError,
+        loading,
+        showPassword,
+        emailRef,
+        passwordRef,
+        validateField,
+        switchMode,
+        fillDemo,
+        handleSubmit,
+        handleGoogle,
+        setShowPassword,
+    } = useLoginForm();
+
+    return (
+        <div className="min-h-screen flex flex-col bg-[#0a0a0a]">
+            <div className="flex flex-1">
+
+                <div className="hidden lg:flex relative w-[55%]">
+                    <Image
+                        src="/atriz.png"
+                        alt="Profissional de beleza"
+                        fill
+                        className="object-cover"
+                        priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40" />
+
+                    <Link
+                        href="/"
+                        className="absolute top-8 left-8 z-10 font-serif text-2xl text-[#c9a84c]"
+                    >
+                        BeautixPro
+                    </Link>
+
+                    <div className="absolute bottom-12 left-8 z-10">
+                        <p className="text-[#c9a84c] text-xs tracking-[0.3em] uppercase mb-4">
+                            Excelência em Beleza
+                        </p>
+                        <h2 className="font-serif text-5xl xl:text-6xl text-white leading-tight">
+                            Defina Sua{" "}
+                            <span className="italic text-[#c9a84c]">Arte.</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <div className="flex-1 flex items-center justify-center px-6 sm:px-12 lg:px-16">
+                    <div className="w-full max-w-md">
+
+                        <Link
+                            href="/"
+                            className="lg:hidden block font-serif text-3xl text-[#c9a84c] mb-10"
+                        >
+                            BeautixPro
+                        </Link>
+
+                        <h1 className="font-serif text-3xl sm:text-4xl text-white mb-2">
+                            {isRegister ? "Crie sua Conta" : "Bem-vindo de Volta"}
+                        </h1>
+                        <p className="text-[#5a5045] text-xs tracking-[0.15em] uppercase mb-10">
+                            {isRegister
+                                ? "Preencha seus dados para começar"
+                                : "Insira suas credenciais para acessar o painel"}
+                        </p>
+
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                            {isRegister && (
+                                <div className="flex flex-col gap-1.5">
+                                    <label className="text-[#5a5045] text-[10px] tracking-[0.2em] uppercase">
+                                        Nome Completo
+                                    </label>
+                                    <input
+                                        name="name"
+                                        type="text"
+                                        placeholder="Seu nome"
+                                        onBlur={(e) => validateField("name", e.target.value)}
+                                        className="bg-transparent border-b border-[#c9a84c33] text-[#f0ead6] pb-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#2a2420] transition-colors"
+                                    />
+                                    {fieldErrors.name && (
+                                        <p className="text-red-400 text-xs">{fieldErrors.name}</p>
+                                    )}
+                                </div>
+                            )}
+
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-[#5a5045] text-[10px] tracking-[0.2em] uppercase">
+                                    E-mail Profissional
+                                </label>
+                                <input
+                                    ref={emailRef}
+                                    name="email"
+                                    type="email"
+                                    placeholder="nome@estudio.com"
+                                    onBlur={(e) => validateField("email", e.target.value)}
+                                    className="bg-transparent border-b border-[#c9a84c33] text-[#f0ead6] pb-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#2a2420] transition-colors"
+                                />
+                                {fieldErrors.email && (
+                                    <p className="text-red-400 text-xs">{fieldErrors.email}</p>
+                                )}
+                            </div>
+
+                            <div className="flex flex-col gap-1.5">
+                                <div className="flex items-center justify-between">
+                                    <label className="text-[#5a5045] text-[10px] tracking-[0.2em] uppercase">
+                                        Senha
+                                    </label>
+                                    {!isRegister && (
+                                        <button
+                                            type="button"
+                                            className="text-[#c9a84c] text-[10px] tracking-[0.15em] uppercase hover:text-[#e8c97a] transition-colors"
+                                        >
+                                            Esqueceu a senha?
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="relative">
+                                    <input
+                                        ref={passwordRef}
+                                        name="password"
+                                        type={showPassword ? "text" : "password"}
+                                        placeholder="••••••••"
+                                        onBlur={(e) => validateField("password", e.target.value)}
+                                        className="w-full bg-transparent border-b border-[#c9a84c33] text-[#f0ead6] pb-3 text-sm outline-none focus:border-[#c9a84c] placeholder:text-[#2a2420] transition-colors pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-0 top-0 text-[#5a5045] hover:text-[#c9a84c] transition-colors"
+                                    >
+                                        {showPassword ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                                                <line x1="1" y1="1" x2="23" y2="23" />
+                                            </svg>
+                                        ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
+                                {fieldErrors.password && (
+                                    <p className="text-red-400 text-xs">{fieldErrors.password}</p>
+                                )}
+                            </div>
+
+                            {serverError && (
+                                <p className="text-red-400 text-xs text-center">{serverError}</p>
+                            )}
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="mt-2 bg-[#c9a84c] text-black py-3.5 text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#e8c97a] transition-colors disabled:opacity-50 cursor-pointer"
+                            >
+                                {loading ? "Aguarde..." : isRegister ? "Criar Conta" : "Entrar"}
+                            </button>
+                        </form>
+
+                        <div className="flex items-center gap-4 w-full my-6">
+                            <div className="flex-1 h-px bg-[#c9a84c22]" />
+                            <span className="text-[#3a3028] text-xs">ou</span>
+                            <div className="flex-1 h-px bg-[#c9a84c22]" />
+                        </div>
+
+                        <button
+                            onClick={handleGoogle}
+                            className="w-full flex items-center justify-center gap-3 border border-[#c9a84c33] text-[#c9a84c] py-3 text-xs tracking-[0.15em] uppercase hover:bg-[#c9a84c11] transition-colors cursor-pointer"
+                        >
+                            Continuar com Google
+                        </button>
+
+                        <div className="text-center mt-8">
+                            <p className="text-[#5a5045] text-xs tracking-widest uppercase">
+                                {isRegister ? "Já tem uma conta?" : "Novo na plataforma?"}
+                            </p>
+                            <button
+                                onClick={switchMode}
+                                className="text-[#c9a84c] text-xs tracking-[0.15em] uppercase mt-1.5 hover:text-[#e8c97a] transition-colors cursor-pointer"
+                            >
+                                {isRegister ? "Entrar" : "Criar uma Conta"}
+                            </button>
+                        </div>
+
+                        {!isRegister && <DemoCard onFill={fillDemo} />}
+                    </div>
+                </div>
+            </div>
+
+            <footer className="border-t border-[#c9a84c15] px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p className="text-[#3a3028] text-[10px] tracking-[0.15em] uppercase">
+                    &copy; 2024 BeautixPro. Todos os direitos reservados.
+                </p>
+                <div className="flex items-center gap-6">
+                    <span className="text-[#3a3028] text-[10px] tracking-[0.15em] uppercase hover:text-[#5a5045] transition-colors cursor-pointer">
+                        Política de Privacidade
+                    </span>
+                    <span className="text-[#3a3028] text-[10px] tracking-[0.15em] uppercase hover:text-[#5a5045] transition-colors cursor-pointer">
+                        Termos de Uso
+                    </span>
+                    <span className="text-[#3a3028] text-[10px] tracking-[0.15em] uppercase hover:text-[#5a5045] transition-colors cursor-pointer">
+                        Política de Cookies
+                    </span>
+                </div>
+            </footer>
+        </div>
+    );
+}

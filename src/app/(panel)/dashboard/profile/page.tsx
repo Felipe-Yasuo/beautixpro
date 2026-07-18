@@ -1,4 +1,4 @@
-import { Profile } from "./_components/profile";
+import { Profile } from "@/components/features/profile/profile";
 
 export default async function ProfilePage() {
     return <Profile />;

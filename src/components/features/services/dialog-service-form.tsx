@@ -7,6 +7,9 @@ import { updateService } from "@/lib/actions/update-service";
 import { extractFieldErrors } from "@/lib/validations/utils";
 import type { Service as DomainService } from "@/types/domain";
 
+// Schema local intencional: valida hours/minutes separados como campos de UI,
+// que não existem em lib/validations/service.ts (o server só recebe "duration" já somado).
+// Não consolidar com o schema central — são domínios de validação diferentes.
 const serviceFieldsSchema = z.object({
     name: z.string().min(2, "Nome deve ter ao menos 2 caracteres"),
     price: z

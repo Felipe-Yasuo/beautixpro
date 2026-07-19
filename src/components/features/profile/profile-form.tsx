@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { z } from "zod";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Clock } from "lucide-react";
 import { updateProfile } from "@/lib/actions/update-profile";
 import { updateUserTimes } from "@/lib/actions/update-user-times";
 import { EmployeesSection } from "./employees-section";
@@ -43,41 +43,35 @@ interface ProfileFormProps {
     isProfessional: boolean;
 }
 
-
 function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;
 }
 
-const LABEL_CLASS = "text-[var(--gold)] text-xs xl:text-sm tracking-widest uppercase";
-
-const INPUT_CLASS =
-    "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
-
-const INPUT_ERROR_CLASS =
-    "bg-[var(--surface-low)] border border-red-500 text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors w-full rounded-lg";
-
-const SELECT_CLASS =
-    "bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base outline-none focus:border-[var(--gold)] transition-colors cursor-pointer w-full rounded-lg";
+const LABEL_CLASS = "text-[11px] font-semibold uppercase tracking-[0.16em]";
 
 function formatPhone(value: string): string {
     const digits = value.replace(/\D/g, "").slice(0, 11);
-
     const ddd = digits.slice(0, 2);
-    const part1 = digits.length > 10
-        ? digits.slice(2, 7)
-        : digits.slice(2, 6);
-    const part2 = digits.length > 10
-        ? digits.slice(7)
-        : digits.slice(6);
+    const part1 = digits.length > 10 ? digits.slice(2, 7) : digits.slice(2, 6);
+    const part2 = digits.length > 10 ? digits.slice(7) : digits.slice(6);
 
     if (!digits) return "";
     if (digits.length <= 2) return `(${ddd}`;
     if (digits.length <= 6) return `(${ddd}) ${digits.slice(2)}`;
-
     return `(${ddd}) ${part1}-${part2}`;
 }
 
+function fieldStyle(hasError?: boolean): React.CSSProperties {
+    return {
+        backgroundColor: "var(--clima-surface)",
+        border: `1px solid ${hasError ? "#ef4444" : "var(--clima-border-strong)"}`,
+        color: "var(--clima-text)",
+        fontSize: "15px",
+    };
+}
+
 export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
+    const formRef = useRef<HTMLFormElement>(null);
     const [loading, setLoading] = useState(false);
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
     const [serverError, setServerError] = useState("");
@@ -145,134 +139,163 @@ export function ProfileForm({ user, isProfessional }: ProfileFormProps) {
         setLoading(false);
     }, []);
 
+    function handleCancel() {
+        formRef.current?.reset();
+        setPhone(formatPhone(user.phone ?? ""));
+        setSelectedTimes(user.times);
+        setFieldErrors({});
+        setServerError("");
+        setSuccess(false);
+    }
+
     const timesLabel = selectedTimes.length > 0
         ? `${selectedTimes.length} ${pluralize(selectedTimes.length, "horário selecionado", "horários selecionados")}`
         : "Clique aqui para selecionar horários";
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1.5">
-                    <label className={LABEL_CLASS}>Nome do salão</label>
+                    <label className={LABEL_CLASS} style={{ color: "var(--clima-text-muted)" }}>Nome do salão</label>
                     <input
                         name="name"
                         type="text"
                         defaultValue={user.name ?? ""}
                         placeholder="Nome do seu salão"
                         onBlur={(e) => validateField("name", e.target.value)}
-                        className={fieldErrors.name ? INPUT_ERROR_CLASS : INPUT_CLASS}
+                        className="w-full rounded-[6px] px-4 py-3 outline-none transition-colors"
+                        style={fieldStyle(!!fieldErrors.name)}
                     />
-                    {fieldErrors.name && <p className="text-red-400 text-xs">{fieldErrors.name}</p>}
+                    {fieldErrors.name && <p className="text-xs text-red-500">{fieldErrors.name}</p>}
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                    <label className={LABEL_CLASS}>Endereço completo</label>
+                    <label className={LABEL_CLASS} style={{ color: "var(--clima-text-muted)" }}>Endereço completo</label>
                     <input
                         name="address"
                         type="text"
                         defaultValue={user.address ?? ""}
-                        placeholder="Digite o endereço da clínica..."
+                        placeholder="Digite o endereço do ateliê..."
                         onBlur={(e) => validateField("address", e.target.value)}
-                        className={fieldErrors.address ? INPUT_ERROR_CLASS : INPUT_CLASS}
+                        className="w-full rounded-[6px] px-4 py-3 outline-none transition-colors"
+                        style={fieldStyle(!!fieldErrors.address)}
                     />
-                    {fieldErrors.address && <p className="text-red-400 text-xs">{fieldErrors.address}</p>}
+                    {fieldErrors.address && <p className="text-xs text-red-500">{fieldErrors.address}</p>}
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                    <label className={LABEL_CLASS}>Número</label>
-                    <input
-                        name="addressNumber"
-                        type="text"
-                        inputMode="numeric"
-                        defaultValue={user.addressNumber ?? ""}
-                        placeholder="Ex: 123, S/N"
-                        onBlur={(e) => validateField("addressNumber", e.target.value)}
-                        className={fieldErrors.addressNumber ? INPUT_ERROR_CLASS : INPUT_CLASS}
-                    />
-                    {fieldErrors.addressNumber && <p className="text-red-400 text-xs">{fieldErrors.addressNumber}</p>}
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <div className="flex flex-col gap-1.5">
+                        <label className={LABEL_CLASS} style={{ color: "var(--clima-text-muted)" }}>Número</label>
+                        <input
+                            name="addressNumber"
+                            type="text"
+                            inputMode="numeric"
+                            defaultValue={user.addressNumber ?? ""}
+                            placeholder="Ex: 123, S/N"
+                            onBlur={(e) => validateField("addressNumber", e.target.value)}
+                            className="w-full rounded-[6px] px-4 py-3 outline-none transition-colors"
+                            style={fieldStyle(!!fieldErrors.addressNumber)}
+                        />
+                        {fieldErrors.addressNumber && <p className="text-xs text-red-500">{fieldErrors.addressNumber}</p>}
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                        <label className={LABEL_CLASS} style={{ color: "var(--clima-text-muted)" }}>Telefone</label>
+                        <input
+                            name="phone"
+                            type="tel"
+                            inputMode="numeric"
+                            value={phone}
+                            onChange={(e) => setPhone(formatPhone(e.target.value))}
+                            placeholder="(43) 99800-8265"
+                            onBlur={(e) => validateField("phone", e.target.value)}
+                            className="w-full rounded-[6px] px-4 py-3 outline-none transition-colors"
+                            style={fieldStyle(!!fieldErrors.phone)}
+                        />
+                        {fieldErrors.phone && <p className="text-xs text-red-500">{fieldErrors.phone}</p>}
+                    </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                    <label className={LABEL_CLASS}>Telefone</label>
-                    <input
-                        name="phone"
-                        type="tel"
-                        inputMode="numeric"
-                        value={phone}
-                        onChange={(e) => setPhone(formatPhone(e.target.value))}
-                        placeholder="(43) 99800-8265"
-                        onBlur={(e) => validateField("phone", e.target.value)}
-                        className={fieldErrors.phone ? INPUT_ERROR_CLASS : INPUT_CLASS}
-                    />
-                    {fieldErrors.phone && <p className="text-red-400 text-xs">{fieldErrors.phone}</p>}
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                    <div className="flex flex-col gap-1.5">
+                        <label className={LABEL_CLASS} style={{ color: "var(--clima-text-muted)" }}>Status do salão</label>
+                        <select
+                            name="status"
+                            defaultValue={user.status ? "true" : "false"}
+                            className="w-full cursor-pointer rounded-[6px] px-4 py-3 outline-none transition-colors"
+                            style={fieldStyle()}
+                        >
+                            <option value="true">Ativo (salão aberto)</option>
+                            <option value="false">Inativo (salão fechado)</option>
+                        </select>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                        <label className={LABEL_CLASS} style={{ color: "var(--clima-text-muted)" }}>Fuso horário</label>
+                        <select
+                            name="timeZone"
+                            defaultValue={user.timeZone ?? "America/Sao_Paulo"}
+                            className="w-full cursor-pointer rounded-[6px] px-4 py-3 outline-none transition-colors"
+                            style={fieldStyle()}
+                        >
+                            {TIMEZONES.map((tz) => (
+                                <option key={tz.value} value={tz.value}>{tz.label}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                    <label className={LABEL_CLASS}>Status da clínica</label>
-                    <select
-                        name="status"
-                        defaultValue={user.status ? "true" : "false"}
-                        className={SELECT_CLASS}
-                    >
-                        <option value="true">Ativo (clínica aberta)</option>
-                        <option value="false">Inativo (clínica fechada)</option>
-                    </select>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                    <label className={LABEL_CLASS}>Fuso horário</label>
-                    <select
-                        name="timeZone"
-                        defaultValue={user.timeZone ?? "America/Sao_Paulo"}
-                        className={SELECT_CLASS}
-                    >
-                        {TIMEZONES.map((tz) => (
-                            <option key={tz.value} value={tz.value}>
-                                {tz.label}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <div style={{ borderTop: "1px solid var(--clima-border)", paddingTop: "20px" }} />
 
                 {!isProfessional && (
                     <div className="flex flex-col gap-1.5">
-                        <label className={LABEL_CLASS}>Configurar horários da clínica</label>
+                        <label className={LABEL_CLASS} style={{ color: "var(--clima-text-muted)" }}>
+                            Configurar horários do salão
+                        </label>
                         <button
                             type="button"
                             onClick={() => setShowTimesModal(true)}
-                            className="flex items-center justify-between bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface-dim)] px-4 py-3 text-sm hover:border-[var(--gold)] hover:text-[var(--on-surface)] transition-colors cursor-pointer w-full text-left rounded-lg"
+                            className="flex w-full cursor-pointer items-center justify-between rounded-[6px] px-4 py-3 text-left text-sm transition-colors"
+                            style={{ backgroundColor: "var(--clima-surface)", border: "1px solid var(--clima-border-strong)", color: "var(--clima-text-muted)" }}
                         >
-                            <span>{timesLabel}</span>
-                            <ChevronRight size={16} className="text-[var(--gold)] shrink-0" />
+                            <span className="flex items-center gap-2">
+                                <Clock size={14} />
+                                {timesLabel}
+                            </span>
+                            <ChevronRight size={16} style={{ color: "var(--clima-accent)" }} className="shrink-0" />
                         </button>
                     </div>
                 )}
 
                 {isProfessional && (
-                    <EmployeesSection
-                        employees={user.employees}
-                        isProfessional={isProfessional}
-                    />
+                    <EmployeesSection employees={user.employees} isProfessional={isProfessional} />
                 )}
 
-                {serverError && <p className="text-red-400 text-xs">{serverError}</p>}
+                {serverError && <p className="text-xs text-red-500">{serverError}</p>}
                 {success && (
-                    <p className="text-[var(--gold)] text-xs tracking-widest uppercase">
+                    <p className="text-xs uppercase tracking-widest" style={{ color: "var(--clima-accent)" }}>
                         Perfil atualizado com sucesso!
                     </p>
                 )}
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="btn-primary w-full py-3.5 disabled:opacity-50 mt-2 rounded-lg"
-                >
-                    {loading ? "Salvando..." : "Salvar alterações"}
-                </button>
+                <div className="mt-2 flex justify-end gap-3">
+                    <button
+                        type="button"
+                        onClick={handleCancel}
+                        className="cursor-pointer rounded-[6px] px-6 py-3 text-xs font-semibold uppercase tracking-widest transition-colors"
+                        style={{ border: "1px solid var(--clima-border-strong)", color: "var(--clima-text-muted)" }}
+                    >
+                        Cancelar
+                    </button>
+                    <button type="submit" disabled={loading} className="btn-profile-save">
+                        {loading ? "Salvando..." : "Salvar alterações"}
+                    </button>
+                </div>
             </form>
 
             {showTimesModal && (
                 <TimePickerModal
+                    title="Horários do salão"
                     selectedTimes={selectedTimes}
                     savingTimes={savingTimes}
                     onToggleTime={toggleTime}

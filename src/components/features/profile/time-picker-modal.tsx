@@ -8,6 +8,7 @@ function pluralize(count: number, singular: string, plural: string): string {
 }
 
 interface TimePickerModalProps {
+    title: string;
     selectedTimes: string[];
     savingTimes: boolean;
     onToggleTime: (time: string) => void;
@@ -16,6 +17,7 @@ interface TimePickerModalProps {
 }
 
 export function TimePickerModal({
+    title,
     selectedTimes,
     savingTimes,
     onToggleTime,
@@ -24,24 +26,20 @@ export function TimePickerModal({
 }: TimePickerModalProps) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div
-                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-                onClick={onClose}
-            />
+            <div className="absolute inset-0 bg-black/50" onClick={onClose} />
             <div
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="time-picker-title"
-                className="relative bg-[var(--surface-low)] border border-[var(--outline-variant)] w-full max-w-lg mx-4 z-10 rounded-xl overflow-hidden"
+                className="relative z-10 mx-4 w-full max-w-lg overflow-hidden rounded-[10px] shadow-2xl"
+                style={{ backgroundColor: "var(--bxp-bg)", border: "1px solid var(--clima-border-strong)" }}
             >
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--gold)]" />
-
                 <div className="flex items-start justify-between p-6 pb-4">
                     <div>
-                        <h2 id="time-picker-title" className="text-2xl font-serif font-bold text-[var(--on-surface)]">
-                            Horários da clínica
+                        <h2 id="time-picker-title" className="font-serif font-normal" style={{ fontSize: "24px", color: "var(--clima-text)" }}>
+                            {title}
                         </h2>
-                        <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase mt-1">
+                        <p className="mt-1 text-[10.5px] uppercase tracking-widest" style={{ color: "var(--clima-text-muted)" }}>
                             Selecione os horários de atendimento
                         </p>
                     </div>
@@ -49,14 +47,15 @@ export function TimePickerModal({
                         type="button"
                         onClick={onClose}
                         aria-label="Fechar modal"
-                        className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer mt-1"
+                        className="mt-1 cursor-pointer transition-colors"
+                        style={{ color: "var(--clima-text-muted)" }}
                     >
                         <X size={18} aria-hidden="true" />
                     </button>
                 </div>
 
                 <div className="px-6 pb-6">
-                    <div className="grid grid-cols-5 gap-2">
+                    <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
                         {ALL_TIMES.map((time) => {
                             const isSelected = selectedTimes.includes(time);
                             return (
@@ -64,11 +63,12 @@ export function TimePickerModal({
                                     key={time}
                                     type="button"
                                     onClick={() => onToggleTime(time)}
-                                    className={`py-2.5 text-xs tracking-wide border transition-colors cursor-pointer rounded-lg ${
+                                    className="cursor-pointer rounded-[6px] py-2.5 text-[13px] font-semibold tracking-wide transition-colors"
+                                    style={
                                         isSelected
-                                            ? "border-[var(--gold)] bg-[var(--gold-ghost)] text-[var(--gold)]"
-                                            : "border-[var(--outline)] text-[var(--on-surface-dim)] hover:border-[var(--gold)] hover:text-[var(--on-surface-variant)]"
-                                    }`}
+                                            ? { backgroundColor: "var(--clima-accent-soft)", border: "1px solid var(--clima-accent)", color: "var(--clima-accent)" }
+                                            : { backgroundColor: "var(--clima-surface)", border: "1px solid var(--clima-border)", color: "var(--clima-text-muted)" }
+                                    }
                                 >
                                     {time}
                                 </button>
@@ -77,19 +77,17 @@ export function TimePickerModal({
                     </div>
                 </div>
 
-                <div className="border-t border-[var(--outline)] px-6 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-[var(--on-surface-dim)]">
+                <div
+                    className="flex items-center justify-between px-6 py-4"
+                    style={{ borderTop: "1px solid var(--clima-border)" }}
+                >
+                    <div className="flex items-center gap-2" style={{ color: "var(--clima-text-muted)" }}>
                         <Clock size={13} />
                         <span className="text-xs">
                             {selectedTimes.length} {pluralize(selectedTimes.length, "horário selecionado", "horários selecionados")}
                         </span>
                     </div>
-                    <button
-                        type="button"
-                        onClick={onSave}
-                        disabled={savingTimes}
-                        className="btn-primary px-6 py-2.5 cursor-pointer rounded-lg disabled:opacity-50"
-                    >
+                    <button type="button" onClick={onSave} disabled={savingTimes} className="btn-profile-save">
                         {savingTimes ? "Salvando..." : "Confirmar"}
                     </button>
                 </div>

@@ -568,3 +568,27 @@
 .btn-service-new:hover {
   background-color: var(--clima-accent-hover);
 }
+
+.btn-profile-save {
+  background-color: var(--clima-accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border-radius: 6px;
+  box-shadow: 0 6px 16px -6px rgb(192 106 119 / 0.4);
+  transition: background-color 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+
+.btn-profile-save:hover:not(:disabled) {
+  background-color: var(--clima-accent-hover);
+  transform: translateY(-1px);
+}
+
+.btn-profile-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

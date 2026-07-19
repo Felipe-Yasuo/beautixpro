@@ -11,29 +11,29 @@ export async function Profile() {
 
     if (!user) {
         return (
-            <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase">
+            <p className="text-xs uppercase tracking-widest" style={{ color: "var(--clima-text-subtle)" }}>
                 Usuário não encontrado.
             </p>
         );
     }
 
     return (
-        <div className="flex flex-col gap-8 p-8">
+        <div className="flex flex-col gap-8" style={{ padding: "34px 40px 48px" }}>
             <div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[var(--on-surface)]">
+                <h1
+                    className="font-serif font-normal"
+                    style={{ fontSize: "clamp(36px, 4vw, 50px)", color: "var(--clima-text)" }}
+                >
                     Perfil
                 </h1>
-                <p className="text-[var(--on-surface-variant)] text-sm xl:text-base mt-2">
+                <p className="mt-2 text-[16px]" style={{ color: "var(--clima-text-muted)" }}>
                     Gerencie as informações do seu ateliê e horários de atendimento.
                 </p>
             </div>
 
             <ProfileAvatar image={user.image} name={user.name} />
 
-            <ProfileForm
-                user={user}
-                isProfessional={plan === "PROFESSIONAL"}
-            />
+            <ProfileForm user={user} isProfessional={plan === "PROFESSIONAL"} />
         </div>
     );
 }

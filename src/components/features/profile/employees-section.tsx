@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { X, Clock, ChevronRight, Trash2, UserPlus } from "lucide-react";
+import { Clock, ChevronRight, Trash2, UserPlus } from "lucide-react";
 import { createEmployee } from "@/lib/actions/create-employee";
 import { deleteEmployee } from "@/lib/actions/delete-employee";
 import { updateEmployeeTimes } from "@/lib/actions/update-employee-times";
-import { ALL_TIMES } from "@/lib/constants";
+import { TimePickerModal } from "./time-picker-modal";
 import type { Employee as DomainEmployee } from "@/types/domain";
 
 type Employee = Pick<DomainEmployee, "id" | "name" | "times">;
@@ -19,7 +19,7 @@ function pluralize(count: number, singular: string, plural: string): string {
     return count === 1 ? singular : plural;
 }
 
-const LABEL_CLASS = "text-[var(--gold)] text-xs xl:text-sm tracking-widest uppercase";
+const LABEL_CLASS = "text-[11px] font-semibold uppercase tracking-[0.16em]";
 
 export function EmployeesSection({ employees, isProfessional }: EmployeesSectionProps) {
     const [loading, setLoading] = useState(false);
@@ -76,15 +76,15 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
     if (!isProfessional) {
         return (
             <div className="flex flex-col gap-1.5">
-                <label className={LABEL_CLASS}>Funcionários</label>
-                <div className="bg-[var(--surface-low)] border border-[var(--outline-variant)] rounded-lg px-4 py-3 flex items-center justify-between">
-                    <span className="text-[var(--on-surface-dim)] text-sm">
+                <label className={LABEL_CLASS} style={{ color: "var(--clima-text-muted)" }}>Funcionários</label>
+                <div
+                    className="flex items-center justify-between rounded-[6px] px-4 py-3"
+                    style={{ backgroundColor: "var(--clima-surface)", border: "1px solid var(--clima-border-strong)" }}
+                >
+                    <span className="text-sm" style={{ color: "var(--clima-text-subtle)" }}>
                         Exclusivo do plano Professional
                     </span>
-                    <a
-                        href="/dashboard/plans"
-                        className="text-[var(--gold)] text-xs tracking-widest uppercase hover:underline"
-                    >
+                    <a href="/dashboard/plans" className="text-xs uppercase tracking-widest hover:underline" style={{ color: "var(--clima-accent)" }}>
                         Fazer upgrade →
                     </a>
                 </div>
@@ -95,52 +95,60 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
     return (
         <>
             <div className="flex flex-col gap-3">
-                <label className={LABEL_CLASS}>Funcionários</label>
+                <label className={LABEL_CLASS} style={{ color: "var(--clima-text-muted)" }}>Funcionários</label>
 
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row">
                     <input
                         type="text"
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                         placeholder="Nome do funcionário"
-                        className="bg-[var(--surface-low)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-3 xl:py-3.5 text-sm xl:text-base outline-none focus:border-[var(--gold)] placeholder:text-[var(--on-surface-dim)] transition-colors flex-1 rounded-lg"
+                        className="flex-1 rounded-[6px] px-4 py-3 text-[15px] outline-none transition-colors"
+                        style={{ backgroundColor: "var(--clima-surface)", border: "1px solid var(--clima-border-strong)", color: "var(--clima-text)" }}
                     />
                     <button
                         type="button"
                         onClick={handleCreate}
                         disabled={loading || !newName.trim()}
-                        className="btn-primary px-4 py-3 flex items-center justify-center gap-2 disabled:opacity-50 rounded-lg shrink-0"
+                        className="btn-profile-save flex shrink-0 items-center justify-center gap-2 disabled:opacity-50"
                     >
-                        <UserPlus size={15} />
+                        <UserPlus size={14} />
                         <span>{loading ? "..." : "Adicionar"}</span>
                     </button>
                 </div>
 
-                {error && <p className="text-red-400 text-xs">{error}</p>}
+                {error && <p className="text-xs text-red-500">{error}</p>}
 
                 {employees.length > 0 && (
                     <div className="flex flex-col gap-2">
                         {employees.map((employee) => (
                             <div
                                 key={employee.id}
-                                className="bg-[var(--surface-low)] border border-[var(--outline-variant)] rounded-lg px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between"
+                                className="flex flex-col gap-3 rounded-[6px] px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                                style={{ backgroundColor: "var(--clima-surface)", border: "1px solid var(--clima-border)" }}
                             >
-                                <div className="flex items-center gap-3 min-w-0">
-                                    <div className="w-8 h-8 rounded-full bg-[var(--gold-ghost)] border border-[var(--outline-variant)] flex items-center justify-center shrink-0">
-                                        <span className="text-[var(--gold)] text-xs font-semibold">
+                                <div className="flex min-w-0 items-center gap-3">
+                                    <div
+                                        className="flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full"
+                                        style={{ backgroundColor: "var(--clima-accent-soft)" }}
+                                    >
+                                        <span className="font-serif" style={{ fontSize: "14px", color: "var(--clima-accent)" }}>
                                             {employee.name.charAt(0).toUpperCase()}
                                         </span>
                                     </div>
-                                    <span className="text-[var(--on-surface)] text-sm xl:text-base truncate">
+                                    <span className="truncate text-[14.5px]" style={{ color: "var(--clima-text)" }}>
                                         {employee.name}
                                     </span>
                                 </div>
 
-                                <div className="flex items-center gap-3 shrink-0">
+                                <div className="flex shrink-0 items-center gap-3">
                                     <button
                                         type="button"
                                         onClick={() => openTimesModal(employee)}
-                                        className="flex items-center gap-1.5 text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors text-xs xl:text-sm cursor-pointer"
+                                        className="flex cursor-pointer items-center gap-1.5 rounded-[4px] px-2 py-1 text-[13px] transition-colors"
+                                        style={{ color: "var(--clima-text-muted)" }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "var(--clima-surface-2)")}
+                                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
                                     >
                                         <Clock size={13} />
                                         <span className="whitespace-nowrap">
@@ -156,7 +164,10 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                                         onClick={() => handleDelete(employee.id)}
                                         disabled={deletingId === employee.id}
                                         aria-label={`Excluir funcionário ${employee.name}`}
-                                        className="text-[var(--on-surface-dim)] hover:text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
+                                        className="cursor-pointer transition-colors disabled:opacity-50"
+                                        style={{ color: "var(--clima-text-subtle)" }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--clima-accent)")}
+                                        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--clima-text-subtle)")}
                                     >
                                         <Trash2 size={14} aria-hidden="true" />
                                     </button>
@@ -167,86 +178,21 @@ export function EmployeesSection({ employees, isProfessional }: EmployeesSection
                 )}
 
                 {employees.length === 0 && (
-                    <p className="text-[var(--on-surface-dim)] text-xs text-center py-4">
+                    <p className="py-4 text-center text-xs" style={{ color: "var(--clima-text-subtle)" }}>
                         Nenhum funcionário cadastrado ainda.
                     </p>
                 )}
             </div>
 
             {timesModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div
-                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-                        onClick={() => setTimesModal(null)}
-                    />
-
-                    <div
-                        role="dialog"
-                        aria-modal="true"
-                        aria-labelledby="employee-times-title"
-                        className="relative bg-[var(--surface-low)] border border-[var(--outline-variant)] w-full max-w-lg mx-4 z-10 rounded-xl overflow-hidden"
-                    >
-                        <div className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--gold)]" />
-
-                        <div className="flex items-start justify-between p-6 pb-4">
-                            <div>
-                                <h2 id="employee-times-title" className="text-2xl font-serif font-bold text-[var(--on-surface)]">
-                                    Horários — {timesModal.name}
-                                </h2>
-                                <p className="text-[var(--on-surface-dim)] text-xs tracking-widest uppercase mt-1">
-                                    Selecione os horários de atendimento
-                                </p>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => setTimesModal(null)}
-                                aria-label="Fechar modal"
-                                className="text-[var(--on-surface-dim)] hover:text-[var(--gold)] transition-colors cursor-pointer mt-1"
-                            >
-                                <X size={18} aria-hidden="true" />
-                            </button>
-                        </div>
-
-                        <div className="px-6 pb-6">
-                            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                                {ALL_TIMES.map((time) => {
-                                    const isSelected = selectedTimes.includes(time);
-                                    return (
-                                        <button
-                                            key={time}
-                                            type="button"
-                                            onClick={() => toggleTime(time)}
-                                            className={`py-2.5 text-xs tracking-wide border transition-colors cursor-pointer rounded-lg ${
-                                                isSelected
-                                                    ? "border-[var(--gold)] bg-[var(--gold-ghost)] text-[var(--gold)]"
-                                                    : "border-[var(--outline)] text-[var(--on-surface-dim)] hover:border-[var(--gold)] hover:text-[var(--on-surface-variant)]"
-                                            }`}
-                                        >
-                                            {time}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        <div className="border-t border-[var(--outline)] px-6 py-4 flex items-center justify-between">
-                            <div className="flex items-center gap-2 text-[var(--on-surface-dim)]">
-                                <Clock size={13} />
-                                <span className="text-xs">
-                                    {selectedTimes.length} {pluralize(selectedTimes.length, "horário selecionado", "horários selecionados")}
-                                </span>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={handleSaveTimes}
-                                disabled={savingTimes}
-                                className="btn-primary px-6 py-2.5 cursor-pointer rounded-lg disabled:opacity-50"
-                            >
-                                {savingTimes ? "Salvando..." : "Confirmar"}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <TimePickerModal
+                    title={`Horários — ${timesModal.name}`}
+                    selectedTimes={selectedTimes}
+                    savingTimes={savingTimes}
+                    onToggleTime={toggleTime}
+                    onSave={handleSaveTimes}
+                    onClose={() => setTimesModal(null)}
+                />
             )}
         </>
     );

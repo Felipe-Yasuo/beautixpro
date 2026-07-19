@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import {
     CalendarDays,
@@ -13,8 +11,6 @@ import {
     BarChart2,
     CreditCard,
     LogOut,
-    ChevronLeft,
-    ChevronRight,
     Menu,
 } from "lucide-react";
 
@@ -28,65 +24,77 @@ interface SidebarProps {
 }
 
 const NAV_LINKS = [
-    { href: "/dashboard", label: "Agendamentos", icon: CalendarDays, group: "PAINEL" },
-    { href: "/dashboard/services", label: "Serviços", icon: Scissors, group: "PAINEL" },
-    { href: "/dashboard/profile", label: "Meu perfil", icon: User, group: "CONFIGURAÇÕES" },
-    { href: "/dashboard/plans", label: "Planos", icon: CreditCard, group: "CONFIGURAÇÕES" },
-    { href: "/dashboard/reports", label: "Relatórios", icon: BarChart2, group: "CONFIGURAÇÕES" },
+    { href: "/dashboard", label: "Agendamentos", icon: CalendarDays, group: "Painel" },
+    { href: "/dashboard/services", label: "Serviços", icon: Scissors, group: "Painel" },
+    { href: "/dashboard/profile", label: "Meu perfil", icon: User, group: "Configurações" },
+    { href: "/dashboard/plans", label: "Planos", icon: CreditCard, group: "Configurações" },
+    { href: "/dashboard/reports", label: "Relatórios", icon: BarChart2, group: "Configurações" },
 ] as const;
 
-const NAV_GROUPS = ["PAINEL", "CONFIGURAÇÕES"] as const;
+const NAV_GROUPS = ["Painel", "Configurações"] as const;
 
 function SidebarContent({
-    collapsed,
     pathname,
     user,
 }: {
-    collapsed?: boolean;
     pathname: string;
     user: SidebarProps["user"];
 }) {
-    return (
-        <div className="flex flex-col flex-1 h-full min-h-0">
-            <div className="p-4 mb-4">
-                {collapsed ? (
-                    <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center text-primary-foreground font-bold text-sm">
-                        B
-                    </div>
-                ) : (
-                    <Image
-                        src="/logo.png"
-                        alt="BeautixPro"
-                        width={160}
-                        height={48}
-                        className="object-contain w-32.5 xl:w-40"
-                    />
-                )}
-            </div>
+    const initial = user.name?.charAt(0).toUpperCase() ?? "?";
 
-            <nav className="flex flex-col gap-6 flex-1 px-2">
+    return (
+        <div className="flex h-full min-h-0 flex-1 flex-col">
+            {/* Logo */}
+            <Link
+                href="/dashboard"
+                className="flex items-center gap-[11px] px-3 pb-[30px]"
+            >
+                <span
+                    className="h-[9px] w-[9px] shrink-0 rounded-[2px]"
+                    style={{ backgroundColor: "var(--gold)" }}
+                />
+                <span
+                    className="font-serif"
+                    style={{ fontSize: "23px", letterSpacing: "-0.01em" }}
+                >
+                    <span className="text-on-surface">Beautix</span>
+                    <span className="text-gold">Pro</span>
+                </span>
+            </Link>
+
+            {/* Nav */}
+            <nav className="flex flex-1 flex-col gap-6 px-2">
                 {NAV_GROUPS.map((group) => {
                     const groupLinks = NAV_LINKS.filter((l) => l.group === group);
                     return (
                         <div key={group} className="flex flex-col gap-1">
-                            {!collapsed && (
-                                <p className="text-muted-foreground text-[10px] xl:text-xs tracking-widest uppercase px-2 mb-1">
-                                    {group}
-                                </p>
-                            )}
+                            <p
+                                className="mb-1 px-3 font-semibold uppercase text-on-surface-dim"
+                                style={{ fontSize: "10px", letterSpacing: "0.18em" }}
+                            >
+                                {group}
+                            </p>
                             {groupLinks.map(({ href, label, icon: Icon }) => {
                                 const isActive = pathname === href;
                                 return (
                                     <Link
                                         key={href}
                                         href={href}
-                                        className={`flex items-center gap-3 px-3 py-2.5 xl:py-3 rounded-sm text-sm xl:text-base transition-colors ${isActive
-                                                ? "bg-primary text-primary-foreground"
-                                                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                                            }`}
+                                        className="flex items-center gap-[13px] rounded-[4px] px-3 py-3 text-sm transition-colors"
+                                        style={{
+                                            backgroundColor: isActive ? "var(--gold-ghost)" : "transparent",
+                                            color: isActive ? "var(--gold)" : "var(--on-surface-variant)",
+                                            fontWeight: isActive ? 600 : 500,
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (!isActive) e.currentTarget.style.backgroundColor = "var(--surface-high)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            if (!isActive) e.currentTarget.style.backgroundColor = "transparent";
+                                        }}
                                     >
-                                        <Icon size={16} className="flex-shrink-0" />
-                                        {!collapsed && label}
+                                        <Icon size={17} strokeWidth={1.7} className="shrink-0" />
+                                        {label}
                                     </Link>
                                 );
                             })}
@@ -95,30 +103,35 @@ function SidebarContent({
                 })}
             </nav>
 
-            <div className="border-t border-border p-4 flex flex-col gap-3">
-                {!collapsed && (
-                    <div className="flex items-center gap-3">
-                        <div className="relative w-8 h-8 flex-shrink-0">
-                            <Image
-                                src={user.image ?? "/foto.webp"}
-                                alt={user.name ?? "Usuário"}
-                                fill
-                                className="object-cover rounded-full"
-                            />
-                        </div>
-                        <div className="flex flex-col overflow-hidden">
-                            <p className="text-foreground text-xs xl:text-sm font-medium truncate">{user.name}</p>
-                            <p className="text-muted-foreground text-[10px] xl:text-xs truncate">{user.email}</p>
-                        </div>
+            {/* Rodapé */}
+            <div
+                className="mt-auto flex flex-col gap-3 pt-[22px]"
+                style={{ borderTop: "1px solid var(--outline-variant)" }}
+            >
+                <div className="flex items-center gap-3 px-1">
+                    <div
+                        className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full font-serif text-white"
+                        style={{ backgroundColor: "var(--gold)", fontSize: "17px" }}
+                    >
+                        {initial}
                     </div>
-                )}
+                    <div className="flex min-w-0 flex-col">
+                        <p className="truncate text-sm font-semibold text-on-surface">
+                            {user.name}
+                        </p>
+                        <p className="truncate text-xs text-on-surface-variant">
+                            {user.email}
+                        </p>
+                    </div>
+                </div>
                 <button
                     onClick={() => signOut({ callbackUrl: "/login" })}
                     aria-label="Sair da conta"
-                    className={`flex items-center gap-3 text-muted-foreground hover:text-destructive text-sm xl:text-base transition-colors cursor-pointer ${collapsed ? "justify-center" : ""}`}
+                    className="flex cursor-pointer items-center gap-[13px] rounded-[4px] px-3 py-2 text-on-surface-variant transition-colors hover:bg-surface-high hover:text-on-surface"
+                    style={{ fontSize: "13.5px" }}
                 >
                     <LogOut size={16} aria-hidden="true" />
-                    {!collapsed && <span>Sair</span>}
+                    <span>Sair</span>
                 </button>
             </div>
         </div>
@@ -127,19 +140,23 @@ function SidebarContent({
 
 export function Sidebar({ user, mobileOnly }: SidebarProps) {
     const pathname = usePathname();
-    const [collapsed, setCollapsed] = useState(false);
 
     if (mobileOnly) {
         return (
             <Sheet>
                 <SheetTrigger asChild>
-                    <button aria-label="Abrir menu" className="text-foreground cursor-pointer">
+                    <button aria-label="Abrir menu" className="cursor-pointer text-on-surface">
                         <Menu size={20} aria-hidden="true" />
                     </button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-64 p-0 bg-card border-border flex flex-col">
+                <SheetContent
+                    side="left"
+                    className="flex w-64 flex-col border-outline-variant bg-surface-lowest p-0"
+                >
                     <SheetTitle className="sr-only">Menu</SheetTitle>
-                    <SidebarContent pathname={pathname} user={user} />
+                    <div className="flex-1 p-5">
+                        <SidebarContent pathname={pathname} user={user} />
+                    </div>
                 </SheetContent>
             </Sheet>
         );
@@ -147,17 +164,13 @@ export function Sidebar({ user, mobileOnly }: SidebarProps) {
 
     return (
         <aside
-            className={`hidden md:flex flex-col shrink-0 border-r border-border sticky top-0 h-screen transition-all duration-300 ${collapsed ? "w-16" : "w-94"
-                }`}
+            className="sticky top-0 hidden h-screen w-[264px] shrink-0 flex-col p-[28px_20px] min-[761px]:flex"
+            style={{
+                backgroundColor: "var(--surface-lowest)",
+                borderRight: "1px solid var(--outline-variant)",
+            }}
         >
-            <button
-                onClick={() => setCollapsed(!collapsed)}
-                aria-label={collapsed ? "Expandir menu lateral" : "Recolher menu lateral"}
-                className="absolute -right-3 top-6 bg-card border border-border rounded-full w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer z-10"
-            >
-                {collapsed ? <ChevronRight size={12} aria-hidden="true" /> : <ChevronLeft size={12} aria-hidden="true" />}
-            </button>
-            <SidebarContent collapsed={collapsed} pathname={pathname} user={user} />
+            <SidebarContent pathname={pathname} user={user} />
         </aside>
     );
 }

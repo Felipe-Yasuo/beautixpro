@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { CategoryStrip } from "./category-strip";
 
 export function Hero() {
     return (
@@ -129,6 +130,7 @@ export function Hero() {
                     </div>
                 </div>
             </div>
+            <CategoryStrip />
         </section>
     );
 }

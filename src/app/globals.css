@@ -433,3 +433,12 @@
   background-color: var(--gold);
   color: #fff;
 }
+
+.footer-link {
+  color: rgba(246, 237, 227, 0.75);
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: #f6ede3;
+}

@@ -15,17 +15,23 @@ export async function SubscriptionDetail() {
     const planName = subscription.plan === "PROFESSIONAL" ? "Professional" : "Basic";
 
     return (
-        <div className="bg-[#141414] border border-[#c9a84c33] rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:justify-between">
-            <div className="flex items-center gap-4 min-w-0">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#1f1a0e] border border-[#c9a84c33] rounded-lg flex items-center justify-center shrink-0">
-                    <span className="text-[#c9a84c] text-lg">✦</span>
+        <div
+            className="flex flex-col gap-4 rounded-[10px] p-5 sm:flex-row sm:items-center sm:justify-between"
+            style={{ backgroundColor: "var(--clima-surface)", border: "1px solid var(--clima-border)" }}
+        >
+            <div className="flex min-w-0 items-center gap-4">
+                <div
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px]"
+                    style={{ backgroundColor: "var(--clima-accent-soft)" }}
+                >
+                    <span style={{ color: "var(--clima-accent)" }}>★</span>
                 </div>
                 <div className="min-w-0">
-                    <p className="text-white text-sm xl:text-base">
-                        Seu Plano:{" "}
-                        <span className="font-bold text-[#c9a84c]">{planName}</span>
+                    <p className="text-sm" style={{ color: "var(--clima-text)" }}>
+                        Seu plano:{" "}
+                        <span className="font-semibold" style={{ color: "var(--clima-accent)" }}>{planName}</span>
                     </p>
-                    <p className="text-[#ffffff40] text-xs xl:text-sm mt-0.5 truncate">
+                    <p className="mt-0.5 truncate text-xs" style={{ color: "var(--clima-text-muted)" }}>
                         {subscription.status === "active"
                             ? "Sua assinatura está ativa e renova automaticamente."
                             : `Status: ${subscription.status}`}

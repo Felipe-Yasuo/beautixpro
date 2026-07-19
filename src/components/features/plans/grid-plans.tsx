@@ -1,104 +1,118 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { SubscriptionButton } from "./subscription-button";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
 
-const plans = [
-    {
-        name: "Basic",
-        label: "Essencial",
-        priceDisplay: "29,90",
-        period: "/mês",
-        priceId: process.env.STRIPE_BASIC_PRICE_ID!,
-        features: [
-            "Serviços limitados até 10 serviços",
-            "Não tem acesso aos relatórios do salão",
-            "Não é possivel registrar outros funcionários",
-            "Menos destaque na landing page",
-        ],
-    },
-    {
-        name: "Professional",
-        label: "Recomendado",
-        priceDisplay: "59,90",
-        period: "/mês",
-        priceId: process.env.STRIPE_PROFESSIONAL_PRICE_ID!,
-        features: [
-            "Serviços ilimitados",
-            "Lembretes automáticos via WhatsApp",
-            "Pode registrar outros funcionários",
-            { text: "Suporte prioritário 24/7", bold: true },
-            "Acesso aos relatórios do salão",
-        ],
-    },
-];
+type Feature = { text: string; positive: boolean; bold?: boolean };
+
+const plans: {
+    name: string;
+    label: string;
+    priceDisplay: string;
+    period: string;
+    priceId: string;
+    features: Feature[];
+}[] = [
+        {
+            name: "Basic",
+            label: "Essencial",
+            priceDisplay: "29,90",
+            period: "/mês",
+            priceId: process.env.STRIPE_BASIC_PRICE_ID!,
+            features: [
+                { text: "Até 10 serviços cadastrados", positive: true },
+                { text: "Sem acesso aos relatórios", positive: false },
+                { text: "Sem registro de funcionários", positive: false },
+                { text: "Menos destaque na vitrine", positive: false },
+            ],
+        },
+        {
+            name: "Professional",
+            label: "Recomendado",
+            priceDisplay: "59,90",
+            period: "/mês",
+            priceId: process.env.STRIPE_PROFESSIONAL_PRICE_ID!,
+            features: [
+                { text: "Serviços ilimitados", positive: true },
+                { text: "Lembretes automáticos via WhatsApp", positive: true },
+                { text: "Múltiplos funcionários", positive: true },
+                { text: "Suporte prioritário 24/7", positive: true, bold: true },
+                { text: "Acesso aos relatórios do salão", positive: true },
+            ],
+        },
+    ];
 
 export async function GridPlans() {
     const session = await auth();
 
     const subscription = session?.user?.id
-        ? await prisma.subscription.findUnique({
-            where: { userId: session.user.id },
-        })
+        ? await prisma.subscription.findUnique({ where: { userId: session.user.id } })
         : null;
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {plans.map((plan) => {
-                const isCurrentPlan =
-                    subscription?.plan === plan.name.toUpperCase();
+                const isCurrentPlan = subscription?.plan === plan.name.toUpperCase();
                 const isPro = plan.name === "Professional";
 
                 return (
                     <div
                         key={plan.name}
-                        className={`relative bg-[var(--surface-low)] rounded-xl flex flex-col gap-5 sm:gap-6 p-5 sm:p-8 border transition-colors ${isCurrentPlan
-                            ? "border-[var(--gold)]"
-                            : isPro
-                                ? "border-[#c9a84c55] hover:border-[#c9a84c88]"
-                                : "border-[var(--outline)] hover:border-[var(--outline-variant)]"
-                            }`}
+                        className="relative flex flex-col gap-6 rounded-[10px] p-8"
+                        style={{
+                            backgroundColor: "var(--clima-surface)",
+                            border: `1px solid ${isCurrentPlan ? "var(--clima-accent)" : "var(--clima-border)"}`,
+                        }}
                     >
                         {isCurrentPlan && (
-                            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-[#c9a84c] text-black text-[9px] sm:text-[10px] tracking-widest uppercase font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                                <span>✦</span>
-                                Plano Atual
+                            <div
+                                className="absolute top-4 right-4 flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-white"
+                                style={{ backgroundColor: "var(--clima-accent)" }}
+                            >
+                                <span>★</span>
+                                Plano atual
                             </div>
                         )}
 
                         <div>
-                            <p className="text-[var(--on-surface-dim)] text-[10px] xl:text-xs tracking-widest uppercase mb-2">
+                            <p
+                                className="mb-2 text-[10px] uppercase tracking-widest"
+                                style={{ color: isPro ? "var(--clima-accent)" : "var(--clima-text-muted)" }}
+                            >
                                 {plan.label}
                             </p>
-                            <h2 className={`text-3xl sm:text-4xl xl:text-5xl font-serif font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
+                            <h2 className="font-serif text-4xl font-normal" style={{ color: "var(--clima-text)" }}>
                                 {plan.name}
                             </h2>
                         </div>
 
                         <div className="flex items-baseline gap-1">
-                            <span className="text-[var(--on-surface-variant)] text-sm xl:text-base">R$</span>
-                            <span className={`text-4xl sm:text-5xl xl:text-6xl font-bold ${isPro ? "text-[var(--gold)]" : "text-[var(--on-surface)]"}`}>
+                            <span className="text-sm" style={{ color: "var(--clima-text-muted)" }}>R$</span>
+                            <span className="font-serif text-5xl" style={{ color: "var(--clima-text)" }}>
                                 {plan.priceDisplay}
                             </span>
-                            <span className="text-[var(--on-surface-dim)] text-sm xl:text-base">{plan.period}</span>
+                            <span className="text-sm" style={{ color: "var(--clima-text-muted)" }}>{plan.period}</span>
                         </div>
 
-                        <ul className="flex flex-col gap-3 flex-1">
-                            {plan.features.map((feature, i) => {
-                                const text = typeof feature === "string" ? feature : feature.text;
-                                const bold = typeof feature === "object" && feature.bold;
-                                return (
-                                    <li key={i} className="flex items-center gap-3">
-                                        <CheckCircle
-                                            size={16}
-                                            className="text-[var(--gold)] shrink-0"
-                                        />
-                                        <span className={`text-sm xl:text-base ${bold ? "font-semibold text-[var(--on-surface)]" : "text-[var(--on-surface-variant)]"}`}>
-                                            {text}
-                                        </span>
-                                    </li>
-                                );
-                            })}
+                        <ul className="flex flex-1 flex-col gap-3">
+                            {plan.features.map((feature, i) => (
+                                <li key={i} className="flex items-center gap-3">
+                                    {feature.positive ? (
+                                        <CheckCircle2 size={16} className="shrink-0" style={{ color: "var(--clima-accent)" }} />
+                                    ) : (
+                                        <XCircle size={16} className="shrink-0" style={{ color: "var(--clima-text-subtle)" }} />
+                                    )}
+                                    <span
+                                        className="text-sm"
+                                        style={{
+                                            color: feature.positive ? "var(--clima-text)" : "var(--clima-text-subtle)",
+                                            fontWeight: feature.bold ? 600 : 400,
+                                        }}
+                                    >
+                                        {feature.text}
+                                    </span>
+                                </li>
+                            ))}
                         </ul>
 
                         <SubscriptionButton

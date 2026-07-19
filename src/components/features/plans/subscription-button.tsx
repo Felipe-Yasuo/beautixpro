@@ -31,20 +31,34 @@ export function SubscriptionButton({
         setLoading(false);
     }
 
-    const label = loading
-        ? "Aguarde..."
-        : isCurrentPlan
-            ? "Gerenciar Plano"
-            : "Assinar Agora";
+    const label = loading ? "Aguarde..." : isCurrentPlan ? "Gerenciar plano" : "Assinar agora";
 
     return (
         <button
             onClick={handleClick}
             disabled={loading}
-            className={`w-full py-3.5 text-xs tracking-widest uppercase font-semibold transition-colors disabled:opacity-50 cursor-pointer rounded-lg ${isCurrentPlan || isPro
-                ? "bg-[var(--gold)] text-black hover:bg-[var(--gold-hover)]"
-                : "border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:border-[var(--gold)] hover:text-[var(--gold)]"
-                }`}
+            className="w-full cursor-pointer rounded-[6px] py-3.5 text-xs font-semibold uppercase tracking-widest transition-colors disabled:opacity-50"
+            style={
+                isCurrentPlan || isPro
+                    ? { backgroundColor: "var(--clima-accent)", color: "#fff" }
+                    : { border: "1px solid var(--clima-border-strong)", color: "var(--clima-text-muted)" }
+            }
+            onMouseEnter={(e) => {
+                if (isCurrentPlan || isPro) {
+                    e.currentTarget.style.backgroundColor = "var(--clima-accent-hover)";
+                } else {
+                    e.currentTarget.style.borderColor = "var(--clima-accent)";
+                    e.currentTarget.style.color = "var(--clima-accent)";
+                }
+            }}
+            onMouseLeave={(e) => {
+                if (isCurrentPlan || isPro) {
+                    e.currentTarget.style.backgroundColor = "var(--clima-accent)";
+                } else {
+                    e.currentTarget.style.borderColor = "var(--clima-border-strong)";
+                    e.currentTarget.style.color = "var(--clima-text-muted)";
+                }
+            }}
         >
             {label}
         </button>

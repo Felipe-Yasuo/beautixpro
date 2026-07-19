@@ -12,14 +12,22 @@ export function PortalButton() {
         if (result?.url) window.location.href = result.url;
         setLoading(false);
     }
-
     return (
         <button
             onClick={handleClick}
             disabled={loading}
-            className="border border-[#c9a84c44] text-[#c9a84c] text-[10px] tracking-widest uppercase px-4 py-2.5 hover:bg-[#c9a84c15] transition-colors cursor-pointer disabled:opacity-50 rounded-lg shrink-0"
+            className="shrink-0 cursor-pointer rounded-[6px] px-4 py-2.5 text-[10px] uppercase tracking-widest transition-colors disabled:opacity-50"
+            style={{ border: "1px solid var(--clima-border-strong)", color: "var(--clima-text-muted)" }}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "var(--clima-accent)";
+                e.currentTarget.style.color = "var(--clima-accent)";
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--clima-border-strong)";
+                e.currentTarget.style.color = "var(--clima-text-muted)";
+            }}
         >
-            {loading ? "Abrindo..." : "Visualizar Recibos"}
+            {loading ? "Abrindo..." : "Visualizar recibos"}
         </button>
     );
 }

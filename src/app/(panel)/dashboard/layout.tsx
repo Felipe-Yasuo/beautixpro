@@ -14,19 +14,18 @@ export default async function DashboardLayout({
     }
 
     return (
-        <div className="flex min-h-screen bg-background">
+        <div className="flex min-h-screen bg-surface-lowest">
             <Sidebar user={session.user} />
 
-            <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-                {/* Header mobile */}
-                <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-border">
+            <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+                <header className="flex items-center gap-3 border-b border-outline-variant px-4 py-3 min-[761px]:hidden">
                     <Sidebar user={session.user} mobileOnly />
-                    <span className="text-foreground text-sm font-medium">
+                    <span className="text-sm font-medium text-on-surface">
                         Menu BeautixPro
                     </span>
                 </header>
 
-                <main className="flex-1 overflow-auto p-4 sm:p-6 md:p-10">
+                <main className="flex-1 overflow-auto">
                     {children}
                 </main>
             </div>

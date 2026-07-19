@@ -396,3 +396,40 @@
     box-shadow: 0 0 20px -5px rgb(192 106 119 / 0.3);
   }
 }
+
+.cta-btn-solid {
+  display: inline-block;
+  background-color: var(--gold);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 17px 34px;
+  border-radius: 3px;
+  box-shadow: 0 10px 25px -8px rgb(192 106 119 / 0.4);
+  transition: background-color 0.2s;
+}
+
+.cta-btn-solid:hover {
+  background-color: var(--gold-container);
+}
+
+.cta-btn-outline {
+  display: inline-block;
+  background-color: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 16px 30px;
+  border-radius: 3px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.cta-btn-outline:hover {
+  background-color: var(--gold);
+  color: #fff;
+}

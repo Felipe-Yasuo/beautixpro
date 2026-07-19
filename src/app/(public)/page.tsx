@@ -2,12 +2,12 @@ import { Header } from "@/components/features/home/header";
 import { Hero } from "@/components/features/home/hero";
 import { HowItWorks } from "@/components/features/home/how-it-works";
 import { Professionals } from "@/components/features/home/professionals";
-import { Manifesto } from "@/components/features/home/manifesto";
 import { Footer } from "@/components/features/home/footer";
 import { ForProfessionals } from "@/components/features/home/for-professionals";
 import { Plans } from "@/components/features/home/plans";
 import { Testimonials } from "@/components/features/home/testimonial";
 import { Faq } from "@/components/features/home/faq";
+import { FinalCta } from "@/components/features/home/cta";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +32,7 @@ export default async function Home() {
                 <Plans />
                 <Testimonials />
                 <Faq />
-                <Manifesto />
+                <FinalCta />
             </main>
 
             <Footer />

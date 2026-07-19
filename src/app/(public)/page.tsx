@@ -7,6 +7,7 @@ import { Footer } from "@/components/features/home/footer";
 import { ForProfessionals } from "@/components/features/home/for-professionals";
 import { Plans } from "@/components/features/home/plans";
 import { Testimonials } from "@/components/features/home/testimonial";
+import { Faq } from "@/components/features/home/faq";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,7 @@ export default async function Home() {
                 <ForProfessionals />
                 <Plans />
                 <Testimonials />
+                <Faq />
                 <Manifesto />
             </main>
 

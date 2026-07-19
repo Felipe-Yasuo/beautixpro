@@ -2,124 +2,105 @@ import Image from "next/image";
 import Link from "next/link";
 import { getProfessionals } from "@/lib/services/get-professionals";
 
+const COLUMN_OFFSET = ["", "lg:mt-14", "lg:mt-5"]; // 0 / 56px / 20px
+
 export async function Professionals() {
-    const professionals = await getProfessionals();
+    const allProfessionals = await getProfessionals();
+    const professionals = allProfessionals.slice(0, 3);
 
     return (
         <section
             id="atelies"
-            className="relative border-t border-outline-variant bg-surface-lowest"
+            className="relative mx-auto max-w-[1280px] pb-24 lg:pb-32"
+            style={{ paddingTop: "clamp(72px, 9vw, 120px)" }}
         >
-            <div className="mx-auto max-w-7xl px-6 py-20 lg:px-12 lg:py-28">
-
-                <header className="mb-16 grid grid-cols-1 items-end gap-8 lg:grid-cols-12">
-                    <div className="lg:col-span-8">
-                        <div className="flex items-center gap-3">
-                            <span className="h-px w-8 bg-gold" />
-                            <span className="label-overline text-gold">
-                                Salões da semana
-                            </span>
-                        </div>
-                        <h2 className="mt-6 font-serif text-5xl italic leading-tight text-on-surface lg:text-6xl">
-                            Nossa
-                            <br />
-                            <span className="text-gradient-gold not-italic font-bold">
-                                seleção
-                            </span>
-                            .
-                        </h2>
-                    </div>
-                    <p className="max-w-sm font-serif text-base italic text-on-surface-variant lg:col-span-4 lg:text-right">
-                        Estúdios e profissionais escolhidos pela qualidade do trabalho
-                        e do atendimento.
-                    </p>
-                </header>
+            <div className="px-12">
+                <div className="mx-auto max-w-[480px] text-center">
+                    <span className="mb-4 block text-[11px] uppercase tracking-[0.42em] text-gold">
+                        Salões da semana
+                    </span>
+                    <h2
+                        className="font-serif font-normal leading-tight text-on-surface"
+                        style={{ fontSize: "clamp(30px, 3.8vw, 50px)" }}
+                    >
+                        Profissionais selecionados para realçar a sua beleza única.
+                    </h2>
+                </div>
 
                 {professionals.length === 0 ? (
-                    <div className="border border-outline-variant px-8 py-20 text-center">
+                    <div className="mt-16 border border-outline-variant px-8 py-20 text-center">
                         <p className="label-overline mb-4">Em breve</p>
-                        <h3 className="font-serif text-3xl italic text-on-surface">
-                            Nossa seleção está
-                            <br />
-                            em formação.
+                        <h3 className="font-serif text-3xl text-on-surface">
+                            Nossa seleção está em formação.
                         </h3>
                         <p className="mt-6 text-sm text-on-surface-variant">
                             Volte em breve para conhecer os primeiros salões.
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
-                        {professionals.map((pro) => {
+                    <div className="mt-16 grid grid-cols-1 items-start gap-9 sm:grid-cols-2 lg:grid-cols-3">
+                        {professionals.map((pro, i) => {
                             const services = pro.employees.flatMap((e) => e.services);
                             const isPremium = pro.subscription?.plan === "PROFESSIONAL";
 
                             return (
                                 <article
                                     key={pro.id}
-                                    className="group flex flex-col"
+                                    className={`group flex flex-col text-left ${COLUMN_OFFSET[i] ?? ""}`}
                                 >
-
-                                    <div className="relative aspect-4/5 w-full overflow-hidden">
-                                        <div className="absolute inset-0 z-20 border border-gold/40 transition-colors duration-300 group-hover:border-gold" />
-                                        <div
-                                            className="absolute -inset-px z-10 border border-gold/15 transition-transform duration-500 group-hover:translate-x-2 group-hover:translate-y-2"
-                                            style={{ transform: "translate(6px, 6px)" }}
-                                        />
+                                    <div className="relative aspect-4/5 w-full overflow-hidden rounded-[4px]">
                                         <Image
                                             src={pro.image || "/foto.webp"}
                                             alt={pro.name ?? "Ateliê"}
                                             fill
-                                            className="object-cover object-top grayscale-15 transition-all duration-500 group-hover:grayscale-0"
+                                            className="object-cover transition-transform duration-[400ms] group-hover:scale-[1.03]"
                                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                         />
-                                        <div className="absolute inset-0 z-10 bg-linear-to-t from-surface-lowest/70 via-transparent to-transparent" />
+                                    </div>
 
+                                    <div className="mt-[18px] flex items-start justify-between gap-3">
+                                        <h3 className="font-serif text-[26px] font-normal text-on-surface">
+                                            {pro.name}
+                                        </h3>
                                         {isPremium && (
-                                            <span className="absolute right-3 top-3 z-30 label-overline bg-surface-lowest/80 px-2 py-1 text-gold backdrop-blur-sm">
-                                                ★ Premium
+                                            <span className="mt-2 shrink-0 text-[10px] font-semibold uppercase tracking-[0.2em] text-gold">
+                                                Premium
                                             </span>
                                         )}
                                     </div>
 
+                                    {pro.address && (
+                                        <p className="mt-1 text-[13px] text-on-surface-dim">
+                                            {pro.address}
+                                        </p>
+                                    )}
 
-                                    <div className="mt-6 flex flex-1 flex-col">
-                                        <h3 className="font-serif text-2xl italic text-on-surface">
-                                            {pro.name}
-                                        </h3>
-                                        {pro.address && (
-                                            <p className="mt-1 font-serif text-sm italic text-on-surface-variant">
-                                                {pro.address}
-                                            </p>
-                                        )}
+                                    {services.length > 0 && (
+                                        <p className="mt-3 text-[14px] leading-[1.6] text-on-surface-variant">
+                                            {services.slice(0, 3).map((s) => s.name).join(" · ")}
+                                        </p>
+                                    )}
 
-                                        {services.length > 0 && (
-                                            <ul className="mt-5 flex flex-col border-t border-outline-variant">
-                                                {services.slice(0, 3).map((service) => (
-                                                    <li
-                                                        key={service.name}
-                                                        className="border-b border-outline-variant py-2 font-serif text-sm text-on-surface"
-                                                    >
-                                                        {service.name}
-                                                    </li>
-                                                ))}
-                                                {services.length > 3 && (
-                                                    <li className="py-2 label-overline text-gold">
-                                                        + {services.length - 3} outros serviços
-                                                    </li>
-                                                )}
-                                            </ul>
-                                        )}
-
-                                        <Link
-                                            href={`/salao/${pro.id}`}
-                                            className="btn-ghost mt-6 text-center"
-                                        >
-                                            Reservar
-                                        </Link>
-                                    </div>
+                                    <Link
+                                        href={`/salao/${pro.id}`}
+                                        className="mt-4 text-[11px] uppercase tracking-[0.18em] text-gold underline underline-offset-4 transition-colors hover:text-gold-container"
+                                    >
+                                        Reservar
+                                    </Link>
                                 </article>
                             );
                         })}
+                    </div>
+                )}
+
+                {professionals.length > 0 && (
+                    <div className="mt-14 flex justify-center">
+                        <Link
+                            href="/saloes"
+                            className="rounded-[3px] border border-gold px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold transition-colors hover:bg-gold-container hover:text-on-gold hover:border-gold-container"
+                        >
+                            Ver todos os salões →
+                        </Link>
                     </div>
                 )}
             </div>

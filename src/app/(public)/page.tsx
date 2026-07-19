@@ -10,7 +10,6 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
     return (
         <div className="relative min-h-screen bg-surface-lowest text-on-surface">
-            {/* Noise overlay para atmosfera */}
             <div
                 className="pointer-events-none fixed inset-0 z-0 opacity-[0.035] mix-blend-overlay"
                 style={{
@@ -23,8 +22,8 @@ export default async function Home() {
 
             <main className="relative z-10 pt-16 lg:pt-20">
                 <Hero />
-                <HowItWorks />
                 <Professionals />
+                <HowItWorks />
                 <Manifesto />
             </main>
 

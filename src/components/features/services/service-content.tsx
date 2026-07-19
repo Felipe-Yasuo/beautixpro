@@ -19,35 +19,14 @@ export async function ServiceContent() {
     const isProfessional = plan === "PROFESSIONAL";
     const limit = SERVICE_LIMITS[plan];
     const atLimit = services.length >= limit;
-    const limitLabel = limit === Infinity ? "∞" : limit;
     const employees = user?.employees ?? [];
 
     return (
-        <div className="flex flex-col gap-6 sm:gap-8">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-                <div>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[var(--on-surface)]">
-                        Serviços
-                    </h1>
-                    <p className="text-[var(--on-surface-variant)] text-sm xl:text-base mt-2 max-w-sm leading-relaxed">
-                        Gerencie o catálogo de luxo do seu ateliê. Defina preços,
-                        durações e a disponibilidade de cada experiência.
-                    </p>
-                </div>
-
-                {limit !== Infinity && (
-                    <span className={`text-xs xl:text-sm tracking-widest uppercase sm:mt-2 ${atLimit ? "text-red-400" : "text-[var(--on-surface-dim)]"}`}>
-                        {services.length}/{limitLabel} serviços
-                    </span>
-                )}
-            </div>
-
-            <ServicesList
-                services={services}
-                employees={employees}
-                isProfessional={isProfessional}
-                atLimit={atLimit}
-            />
-        </div>
+        <ServicesList
+            services={services}
+            employees={employees}
+            isProfessional={isProfessional}
+            atLimit={atLimit}
+        />
     );
 }

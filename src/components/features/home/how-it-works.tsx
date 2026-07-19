@@ -1,47 +1,64 @@
 export function HowItWorks() {
     return (
-        <section
-            id="como-funciona"
-            className="relative border-t border-outline-variant bg-surface-low"
-        >
-            <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold/40 to-transparent" />
-            <div className="mx-auto max-w-7xl px-6 py-20 lg:px-12 lg:py-28">
-                <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-                    <header className="lg:col-span-4">
-                        <div className="flex items-center gap-3">
-                            <span className="h-px w-8 bg-gold" />
-                            <span className="label-overline text-gold">O ritual</span>
-                        </div>
-                        <h2 className="mt-6 font-serif text-4xl italic leading-tight text-on-surface lg:text-5xl">
-                            Como
-                            <br />
-                            <span className="text-gradient-gold not-italic font-bold">
-                                funciona
-                            </span>
-                            .
-                        </h2>
-                        <p className="mt-6 max-w-sm font-serif text-base italic text-on-surface-variant">
-                            Três passos entre o seu desejo e a confirmação do salão.
-                        </p>
-                    </header>
+        <section id="como-funciona" className="relative">
+            {/* Bloco de foto */}
+            <div className="relative h-[420px] w-full overflow-hidden">
+                <img
+                    src="/manicure.png"
+                    alt="Manicure em andamento"
+                    className="absolute inset-0 h-full w-full object-cover"
+                    style={{ filter: "saturate(0.9)" }}
+                />
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        background:
+                            "linear-gradient(180deg, rgba(43,33,27,0.72) 0%, rgba(43,33,27,0.28) 55%, rgba(43,33,27,0.1) 100%)",
+                    }}
+                />
 
-                    <ol className="lg:col-span-8 flex flex-col">
-                        <Step
-                            roman="I"
-                            title="Escolha o salão"
-                            body="Explore os profissionais disponíveis. Veja os serviços, os horários e a localização de cada salão."
-                        />
-                        <Step
-                            roman="II"
-                            title="Reserve seu horário"
-                            body="Preencha um formulário breve com suas informações, escolha o serviço, a data e o horário desejado."
-                        />
-                        <Step
-                            roman="III"
-                            title="Receba a confirmação"
-                            body="O salão analisa sua reserva e confirma em tempo real. Você recebe a notificação assim que aprovado."
-                        />
-                    </ol>
+                <div className="absolute inset-x-0 top-16 text-center">
+                    <span
+                        className="mb-4 block text-[11px] uppercase tracking-[0.42em]"
+                        style={{ color: "rgba(255,248,240,0.85)" }}
+                    >
+                        Como funciona
+                    </span>
+                    <h2
+                        className="mx-auto px-6 font-serif font-normal"
+                        style={{
+                            fontSize: "clamp(30px, 3.8vw, 48px)",
+                            color: "#fff8f0",
+                        }}
+                    >
+                        Três passos, nenhuma ligação.
+                    </h2>
+                </div>
+            </div>
+
+            {/* Card de passos sobreposto */}
+            <div className="relative px-6 pb-24 lg:px-12 lg:pb-32">
+                <div
+                    className="relative z-10 mx-auto grid max-w-[1080px] grid-cols-1 rounded-[4px] bg-[#fffaf3] shadow-2xl sm:grid-cols-3"
+                    style={{ marginTop: "-150px" }}
+                >
+                    <Step
+                        number="01/"
+                        title="Escolha o salão"
+                        text="Explore profissionais, serviços, preços e horários perto de você."
+                    />
+                    <Step
+                        number="02/"
+                        title="Reserve o horário"
+                        text="Serviço, data e horário em menos de um minuto. Sem criar conta."
+                        divider
+                    />
+                    <Step
+                        number="03/"
+                        title="Pronto, confirmado"
+                        text="O salão aprova em tempo real e você recebe o aviso na hora."
+                        divider
+                    />
                 </div>
             </div>
         </section>
@@ -49,27 +66,36 @@ export function HowItWorks() {
 }
 
 function Step({
-    roman,
+    number,
     title,
-    body,
+    text,
+    divider,
 }: {
-    roman: string;
+    number: string;
     title: string;
-    body: string;
+    text: string;
+    divider?: boolean;
 }) {
     return (
-        <li className="flex gap-6 border-t border-outline-variant py-10 first:border-t-0 first:pt-0 lg:gap-10">
-            <span className="font-serif text-3xl italic text-gold/70 lg:text-4xl">
-                {roman}
-            </span>
-            <div className="flex-1">
-                <h3 className="font-serif text-2xl text-on-surface lg:text-3xl">
-                    {title}
-                </h3>
-                <p className="mt-3 max-w-lg text-sm leading-relaxed text-on-surface-variant lg:text-base">
-                    {body}
-                </p>
-            </div>
-        </li>
+        <div
+            className={`px-9 py-11 text-center ${divider ? "sm:border-l" : ""}`}
+            style={divider ? { borderLeft: "1px dashed #d9c3ae" } : undefined}
+        >
+            <p className="font-serif text-gold" style={{ fontSize: "20px" }}>
+                {number}
+            </p>
+            <h3
+                className="mt-2 font-serif font-normal text-on-surface"
+                style={{ fontSize: "23px" }}
+            >
+                {title}
+            </h3>
+            <p
+                className="mx-auto mt-3 max-w-[26ch] text-on-surface-variant"
+                style={{ fontSize: "14px", lineHeight: 1.6 }}
+            >
+                {text}
+            </p>
+        </div>
     );
 }

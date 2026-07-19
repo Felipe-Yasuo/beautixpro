@@ -4,6 +4,7 @@ import { HowItWorks } from "@/components/features/home/how-it-works";
 import { Professionals } from "@/components/features/home/professionals";
 import { Manifesto } from "@/components/features/home/manifesto";
 import { Footer } from "@/components/features/home/footer";
+import { ForProfessionals } from "@/components/features/home/for-professionals";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,7 @@ export default async function Home() {
                 <Hero />
                 <Professionals />
                 <HowItWorks />
+                <ForProfessionals />
                 <Manifesto />
             </main>
 

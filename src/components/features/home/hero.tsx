@@ -3,105 +3,132 @@ import Link from "next/link";
 
 export function Hero() {
     return (
-        <section className="relative">
+        <section
+            className="relative"
+            style={{ paddingTop: "clamp(24px, 4vw, 64px)" }}
+        >
+            <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-12 px-6 pb-20 min-[921px]:grid-cols-[1.05fr_0.95fr] min-[921px]:items-center min-[921px]:gap-16 lg:px-12 lg:pb-28">
+                <div className="relative flex flex-col justify-center">
+                    <svg
+                        className="pointer-events-none absolute z-0"
+                        style={{
+                            left: "-30px",
+                            top: "30px",
+                            width: "150px",
+                            height: "200px",
+                            opacity: 0.35,
+                        }}
+                        viewBox="0 0 150 200"
+                        fill="none"
+                    >
+                        <path
+                            d="M60 10 C30 25 25 45 40 60 C55 75 50 95 30 100"
+                            stroke="#a08265"
+                            strokeWidth="1.2"
+                        />
+                        <circle cx="60" cy="10" r="3" stroke="#a08265" strokeWidth="1.2" />
+                    </svg>
 
-            <div className="relative flex min-h-[75vh] items-end overflow-hidden lg:min-h-[88vh]">
-                <Image
-                    src="/hairdresser-hero.webp"
-                    alt="Ateliê de beleza"
-                    fill
-                    className="object-cover object-top"
-                    priority
-                    sizes="100vw"
-                />
+                    <span className="relative z-10 mb-4 text-[11px] uppercase tracking-[0.42em] text-gold">
+                        Beleza | Agendamentos
+                    </span>
 
-                <div className="absolute inset-0 bg-linear-to-t from-surface-lowest via-surface-lowest/90 to-surface-lowest/20 lg:hidden" />
+                    <h1
+                        className="relative z-10 font-serif font-normal leading-[1.05] tracking-[-0.01em] text-on-surface"
+                        style={{ fontSize: "clamp(44px, 5.6vw, 84px)" }}
+                    >
+                        Sua beleza,
+                        <br />
+                        no <span className="italic text-gold">seu</span> horário.
+                    </h1>
 
-                <div className="absolute inset-0 hidden bg-linear-to-r from-surface-lowest via-surface-lowest/85 to-surface-lowest/10 lg:block" />
+                    <p className="relative z-10 mt-6 max-w-[460px] text-[17px] leading-[1.6] text-on-surface-variant">
+                        Encontre salões e profissionais de beleza com agenda aberta,
+                        reserve em segundos e receba a confirmação na hora.
+                    </p>
 
-                <div className="absolute inset-x-0 top-0 h-32 bg-linear-to-b from-surface-lowest/80 to-transparent" />
+                    <div className="relative z-10 mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
+                        <Link href="#atelies" className="btn-primary text-center">
+                            Agendar agora
+                        </Link>
+                        <Link
+                            href="#como-funciona"
+                            className="btn-ghost text-center"
+                        >
+                            Como funciona
+                        </Link>
+                    </div>
 
-                <div className="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-surface-lowest via-surface-lowest/60 to-transparent" />
-
-                <div
-                    className="pointer-events-none absolute left-0 top-1/2 h-150 w-225 -translate-y-1/2 opacity-40"
-                    style={{
-                        background:
-                            "radial-gradient(ellipse at left center, rgba(201,168,76,0.15) 0%, rgba(201,168,76,0.04) 35%, transparent 70%)",
-                    }}
-                />
-
-                <div className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-12 lg:px-12 lg:pb-32">
-                    <div className="max-w-3xl">
-                        <div className="flex items-center gap-3">
-                            <span className="h-px w-10 bg-gold" />
-                            <span className="label-overline text-gold">
-                                Convite ao agendamento · 2026
-                            </span>
+                    {/* Citação — avatar + aspas + texto itálico */}
+                    <div className="relative z-10 mt-10 flex items-start gap-3">
+                        <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full">
+                            <Image
+                                src="/foto.webp"
+                                alt="Cliente BeautixPro"
+                                fill
+                                className="object-cover"
+                                sizes="44px"
+                            />
                         </div>
-
-                        <h1 className="mt-6 font-serif text-5xl leading-[1.05] tracking-tight text-on-surface sm:text-6xl lg:text-7xl xl:text-8xl">
-                            <span className="italic text-on-surface">Encontre o</span>
-                            <br />
-                            <span className="text-gradient-gold font-bold">salão</span>
-                            <span className="italic text-on-surface"> que</span>
-                            <br />
-                            <span className="italic text-on-surface-variant">entende você.</span>
-                        </h1>
-
-                        <p className="mt-8 max-w-xl font-serif text-base italic text-on-surface-variant sm:text-lg">
-                            Profissionais e salões de beleza,
-                            agendados em segundos, confirmados em tempo real.
-                        </p>
-
-                        <div className="mt-10 flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
-                            <Link href="#atelies" className="btn-primary text-center">
-                                Explorar salões
-                            </Link>
-                            <Link
-                                href="/login"
-                                className="font-serif text-sm italic text-on-surface-variant underline decoration-gold/40 underline-offset-4 transition-colors hover:text-gold sm:ml-2"
+                        <div className="flex gap-1">
+                            <span
+                                className="font-serif text-gold"
+                                style={{ fontSize: "34px", lineHeight: 0.7 }}
                             >
-                                Sou um profissional →
-                            </Link>
+                                &ldquo;
+                            </span>
+                            <p
+                                className="italic text-on-surface-variant"
+                                style={{ fontSize: "16px", lineHeight: 1.55 }}
+                            >
+                                Marquei coloração no caminho do trabalho. Quando
+                                <br />
+                                cheguei em casa, já estava confirmado.
+                            </p>
                         </div>
+                    </div>
+                </div>
 
-                        <p className="mt-16 hidden font-serif text-xs italic tracking-wide text-on-surface-variant lg:block">
-                            — fotografia editorial · BeautixPro Curadoria
-                        </p>
+                <div className="relative min-h-[340px] min-[921px]:min-h-[520px]">
+                    <div
+                        className="pointer-events-none absolute -top-10 -left-10 h-64 w-64 opacity-45"
+                        style={{ background: "#c99a72", borderRadius: "58% 42% 55% 45% / 50% 55% 45% 50%" }}
+                    />
+                    <div
+                        className="pointer-events-none absolute -right-6 -bottom-8 h-40 w-40 opacity-40"
+                        style={{ background: "#cdd3bc", borderRadius: "45% 55% 42% 58% / 55% 45% 55% 45%" }}
+                    />
+                    <div
+                        className="pointer-events-none absolute top-1/4 -right-8 h-24 w-24 opacity-35"
+                        style={{ background: "#c99a72", borderRadius: "50% 50% 40% 60% / 55% 45% 55% 45%" }}
+                    />
+
+                    <div className="absolute inset-0 translate-x-4 translate-y-4 rounded-[2rem_2rem_2rem_5rem] border border-gold/30" />
+
+                    <div className="relative h-full min-h-[340px] w-full min-[921px]:min-h-[520px]">
+                        <div
+                            className="absolute overflow-hidden rounded-[2rem_2rem_2rem_5rem]"
+                            style={{
+                                top: "-40px",
+                                right: "-56px",
+                                bottom: "-20px",
+                                left: "-10px",
+                                width: "calc(100% + 66px)",
+                                height: "calc(100% + 60px)",
+                            }}
+                        >
+                            <Image
+                                src="/hero.png"
+                                alt="Ateliê de beleza"
+                                fill
+                                priority
+                                className="object-cover"
+                                sizes="(max-width: 921px) 100vw, 50vw"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <div className="relative z-10 border-y border-outline-variant bg-surface-low">
-                <div className="mx-auto flex max-w-7xl flex-col items-stretch gap-px bg-outline-variant sm:flex-row">
-                    <Promise label="Curadoria" value="Profissionais selecionados" />
-                    <Promise label="Reserva" value="Agende em 60 segundos" />
-                    <Promise label="Confirmação" value="Resposta em tempo real" accent />
-                </div>
-            </div>
         </section>
-    );
-}
-
-function Promise({
-    label,
-    value,
-    accent,
-}: {
-    label: string;
-    value: string;
-    accent?: boolean;
-}) {
-    return (
-        <div className="flex-1 bg-surface-low px-6 py-8 lg:px-10">
-            <p className="label-overline text-gold">{label}</p>
-            <p
-                className={`mt-2 font-serif text-lg ${accent ? "text-gold italic" : "text-on-surface"
-                    }`}
-            >
-                {value}
-            </p>
-        </div>
     );
 }

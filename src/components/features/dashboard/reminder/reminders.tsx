@@ -6,11 +6,16 @@ export async function Reminders() {
     const reminders = await getReminders();
 
     return (
-        <div className="bg-[var(--surface-low)] border border-[var(--outline)] rounded-xl overflow-hidden">
-            <div className="px-6 py-5 border-b border-[var(--outline)]">
-                <h2 className="text-xl xl:text-2xl font-bold text-foreground">Meus Lembretes</h2>
+        <div
+            className="overflow-hidden rounded-[10px]"
+            style={{ backgroundColor: "var(--clima-surface)", border: "1px solid var(--clima-border)" }}
+        >
+            <div className="px-6 py-5" style={{ borderBottom: "1px solid var(--clima-border)" }}>
+                <h2 className="font-serif font-normal" style={{ fontSize: "22px", color: "var(--clima-text)" }}>
+                    Meus lembretes
+                </h2>
             </div>
-            <div className="p-4 flex flex-col gap-3">
+            <div className="flex flex-col gap-3 p-4">
                 <ReminderForm />
                 <ReminderList reminders={reminders} />
             </div>

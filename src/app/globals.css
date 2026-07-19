@@ -442,3 +442,49 @@
 .footer-link:hover {
   color: #f6ede3;
 }
+
+.btn-login {
+  width: 100%;
+  background-color: var(--gold);
+  color: var(--on-gold);
+  padding: 0.875rem 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+
+.btn-login:hover:not(:disabled) {
+  background-color: var(--gold-container);
+  transform: translateY(-1px);
+}
+
+.btn-login:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: 1px solid var(--outline-variant);
+  color: var(--on-surface);
+  padding: 0.75rem 0;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.btn-google:hover {
+  background-color: var(--surface-high);
+  border-color: var(--outline);
+}

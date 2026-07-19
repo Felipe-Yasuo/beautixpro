@@ -14,13 +14,16 @@ export default async function DashboardLayout({
     }
 
     return (
-        <div className="flex min-h-screen bg-surface-lowest">
+        <div className="flex min-h-screen" style={{ backgroundColor: "var(--bxp-bg)" }}>
             <Sidebar user={session.user} />
 
             <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-                <header className="flex items-center gap-3 border-b border-outline-variant px-4 py-3 min-[761px]:hidden">
+                <header
+                    className="flex items-center gap-3 px-4 py-3 min-[761px]:hidden"
+                    style={{ borderBottom: "1px solid var(--clima-border)" }}
+                >
                     <Sidebar user={session.user} mobileOnly />
-                    <span className="text-sm font-medium text-on-surface">
+                    <span className="text-sm font-medium" style={{ color: "var(--clima-text)" }}>
                         Menu BeautixPro
                     </span>
                 </header>

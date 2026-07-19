@@ -150,6 +150,26 @@
   /* borda padrão — ink sobre paper, sutil */
   --outline-variant: #2b211b14;
   /* ghost border — mais sutil ainda */
+
+  /* ── Dashboard (BeautixPro Panel) ── */
+  --bxp-bg: #f4ebe5;
+
+  --clima-surface: #fffaf3;
+  --clima-surface-2: #f2e4d8;
+
+  --clima-border: rgba(43, 33, 27, 0.1);
+  --clima-border-strong: rgba(43, 33, 27, 0.18);
+
+  --clima-text: #2b211b;
+  --clima-text-muted: #7d6450;
+  --clima-text-subtle: #a08265;
+
+  --clima-accent: #c06a77;
+  --clima-accent-soft: rgba(192, 106, 119, 0.12);
+  --clima-accent-hover: #9a505c;
+
+  --clima-success: #1f8a5b;
+  --clima-pending: #8a7e69;
 }
 
 @layer base {
@@ -487,4 +507,44 @@
 .btn-google:hover {
   background-color: var(--surface-high);
   border-color: var(--outline);
+}
+
+.btn-solid-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--clima-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 6px;
+  box-shadow: 0 6px 16px -6px rgb(192 106 119 / 0.4);
+  transition: background-color 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.btn-solid-sm:hover {
+  background-color: var(--clima-accent-hover);
+  transform: translateY(-1px);
+}
+
+.btn-outline-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--clima-surface);
+  border: 1px solid var(--clima-border-strong);
+  color: var(--clima-text);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 6px;
+  transition: border-color 0.2s;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-outline-sm:hover {
+  border-color: var(--clima-accent);
 }

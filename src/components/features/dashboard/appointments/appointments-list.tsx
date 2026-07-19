@@ -16,7 +16,6 @@ interface AppointmentsListProps {
     isProfessional: boolean;
 }
 
-
 type SlotInfo = { appointment: Appointment; isStart: boolean; totalSlots: number };
 
 function buildSlotMap(appointments: Appointment[]): Record<string, SlotInfo> {
@@ -51,21 +50,24 @@ export function AppointmentsList({
         router.push(`?${params.toString()}`);
     }
 
-    const sortedTimes = [...times].sort(
-        (a, b) => parseTime(a) - parseTime(b)
-    );
-
+    const sortedTimes = [...times].sort((a, b) => parseTime(a) - parseTime(b));
     const slotMap = useMemo(() => buildSlotMap(appointments), [appointments]);
 
     return (
         <div className="flex flex-col">
             {isProfessional && employees.length > 0 && (
-                <div className="px-4 sm:px-6 py-4 border-b border-[var(--outline)]">
+                <div className="px-4 py-4 sm:px-6" style={{ borderBottom: "1px solid var(--clima-border)" }}>
                     <select
                         value={selectedEmployeeId ?? employees[0]?.id}
                         onChange={(e) => handleEmployeeChange(e.target.value)}
                         aria-label="Selecionar funcionário"
-                        className="bg-[var(--surface-high)] border border-[var(--outline-variant)] text-[var(--on-surface)] px-4 py-2.5 text-sm outline-none focus:border-[var(--gold)] transition-colors cursor-pointer rounded-lg"
+                        className="cursor-pointer rounded-[6px] px-4 py-2.5 text-sm outline-none transition-colors"
+                        style={{
+                            backgroundColor: "var(--clima-surface)",
+                            border: "1px solid var(--clima-border-strong)",
+                            color: "var(--clima-text)",
+                            fontWeight: 500,
+                        }}
                     >
                         {employees.map((e) => (
                             <option key={e.id} value={e.id}>
@@ -77,7 +79,7 @@ export function AppointmentsList({
             )}
 
             {sortedTimes.length === 0 ? (
-                <p className="text-muted-foreground text-sm text-center py-10">
+                <p className="py-10 text-center text-sm" style={{ color: "var(--clima-text-muted)" }}>
                     {isProfessional
                         ? "Nenhum horário configurado para este funcionário."
                         : "Nenhum horário configurado. Configure seus horários no perfil."}
@@ -85,56 +87,63 @@ export function AppointmentsList({
             ) : (
                 sortedTimes.map((time, index) => {
                     const slot = slotMap[time];
-
                     if (slot && !slot.isStart) return null;
-
                     const isLast = index === sortedTimes.length - 1;
 
                     return (
                         <div
                             key={time}
-                            className={`flex gap-0 ${!isLast ? "border-b border-[var(--outline)]" : ""}`}
+                            className="grid grid-cols-[96px_1fr]"
+                            style={{ borderBottom: !isLast ? "1px solid var(--clima-border)" : "none" }}
                         >
-                            <div className="w-14 sm:w-20 xl:w-24 shrink-0 flex items-start pt-4 pl-3 sm:pl-6">
-                                <span className="text-muted-foreground text-xs sm:text-sm xl:text-base font-medium">{time}</span>
+                            <div className="flex items-start px-4 py-4 sm:px-6">
+                                <span className="font-serif" style={{ fontSize: "19px", color: "var(--clima-text)" }}>
+                                    {time}
+                                </span>
                             </div>
 
-                            <div className="w-px bg-[var(--outline)] mx-1 sm:mx-2 self-stretch" />
-
-                            <div className="flex-1 py-3 pr-3 sm:pr-4 min-w-0">
+                            <div className="min-w-0 py-3 pr-4 sm:pr-6">
                                 {slot ? (
                                     <div
-                                        className="rounded-lg border border-[var(--outline)] bg-linear-to-r from-[#3a2f0b] to-[var(--surface-lowest)] p-3 sm:p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+                                        className="rounded-[6px] p-3 sm:p-4"
                                         style={{
-                                            minHeight: slot.totalSlots > 1 ? `${slot.totalSlots * 64}px` : "auto",
+                                            backgroundColor: "var(--clima-accent-soft)",
+                                            borderLeft: "3px solid var(--clima-accent)",
+                                            minHeight: slot.totalSlots > 1 ? `${slot.totalSlots * 56}px` : "auto",
                                         }}
                                     >
-                                        <div className="flex items-center gap-3 min-w-0">
-                                            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0">
-                                                <span className="text-primary text-xs sm:text-sm font-bold">
-                                                    {slot.appointment.name.charAt(0).toUpperCase()}
-                                                </span>
-                                            </div>
+                                        <div className="flex items-center justify-between gap-3">
                                             <div className="min-w-0">
-                                                <p className="text-foreground text-sm sm:text-lg xl:text-xl font-bold truncate">
+                                                <p
+                                                    className="truncate"
+                                                    style={{ fontSize: "14.5px", fontWeight: 600, color: "var(--clima-text)" }}
+                                                >
                                                     {slot.appointment.name}
                                                 </p>
-                                                <p className="text-muted-foreground text-xs sm:text-base xl:text-lg mt-0.5 truncate">
+                                                <p
+                                                    className="mt-0.5 truncate"
+                                                    style={{ fontSize: "13px", color: "var(--clima-text-muted)" }}
+                                                >
                                                     {slot.appointment.service.name}
                                                 </p>
-                                                {slot.totalSlots > 1 && (
-                                                    <p className="text-primary/60 text-xs sm:text-sm xl:text-base mt-1 flex items-center gap-1">
-                                                        ⏱ Duração: {slot.appointment.service.duration} min
-                                                    </p>
-                                                )}
                                             </div>
+                                            <span
+                                                className="shrink-0 uppercase"
+                                                style={{ fontSize: "10px", letterSpacing: "0.1em", color: "var(--clima-accent)" }}
+                                            >
+                                                Confirmado
+                                            </span>
                                         </div>
-                                        <div className="shrink-0 self-end sm:self-center">
+
+                                        <div className="mt-2">
                                             <DialogAppointment appointment={slot.appointment} />
                                         </div>
                                     </div>
                                 ) : (
-                                    <p className="text-muted-foreground/40 text-xs sm:text-sm xl:text-base italic py-3 pl-2">
+                                    <p
+                                        className="py-1 font-serif italic"
+                                        style={{ fontSize: "17px", color: "var(--clima-text-subtle)" }}
+                                    >
                                         Disponível
                                     </p>
                                 )}

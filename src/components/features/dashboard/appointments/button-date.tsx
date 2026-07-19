@@ -22,19 +22,25 @@ export function ButtonDate() {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <button className="flex items-center gap-2 bg-[var(--surface-low)] border border-[var(--outline)] rounded-lg px-4 py-2.5 text-sm text-foreground hover:border-primary transition-colors cursor-pointer">
-                    <CalendarIcon size={14} className="text-primary" />
+                <button
+                    className="flex cursor-pointer items-center gap-2 rounded-[6px] px-4 py-2.5 text-sm transition-colors"
+                    style={{
+                        backgroundColor: "var(--clima-surface)",
+                        border: "1px solid var(--clima-border-strong)",
+                        color: "var(--clima-text)",
+                    }}
+                >
+                    <CalendarIcon size={14} style={{ color: "var(--clima-accent)" }} />
                     <span>{format(selected, "dd, 'de' MMMM", { locale: ptBR })}</span>
-                    <ChevronDown size={14} className="text-muted-foreground" />
+                    <ChevronDown size={14} style={{ color: "var(--clima-text-muted)" }} />
                 </button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-[var(--surface-low)] border-[var(--outline)]" align="end">
-                <Calendar
-                    mode="single"
-                    selected={selected}
-                    onSelect={handleSelect}
-                    locale={ptBR}
-                />
+            <PopoverContent
+                className="w-auto p-0"
+                style={{ backgroundColor: "var(--clima-surface)", borderColor: "var(--clima-border)" }}
+                align="end"
+            >
+                <Calendar mode="single" selected={selected} onSelect={handleSelect} locale={ptBR} />
             </PopoverContent>
         </Popover>
     );

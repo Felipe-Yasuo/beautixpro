@@ -10,17 +10,12 @@ interface TimeStepProps {
 
 export function TimeStep({ times, selectedTime, onSelect, bookedTimes, selectedDate }: TimeStepProps) {
     return (
-        <div className="flex flex-col gap-3">
-            <p className="text-xs text-on-surface-variant">
-                Horários riscados estão indisponíveis. Toque para escolher.
-            </p>
-            <ScheduleTimeList
-                times={times}
-                selectedTime={selectedTime}
-                onSelect={onSelect}
-                bookedTimes={bookedTimes}
-                selectedDate={selectedDate}
-            />
-        </div>
+        <ScheduleTimeList
+            times={times}
+            selectedTime={selectedTime}
+            onSelect={onSelect}
+            bookedTimes={bookedTimes}
+            selectedDate={selectedDate}
+        />
     );
 }

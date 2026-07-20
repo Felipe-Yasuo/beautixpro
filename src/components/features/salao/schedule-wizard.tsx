@@ -1,8 +1,7 @@
 "use client";
 
-import { useScheduleForm, STEPS } from "@/hooks/use-schedule-form";
-import { useAvailableSlots } from "@/hooks/use-available-slots";
-import type { Employee } from "@/hooks/use-schedule-form";
+import { STEPS } from "@/hooks/use-schedule-form";
+import type { useScheduleForm, Employee } from "@/hooks/use-schedule-form";
 import { ServiceStep } from "./steps/service-step";
 import { DateStep } from "./steps/date-step";
 import { EmployeeStep } from "./steps/employee-step";
@@ -10,11 +9,12 @@ import { TimeStep } from "./steps/time-step";
 import { CustomerStep } from "./steps/customer-step";
 import { SuccessStep } from "./steps/success-step";
 
-interface ScheduleFormProps {
-    user: {
-        id: string;
-        employees: Employee[];
-    };
+type ScheduleFormState = ReturnType<typeof useScheduleForm>;
+
+interface ScheduleWizardProps {
+    form: ScheduleFormState;
+    bookedTimes: string[];
+    user: { id: string; employees: Employee[] };
 }
 
 const STEP_LABELS: Record<string, string> = {
@@ -33,15 +33,7 @@ const STEP_TITLES: Record<string, { title: string; subtitle: string }> = {
     customer: { title: "Suas informações", subtitle: "Para enviarmos a confirmação da reserva." },
 };
 
-export function ScheduleForm({ user }: ScheduleFormProps) {
-    const form = useScheduleForm({ user });
-
-    const { bookedTimes } = useAvailableSlots({
-        employeeId: form.selectedEmployee?.id ?? null,
-        selectedDate: form.selectedDate,
-        serviceDuration: form.selectedService?.duration ?? 0,
-    });
-
+export function ScheduleWizard({ form, bookedTimes, user }: ScheduleWizardProps) {
     if (user.employees.length === 0) {
         return (
             <div
@@ -174,7 +166,10 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
             )}
 
             {/* Navegação */}
-            <div className="mt-8 flex items-center justify-between" style={{ borderTop: "1px solid var(--clima-border)", paddingTop: "24px" }}>
+            <div
+                className="mt-8 flex items-center justify-between"
+                style={{ borderTop: "1px solid var(--clima-border)", paddingTop: "24px" }}
+            >
                 <button
                     type="button"
                     onClick={form.back}
@@ -189,8 +184,11 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                     <button
                         type="submit"
                         disabled={!form.canNext || form.loading}
-                        className="rounded-[6px] px-6 py-3 text-xs font-semibold uppercase tracking-widest text-white transition-colors disabled:cursor-not-allowed"
-                        style={{ backgroundColor: form.canNext ? "var(--clima-accent)" : "var(--clima-surface-2)", color: form.canNext ? "#fff" : "var(--clima-text-subtle)" }}
+                        className="rounded-[6px] px-6 py-3 text-xs font-semibold uppercase tracking-widest transition-colors disabled:cursor-not-allowed"
+                        style={{
+                            backgroundColor: form.canNext ? "var(--clima-accent)" : "var(--clima-surface-2)",
+                            color: form.canNext ? "#fff" : "var(--clima-text-subtle)",
+                        }}
                     >
                         {form.loading ? "Enviando..." : "Confirmar reserva"}
                     </button>
@@ -200,7 +198,10 @@ export function ScheduleForm({ user }: ScheduleFormProps) {
                         onClick={form.next}
                         disabled={!form.canNext}
                         className="rounded-[6px] px-6 py-3 text-xs font-semibold uppercase tracking-widest transition-colors disabled:cursor-not-allowed"
-                        style={{ backgroundColor: form.canNext ? "var(--clima-accent)" : "var(--clima-surface-2)", color: form.canNext ? "#fff" : "var(--clima-text-subtle)" }}
+                        style={{
+                            backgroundColor: form.canNext ? "var(--clima-accent)" : "var(--clima-surface-2)",
+                            color: form.canNext ? "#fff" : "var(--clima-text-subtle)",
+                        }}
                     >
                         Continuar →
                     </button>

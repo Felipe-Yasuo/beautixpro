@@ -1,31 +1,62 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Employee } from "@/hooks/use-schedule-form";
 
 interface EmployeeStepProps {
     employees: Employee[];
-    onEmployeeChange: (employeeId: string) => void;
+    selectedId: string | null;
+    onSelect: (id: string) => void;
 }
 
-export function EmployeeStep({ employees, onEmployeeChange }: EmployeeStepProps) {
+export function EmployeeStep({ employees, selectedId, onSelect }: EmployeeStepProps) {
     return (
-        <label className="flex flex-col">
-            <span className="label-overline mb-2">Quem irá atendê-lo(a)</span>
-            <Select onValueChange={onEmployeeChange}>
-                <SelectTrigger className="h-auto rounded-none border-0 border-b border-outline-variant bg-transparent px-0 py-2.5 font-serif text-base text-on-surface shadow-none focus:border-gold focus-visible:ring-0 data-placeholder:text-on-surface-dim">
-                    <SelectValue placeholder="Escolha um profissional" />
-                </SelectTrigger>
-                <SelectContent className="border-outline-variant bg-surface-high">
-                    {employees.map((e) => (
-                        <SelectItem
-                            key={e.id}
-                            value={e.id}
-                            className="font-serif text-base text-on-surface focus:bg-gold/10 focus:text-gold"
-                        >
-                            {e.name}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-        </label>
+        <div className="flex flex-col gap-3">
+            {employees.map((emp) => {
+                const isSelected = selectedId === emp.id;
+                return (
+                    <button
+                        key={emp.id}
+                        type="button"
+                        onClick={() => onSelect(emp.id)}
+                        className="flex items-center justify-between gap-3 rounded-[12px] p-4 text-left transition-colors"
+                        style={
+                            isSelected
+                                ? { backgroundColor: "var(--clima-accent-soft)", border: "1px solid var(--clima-accent)" }
+                                : { backgroundColor: "var(--clima-surface)", border: "1px solid var(--clima-border)" }
+                        }
+                    >
+                        <div className="flex items-center gap-3">
+                            <div
+                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-serif"
+                                style={{ backgroundColor: "var(--clima-accent-soft)", color: "var(--clima-accent)", fontSize: "14px" }}
+                            >
+                                {emp.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <p className="font-serif" style={{ fontSize: "17px", color: "var(--clima-text)" }}>
+                                    {emp.name}
+                                </p>
+                                <p className="text-[13px]" style={{ color: "var(--clima-text-muted)" }}>
+                                    Profissional
+                                </p>
+                            </div>
+                        </div>
+                        <RadioDot selected={isSelected} />
+                    </button>
+                );
+            })}
+        </div>
+    );
+}
+
+function RadioDot({ selected }: { selected: boolean }) {
+    return (
+        <span
+            className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
+            style={{
+                border: `1px solid ${selected ? "var(--clima-accent)" : "var(--clima-border-strong)"}`,
+                backgroundColor: selected ? "var(--clima-accent)" : "transparent",
+            }}
+        >
+            {selected && <span className="text-[11px] text-white">✓</span>}
+        </span>
     );
 }

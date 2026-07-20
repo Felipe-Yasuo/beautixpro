@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { z } from "zod";
 import { createAppointment } from "@/lib/actions/create-appointment";
 import { extractFieldErrors } from "@/lib/validations/utils";
@@ -22,6 +22,13 @@ type Employee = Pick<DomainEmployee, "id" | "name" | "times"> & {
     services: Service[];
 };
 
+type AggregatedService = {
+    key: string;
+    name: string;
+    price: number;
+    duration: number;
+};
+
 interface UseScheduleFormProps {
     user: {
         id: string;
@@ -29,27 +36,82 @@ interface UseScheduleFormProps {
     };
 }
 
+export const STEPS = ["service", "date", "professional", "time", "customer"] as const;
+export type StepKey = (typeof STEPS)[number];
+
+function serviceKey(s: Service): string {
+    return `${s.name}::${s.price}::${s.duration}`;
+}
 
 export function useScheduleForm({ user }: UseScheduleFormProps) {
-    const isMultiEmployee = user.employees.length > 1;
+    const [step, setStep] = useState(0);
+    const [success, setSuccess] = useState(false);
 
-    const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-        isMultiEmployee ? null : user.employees[0] ?? null
-    );
+    const [selectedServiceKey, setSelectedServiceKey] = useState<string | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+    const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [selectedService, setSelectedService] = useState<Service | null>(null);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
     const [serverError, setServerError] = useState("");
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
 
-    const isComplete =
-        name && email && phone && selectedEmployee && selectedService && selectedDate && selectedTime;
+    const aggregatedServices = useMemo<AggregatedService[]>(() => {
+        const map = new Map<string, AggregatedService>();
+        for (const emp of user.employees) {
+            for (const svc of emp.services) {
+                const key = serviceKey(svc);
+                if (!map.has(key)) {
+                    map.set(key, { key, name: svc.name, price: svc.price, duration: svc.duration });
+                }
+            }
+        }
+        return Array.from(map.values());
+    }, [user.employees]);
+
+    const selectedService = useMemo(
+        () => aggregatedServices.find((s) => s.key === selectedServiceKey) ?? null,
+        [aggregatedServices, selectedServiceKey]
+    );
+
+    const availableEmployees = useMemo(() => {
+        if (!selectedServiceKey) return [];
+        return user.employees.filter((emp) =>
+            emp.services.some((svc) => serviceKey(svc) === selectedServiceKey)
+        );
+    }, [user.employees, selectedServiceKey]);
+
+    const resolvedService = useMemo(() => {
+        if (!selectedEmployee || !selectedServiceKey) return null;
+        return selectedEmployee.services.find((svc) => serviceKey(svc) === selectedServiceKey) ?? null;
+    }, [selectedEmployee, selectedServiceKey]);
+
+    const currentStep = STEPS[step];
+
+    const canNext = useMemo(() => {
+        switch (currentStep) {
+            case "service":
+                return !!selectedServiceKey;
+            case "date":
+                return !!selectedDate;
+            case "professional":
+                return !!selectedEmployee;
+            case "time":
+                return !!selectedTime;
+            case "customer":
+                return (
+                    name.trim().length >= 3 &&
+                    /\S+@\S+\.\S+/.test(email) &&
+                    phone.replace(/\D/g, "").length >= 10
+                );
+            default:
+                return false;
+        }
+    }, [currentStep, selectedServiceKey, selectedDate, selectedEmployee, selectedTime, name, email, phone]);
 
     function validateField(field: keyof ScheduleFields, value: string) {
         const result = scheduleSchema.shape[field].safeParse(value);
@@ -59,17 +121,9 @@ export function useScheduleForm({ user }: UseScheduleFormProps) {
         }));
     }
 
-    function handleEmployeeChange(employeeId: string) {
-        const employee = user.employees.find((e) => e.id === employeeId);
-        setSelectedEmployee(employee ?? null);
-        setSelectedService(null);
-        setSelectedTime(null);
-    }
-
-    function handleServiceChange(serviceId: string) {
-        if (!selectedEmployee) return;
-        const service = selectedEmployee.services.find((s) => s.id === serviceId);
-        setSelectedService(service ?? null);
+    function handleServiceChange(key: string) {
+        setSelectedServiceKey(key);
+        setSelectedEmployee(null);
         setSelectedTime(null);
     }
 
@@ -77,6 +131,38 @@ export function useScheduleForm({ user }: UseScheduleFormProps) {
         setSelectedDate(date ?? null);
         setSelectedTime(null);
     }
+
+    function handleEmployeeChange(employeeId: string) {
+        const employee = availableEmployees.find((e) => e.id === employeeId);
+        setSelectedEmployee(employee ?? null);
+        setSelectedTime(null);
+    }
+
+    function next() {
+        if (!canNext) return;
+        setStep((s) => Math.min(s + 1, STEPS.length - 1));
+    }
+
+    function back() {
+        setStep((s) => Math.max(s - 1, 0));
+    }
+
+    function reset() {
+        setStep(0);
+        setSuccess(false);
+        setSelectedServiceKey(null);
+        setSelectedDate(null);
+        setSelectedEmployee(null);
+        setSelectedTime(null);
+        setName("");
+        setEmail("");
+        setPhone("");
+        setFieldErrors({});
+        setServerError("");
+    }
+
+    const isComplete =
+        !!name && !!email && !!phone && !!selectedEmployee && !!resolvedService && !!selectedDate && !!selectedTime;
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -96,10 +182,10 @@ export function useScheduleForm({ user }: UseScheduleFormProps) {
         formData.set("name", name);
         formData.set("email", email);
         formData.set("phone", phone.replace(/\D/g, ""));
-        formData.set("serviceId", selectedService.id);
-        formData.set("employeeId", selectedEmployee.id);
-        formData.set("appointmentDate", selectedDate.toISOString());
-        formData.set("time", selectedTime);
+        formData.set("serviceId", resolvedService!.id);
+        formData.set("employeeId", selectedEmployee!.id);
+        formData.set("appointmentDate", selectedDate!.toISOString());
+        formData.set("time", selectedTime!);
         formData.set("userId", user.id);
 
         const result = await createAppointment(formData);
@@ -115,10 +201,19 @@ export function useScheduleForm({ user }: UseScheduleFormProps) {
     }
 
     return {
-        // state
-        isMultiEmployee,
-        selectedEmployee,
+        step,
+        currentStep,
+        canNext,
+        next,
+        back,
+        reset,
+        totalSteps: STEPS.length,
+        aggregatedServices,
+        availableEmployees,
+        selectedServiceKey,
         selectedService,
+        selectedEmployee,
+        resolvedService,
         selectedDate,
         selectedTime,
         name,
@@ -129,20 +224,16 @@ export function useScheduleForm({ user }: UseScheduleFormProps) {
         loading,
         success,
         isComplete,
-
-        // setters
+        setSelectedTime,
         setName,
         setEmail,
         setPhone,
-        setSelectedTime,
-
-        // handlers
         validateField,
-        handleEmployeeChange,
         handleServiceChange,
         handleDateChange,
+        handleEmployeeChange,
         handleSubmit,
     };
 }
 
-export type { Employee, Service, FieldErrors };
+export type { Employee, Service, AggregatedService, FieldErrors };
